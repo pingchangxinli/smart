@@ -10,9 +10,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.lee</groupId>
-    <artifactId>smart-common</artifactId>
+    <artifactId>smart-common-core</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>smart-common</name>
+    <name>smart-common-core</name>
     <description>smart common tool</description>
 
     <build>

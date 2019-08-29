@@ -1,0 +1,12 @@
+##API GATEWAY configuration
+
+##If you want to write log files in addition to the console output,
+## you need to set a logging.file or logging.path property ,  or or or
+logging:
+  path: ./logs
+  file: ${logging.path}/application.log
+##
+uri:
+  page:
+    ##登陆路径
+    login: https://localhost:30001/login

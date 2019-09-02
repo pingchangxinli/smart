@@ -1,0 +1,13 @@
+spring:
+  cloud:
+    gateway:
+      locator:
+        enabled: true
+      routes:
+        id: smart-auth
+        uri: lb://smart-auth-server
+        predicates:
+          - Path=/auth/**
+  redis:
+    host: localhost
+    port: 6379

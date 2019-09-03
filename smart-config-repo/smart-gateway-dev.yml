@@ -1,4 +1,6 @@
 spring:
+  main:
+    allow-bean-definition-overriding: true
   cloud:
     gateway:
       locator:
@@ -17,8 +19,6 @@ spring:
       max-idle: 8
       min-idle: 0
       timeout: 0
-  main:
-    allow-bean-definition-overriding: true
 eureka:
   client:
     serviceUrl:

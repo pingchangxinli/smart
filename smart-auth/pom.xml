@@ -10,6 +10,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>smart-auth</artifactId>
-
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-spring-boot-web-starter</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

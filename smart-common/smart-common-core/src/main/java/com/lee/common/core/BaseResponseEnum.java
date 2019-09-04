@@ -5,7 +5,7 @@ package com.lee.common.core;
  *
  * @author: haitao.li
  **/
-public enum GateWayResponseEnum {
+public enum BaseResponseEnum {
     /**
      *交易成功
      */
@@ -32,7 +32,7 @@ public enum GateWayResponseEnum {
 
 
 
-    GateWayResponseEnum(String code, String message) {
+    BaseResponseEnum(String code, String message) {
         this.code = code;
         this.message = message;
     }

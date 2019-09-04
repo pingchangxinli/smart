@@ -1,0 +1,13 @@
+server:
+  port: 8200
+spring:
+  application:
+    name: smart-config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/pingchangxinli/smart
+          search-paths: smart-config-repo
+          username: pingchangxinli@126.com
+          password: tqq102

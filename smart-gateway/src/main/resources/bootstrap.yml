@@ -1,0 +1,20 @@
+spring:
+  cloud:
+    config:
+      uri: http://localhost:8200
+      profile: dev
+      label: master
+    gateway:
+      routes:
+        ## 跳转到用户授权服务
+        - id: setpath_route
+          uri: http://localhost:8600
+          predicates:
+            - Path=/tenant/{segment}
+          filters:
+            - SetPath=/tenant/{segment}
+  application:
+    name: smart-gateway
+server:
+  port: 8300
+

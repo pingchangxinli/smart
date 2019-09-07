@@ -1,6 +1,13 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/smart_auth?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    jdbc-url: jdbc:mysql://localhost:3306/smart_auth?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
     username: root
     password: root
     pool-size: 30
+  main:
+    allow-bean-definition-overriding: true
+logging:
+  level:
+    root: INFO
+    com.lee: DEBUG
+    org.springframework.security: DEBUG

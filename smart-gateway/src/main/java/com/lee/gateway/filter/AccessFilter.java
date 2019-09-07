@@ -66,7 +66,6 @@ public class AccessFilter implements GlobalFilter, Ordered {
             byte[] bits = message.getBytes(StandardCharsets.UTF_8);
             DataBuffer buffer = httpResponse.bufferFactory().wrap(bits);
             httpResponse.setStatusCode(HttpStatus.UNAUTHORIZED);
-            // 指定编码，否则在浏览器中会中文乱码
             httpResponse.getHeaders().add("Content-Type", "application/json;charset=UTF-8");
 
             return httpResponse.writeWith(Mono.just(buffer));

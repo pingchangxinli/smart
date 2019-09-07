@@ -3,11 +3,16 @@ server:
 spring:
   application:
     name: smart-config-server
+  profiles:
+    active: native
   cloud:
     config:
       server:
-        git:
-          uri: https://github.com/pingchangxinli/smart
-          search-paths: smart-config-repo
-          username: pingchangxinli@126.com
-          password: tqq102
+        ##git:
+        ##  uri: https://github.com/pingchangxinli/smart
+        ##  search-paths: smart-config-repo
+        ##  username: pingchangxinli@126.com
+        ##  password:
+        ##配置本地路径
+        native:
+          search-locations: file:D:\private\smartSpace\smart\smart-config-repo

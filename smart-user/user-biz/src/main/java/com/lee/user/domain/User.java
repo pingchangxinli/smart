@@ -2,7 +2,10 @@ package com.lee.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -10,7 +13,7 @@ import java.util.List;
  * 用户信息类
  */
 @Data
-public class User {
+public class User implements UserDetails {
     /**
      * 自生成ID
      **/
@@ -53,4 +56,24 @@ public class User {
     private boolean enabled;
 
     private List<Role> roles;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
 }

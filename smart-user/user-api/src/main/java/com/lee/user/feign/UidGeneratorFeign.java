@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 /**
  * @author haitao.li
  */
-@FeignClient("smart-uid-server")
+@FeignClient("smart-uid")
 public interface UidGeneratorFeign {
     /**
      * 通过UID服务,获取UID

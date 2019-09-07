@@ -2,7 +2,6 @@ package com.lee.user.controller;
 
 import com.lee.user.UserResponseInfo;
 import com.lee.user.domain.User;
-import com.lee.user.feign.UidGeneratorFeign;
 import com.lee.user.response.UserResponse;
 import com.lee.user.service.UserService;
 import org.slf4j.Logger;
@@ -15,13 +14,12 @@ import javax.annotation.Resource;
  * @author haitao.li
  */
 @RestController
+@RequestMapping("/user")
 public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     @Resource
     private UserService userService;
 
-    @Resource
-    private UidGeneratorFeign uidGeneratorFeign;
 
     /**
      * 用户登录
@@ -32,12 +30,11 @@ public class UserController {
      * @return 成功与否
      */
     @GetMapping("/signIn")
-    public UserResponse signIn(@RequestParam("site_id") Integer siteId, @RequestParam("user_id") String userId,
-                               @RequestParam("password") String password) {
+    public UserResponse signIn(@RequestParam("user_id") String userId, @RequestParam("password") String password) {
         if (log.isDebugEnabled()) {
             log.debug("[USER API] signIn,siteId:{}.userId:{},password:{}", siteId, userId, password);
         }
-        User user = userService.loadUserByUserIdAndSiteId(userId, siteId);
+        User user = userService.loadUserByUsername(userId);
         if (log.isDebugEnabled()) {
             log.debug("[USER API] signIn,user:{}", user);
         }
@@ -53,7 +50,7 @@ public class UserController {
                 info = UserResponseInfo.SUCCESS;
             }
         }
-        return  UserResponse.builder().subCode(info.getCode()).subMsg(info.getMessage()).build();
+        return UserResponse.builder().subCode(info.getCode()).subMsg(info.getMessage()).build();
     }
 
     /**

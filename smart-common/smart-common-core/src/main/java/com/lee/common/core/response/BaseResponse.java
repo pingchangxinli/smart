@@ -2,6 +2,8 @@ package com.lee.common.core.response;
 
 import com.lee.common.core.BaseResponseEnum;
 import lombok.Builder;
+import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 
@@ -9,18 +11,25 @@ import java.io.Serializable;
  * @author haitao.li
  * 基础相应信息
  **/
+@Data
 @Builder
 public  class BaseResponse implements Serializable {
-    {
-        code = BaseResponseEnum.SUCCESS.getCode();
-        msg = BaseResponseEnum.SUCCESS.getMessage();
-    }
     /**
      * 网关返回码
      */
-    public String code;
+    private String code = BaseResponseEnum.SUCCESS.getCode();
     /**
      * 网关返回码描述
      */
-    public String msg;
+    private String msg =BaseResponseEnum.SUCCESS.getMessage();
+    /**
+     * 服务返回码
+     */
+    private String subCode;
+    /**
+     * 服务返回信息
+     */
+    private String subMsg;
+
+    private Object data;
 }

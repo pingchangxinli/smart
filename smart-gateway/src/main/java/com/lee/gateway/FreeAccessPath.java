@@ -11,8 +11,8 @@ import java.util.List;
  *
  * @author haitao.li
  */
-@Component
-@ConfigurationProperties(prefix = "free.access")
+//@Component
+//@ConfigurationProperties(prefix = "free.access")
 public class FreeAccessPath {
     private static final String[] PATH = new String[]{""};
 

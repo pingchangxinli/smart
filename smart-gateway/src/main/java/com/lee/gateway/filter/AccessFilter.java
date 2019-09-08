@@ -4,15 +4,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lee.common.core.BaseResponseEnum;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.common.core.util.JsonUtil;
+import com.lee.gateway.feign.AuthClient;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -34,7 +35,6 @@ import java.util.List;
 public class AccessFilter implements GlobalFilter, Ordered {
 
     private static final Logger logger = LoggerFactory.getLogger(AccessFilter.class);
-
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
@@ -48,8 +48,12 @@ public class AccessFilter implements GlobalFilter, Ordered {
                 request.getQueryParams());
         //获取access token
         String accessToken = extractToken(request);
-        String value = (String) redisTemplate.opsForValue().get("token:" + accessToken);
-        if (value != null) {
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        Boolean hasKey = redisTemplate.hasKey("access:"+accessToken);
+        if (logger.isDebugEnabled()) {
+            logger.debug("gateway access_token is exist in Redis server ? an : {} ", hasKey);
+        }
+        if (hasKey) {
             return chain.filter(exchange);
         } else {
             BaseResponseEnum responseEnum = BaseResponseEnum.AUTH_NOT_ENOUGH;
@@ -59,7 +63,7 @@ public class AccessFilter implements GlobalFilter, Ordered {
             String message = "";
             try {
                 message = JsonUtil.toJson(response);
-                logger.debug("[AccessFilter] token invalid,return message:{}" ,message);
+                logger.debug("[AccessFilter] token invalid,return message:{}", message);
             } catch (JsonProcessingException e) {
                 logger.error("[GATEWAY],response no token: {}", e);
             }

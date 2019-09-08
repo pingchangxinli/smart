@@ -4,7 +4,10 @@ import com.lee.auth.server.service.RedisClientDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -19,6 +22,7 @@ import org.springframework.security.oauth2.provider.code.AuthorizationCodeServic
 import org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -26,12 +30,15 @@ import javax.sql.DataSource;
 /**
  * @author haitao.li
  */
+@SuppressWarnings("AlibabaClassNamingShouldBeCamel")
 @Configuration
 public class OAuth2ServerConfig {
     @Resource
     private DataSource dataSource;
     @Resource
     private RedisTemplate redisTemplate;
+    @Resource
+    private  RedisConnectionFactory connectionFactory;
     @Bean
     public RedisClientDetailService redisClientDetailService() {
         RedisClientDetailService service = new RedisClientDetailService(dataSource);
@@ -68,7 +75,7 @@ public class OAuth2ServerConfig {
 
         @Bean
         public TokenStore tokenStore() {
-            return new JdbcTokenStore(dataSource);
+            return new RedisTokenStore(connectionFactory);
         }
 
 

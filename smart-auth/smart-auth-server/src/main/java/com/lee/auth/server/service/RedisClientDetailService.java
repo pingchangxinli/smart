@@ -9,8 +9,10 @@ import org.springframework.security.oauth2.common.exceptions.InvalidClientExcept
 import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.NoSuchClientException;
+import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.List;
@@ -21,7 +23,8 @@ import java.util.List;
 public class RedisClientDetailService extends JdbcClientDetailsService {
     private static final String REDIS_KEY = "oauth_client_details";
     private static final Logger logger = LoggerFactory.getLogger(RedisClientDetailService.class);
-
+    @Resource
+    private SysClientService sysClientService;
 
     private RedisTemplate<String, Object> redisTemplate;
 
@@ -37,9 +40,9 @@ public class RedisClientDetailService extends JdbcClientDetailsService {
             clientDetails = getAndCacheClient(clientId);
         } else {
             try {
-                clientDetails = JsonUtil.fromJson(value, ClientDetails.class);
+                clientDetails = JsonUtil.fromJson(value, BaseClientDetails.class);
             } catch (IOException e) {
-                logger.error("cache clientId failed : key: {} ,exception{}", clientId, e);
+                logger.error("cache clientId failed : key: {} ,exception: {}", clientId, e);
             }
         }
         return clientDetails;

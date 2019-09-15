@@ -20,4 +20,11 @@ public interface SysClientService {
      * @return
      */
     SysClient findClientById(String clientId);
+
+    /**
+     * 创建Client
+     * @param client
+     * @return
+     */
+    Integer createClient(SysClient client);
 }

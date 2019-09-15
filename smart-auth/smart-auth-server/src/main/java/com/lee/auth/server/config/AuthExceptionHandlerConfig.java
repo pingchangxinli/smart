@@ -1,6 +1,6 @@
 package com.lee.auth.server.config;
 
-import com.lee.common.core.BaseResponseEnum;
+import com.lee.common.core.enums.BaseResponseEnum;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.common.core.util.JsonUtil;
 import org.slf4j.Logger;

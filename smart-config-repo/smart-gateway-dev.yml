@@ -11,7 +11,13 @@ spring:
         predicates:
         - Path=/auth-api/**
         filters:
-        - StripPrefix=1 # 表示在转发时去掉userapi
+        - StripPrefix=1 # 表示在转发时去掉auth api
+      - id: smart-user
+        uri: lb://smart-user
+        predicates:
+        - Path=/user-api/**
+        filters:
+        - StripPrefix=1 # 表示在转发时去掉user api
   redis:
     host: localhost
     port: 6379
@@ -29,7 +35,4 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
-#可自由访问路径
-free:
-  access:
-    path: /oauth/token
+

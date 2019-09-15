@@ -36,9 +36,11 @@ public class RedisClientDetailService extends JdbcClientDetailsService {
     public ClientDetails loadClientByClientId(String clientId) throws InvalidClientException {
         ClientDetails clientDetails = null;
         String value = (String) redisTemplate.boundHashOps(REDIS_KEY).get(clientId);
+        //判断是否存在该client id
         if (value == null) {
             clientDetails = getAndCacheClient(clientId);
         } else {
+
             try {
                 clientDetails = JsonUtil.fromJson(value, BaseClientDetails.class);
             } catch (IOException e) {

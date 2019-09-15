@@ -1,9 +1,8 @@
 package com.lee.common.core.response;
 
-import com.lee.common.core.BaseResponseEnum;
+import com.lee.common.core.enums.BaseResponseEnum;
 import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.SuperBuilder;
 import org.springframework.http.HttpStatus;
 
 import java.io.Serializable;

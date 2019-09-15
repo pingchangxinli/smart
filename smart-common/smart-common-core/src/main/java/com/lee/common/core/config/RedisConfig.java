@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
@@ -17,17 +18,19 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  * Redis配置文件
  * @author haitao.li
  */
-@Configuration
 public class RedisConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(RedisConfig.class);
-    @Autowired(required=false)
-    private LettuceConnectionFactory lettuceConnectionFactory;
+    @Bean
+    JedisConnectionFactory jedisConnectionFactory() {
+        return new JedisConnectionFactory();
+    }
+
     @Bean
     public RedisTemplate<Object, Object> getRedisTemplate() {
         logger.info("Loader RedisTemplate [RedisConfig]");
         RedisTemplate<Object, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(lettuceConnectionFactory);
+        template.setConnectionFactory(jedisConnectionFactory());
 
         //使用Jackson2JsonRedisSerializer来序列化和反序列化redis的value值（默认使用JDK的序列化方式）
         Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer(Object.class);

@@ -1,9 +1,11 @@
 package com.lee.auth.server.config;
 
+import com.lee.auth.server.service.impl.AuthUserDetailsServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
@@ -18,14 +20,21 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.AuthenticationEntryPoint;
+
+import javax.annotation.Resource;
+import javax.sql.DataSource;
 
 /**
  * @author haitao.li
  */
+@Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
+    @Resource
+    private DataSource dataSource;
     @Autowired
     private AuthenticationEntryPoint authenticationEntryPoint;
 
@@ -35,14 +44,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    /**
+     * 该配置配合oauth2 password模式,根据request提交
+     * username 和 password 判断是否存在
+     * @return
+     */
     @Override
     @Bean
     public UserDetailsService userDetailsService() {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        String finalPassword = "{bcrypt}"+bCryptPasswordEncoder.encode("password");
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("user").password(finalPassword).authorities("USER").build());
-        return manager;
+        UserDetailsService userDetailsService =  new AuthUserDetailsServiceImpl(dataSource);
+        log.info("Loaded userDetailsService use: {}",userDetailsService);
+        return userDetailsService;
+//        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+//        String finalPassword = "{bcrypt}"+bCryptPasswordEncoder.encode("password");
+//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+//        manager.createUser(User.withUsername("user").password(finalPassword).authorities("USER").build());
+//        return manager;
     }
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -73,4 +90,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/oauth/*").permitAll();
         http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
     }
+
 }

@@ -10,6 +10,7 @@
     </parent>
     <modules>
         <module>smart-common-core</module>
+        <module>smart-common-business</module>
     </modules>
 
     <artifactId>smart-common</artifactId>

@@ -1,26 +1,27 @@
-package com.lee.user.domain;
+package com.lee.role.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.lee.EnabledStatus;
+import com.lee.common.core.BaseObject;
+import com.lee.user.domain.Permission;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import javax.management.relation.RoleStatus;
 import java.util.List;
 
 /**
  * @author haitao.li
  */
 @Data
-@AllArgsConstructor
 @TableName(value = "sys_role")
-public class SysRole {
+public class SysRole extends BaseObject {
     /**
      * 编号
      */
-    @TableId(value = "id", type = IdType.INPUT)
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     /**
      * 名称
@@ -31,16 +32,15 @@ public class SysRole {
      */
     private String code;
     /**
-     * 角色描述,UI界面显示使用
-     */
-    private String desc;
-    /**
      * 是否可用,如果不可用将不会添加给用户
      */
-    private RoleStatus enabled;
+    private EnabledStatus enabled;
     /**
      * 权限 和 角色 是多对多关心
      */
     @TableField(exist = false)
     private List<Permission> permissions;
+
+    @TableField("tenant_id")
+    private Long tenantId;
 }

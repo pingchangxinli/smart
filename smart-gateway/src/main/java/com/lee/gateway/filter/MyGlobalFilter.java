@@ -72,7 +72,6 @@ public class MyGlobalFilter implements GlobalFilter, Ordered {
             logger.debug("gateway access_token is exist in Redis server ?  {} ", hasKey);
         }
         if (hasKey) {
-
             return chain.filter(exchange);
         } else {
             BaseResponseEnum responseEnum = BaseResponseEnum.AUTH_NOT_ENOUGH;

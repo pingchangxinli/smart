@@ -1,6 +1,7 @@
 package com.lee.user.service;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lee.common.bussiness.domain.LoginUser;
 import com.lee.user.domain.SysUser;
 
@@ -22,4 +23,20 @@ public interface UserService {
      * @return
      */
     LoginUser internalFindUserByUserName(String username);
+
+    /**
+     * 创建用户
+     * @param user
+     * @return
+     */
+    boolean createUser(SysUser user);
+
+    IPage<SysUser> pageList(Integer page, Integer limit, String userCode, String username);
+
+    /**
+     * 作废用户
+     * @param id
+     * @return
+     */
+    Integer disabledUserById(Long id);
 }

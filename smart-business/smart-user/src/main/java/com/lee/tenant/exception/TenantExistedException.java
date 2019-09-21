@@ -1,4 +1,4 @@
-package com.lee.tenant;
+package com.lee.tenant.exception;
 
 /**
  * @author haitao.li

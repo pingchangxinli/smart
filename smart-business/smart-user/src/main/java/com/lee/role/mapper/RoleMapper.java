@@ -1,7 +1,7 @@
-package com.lee.user.mapper;
+package com.lee.role.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.lee.user.domain.SysRole;
+import com.lee.role.domain.SysRole;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 

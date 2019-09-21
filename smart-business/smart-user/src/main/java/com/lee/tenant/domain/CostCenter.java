@@ -1,33 +1,39 @@
-package com.lee.user.domain;
+package com.lee.tenant.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.lee.EnabledStatus;
 import lombok.Data;
 
 /**
- * 用户 角色 对应表
+ * 成本中心
  * @author haitao.li
  */
 @Data
-@TableName(value="sys_user_role")
-public class SysUserRole {
-    @TableId(value = "id",type = IdType.AUTO)
+@TableName("sys_cost_center")
+public class CostCenter {
+    /**
+     * 主键
+     */
+    @TableId(type = IdType.AUTO)
     private Long id;
     /**
-     * 用户ID
+     * 租户自定义代码，唯一
      */
-    @TableField(value = "user_id")
-    private Long userId;
+    private String code;
     /**
-     * 角色ID
+     * 成本中心名称
      */
-    @TableField(value= "role_id")
-    private Long roleId;
+    private String name;
     /**
      * 租户ID
      */
     @TableField(value = "tenant_id")
     private Long tenantId;
+    /**
+     * 是否启用
+     */
+    private EnabledStatus enabled;
 }

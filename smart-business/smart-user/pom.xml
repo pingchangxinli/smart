@@ -12,6 +12,10 @@
     <artifactId>smart-user</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.baomidou</groupId>

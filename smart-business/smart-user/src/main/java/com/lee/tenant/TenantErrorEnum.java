@@ -5,6 +5,10 @@ package com.lee.tenant;
  */
 public enum TenantErrorEnum {
     /**
+     * 租户不存在
+     */
+    NOT_EXISTED("TENANT_NOT_EXISTED","租户不存在"),
+    /**
      * 租户域名已存在
      */
     EXISTED("TENANT_DOMAIN_EXISTED","租户域名已存在"),

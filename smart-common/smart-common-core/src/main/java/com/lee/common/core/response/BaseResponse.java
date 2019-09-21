@@ -27,10 +27,12 @@ public  class BaseResponse implements Serializable {
     /**
      * 服务返回码
      */
+    @Builder.Default
     private String subCode = String.valueOf(HttpStatus.OK.value());
     /**
      * 服务返回信息
      */
+    @Builder.Default
     private String subMsg = HttpStatus.OK.getReasonPhrase();
 
     private Object data;

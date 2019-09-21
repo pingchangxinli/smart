@@ -20,7 +20,7 @@ public enum EnabledStatus implements IEnum<Integer> {
      */
     DISABLED(1, "失效");
 
-    private int value;
+    private Integer value;
     /**
      * 描述
      */

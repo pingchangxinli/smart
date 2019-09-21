@@ -1,0 +1,81 @@
+package com.lee.common.business;
+
+import com.baomidou.mybatisplus.core.parser.ISqlParser;
+import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.tenant.TenantHandler;
+import com.baomidou.mybatisplus.extension.plugins.tenant.TenantSqlParser;
+import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.expression.LongValue;
+import org.mybatis.spring.annotation.MapperScan;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author haitao.li
+ */
+@Configuration
+@MapperScan({"com.lee.*.mapper", "com.lee.*.*.mapper"})
+public class MybatisPlusConfig {
+    @Resource
+    private HttpServletRequest request;
+    private static final Logger logger = LoggerFactory.getLogger(MybatisPlusConfig.class);
+    /**
+     * 分页插件
+     */
+    @Bean
+    public PaginationInterceptor paginationInterceptor() {
+        PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
+        /*
+         * 【测试多租户】 SQL 解析处理拦截器<br>
+         * 这里固定写成住户 1 实际情况你可以从cookie读取，因此数据看不到 【 麻花藤 】 这条记录（ 注意观察 SQL ）<br>
+         */
+        List<ISqlParser> sqlParserList = new ArrayList<>();
+        TenantSqlParser tenantSqlParser = new TenantSqlParser();
+        tenantSqlParser.setTenantHandler(new TenantHandler() {
+            @Override
+            public Expression getTenantId(boolean where) {
+                // 从请求中获取租户ID
+                String tenantId = request.getHeader("X-TENANT-ID");
+
+                logger.info("Tenant interceptor get tenant id from request header:{}", tenantId);
+
+                return new LongValue(tenantId);
+            }
+
+            @Override
+            public String getTenantIdColumn() {
+                return "tenant_id";
+            }
+
+            @Override
+            public boolean doTableFilter(String tableName) {
+                // 这里可以判断是否过滤表
+                if ("sys_tenant".equals(tableName)) {
+                    return true;
+                }
+                return false;
+            }
+        });
+        sqlParserList.add(tenantSqlParser);
+        paginationInterceptor.setSqlParserList(sqlParserList);
+//        paginationInterceptor.setSqlParserFilter(new ISqlParserFilter() {
+//            @Override
+//            public boolean doFilter(MetaObject metaObject) {
+//                MappedStatement ms = SqlParserHelper.getMappedStatement(metaObject);
+//                // 过滤自定义查询此时无租户信息约束【 麻花藤 】出现
+//                if ("com.baomidou.springboot.mapper.UserMapper.selectListBySQL".equals(ms.getId())) {
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
+        return paginationInterceptor;
+    }
+}

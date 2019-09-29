@@ -27,7 +27,6 @@ import java.util.Map;
 @SpringBootApplication
 @EnableFeignClients
 @EnableEurekaClient
-@MapperScan({"com.lee.*.mapper"})
 public class SmartUserApplication {
 
     public static void main(String[] args) {

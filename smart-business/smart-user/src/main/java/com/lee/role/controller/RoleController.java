@@ -1,7 +1,7 @@
 package com.lee.role.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.lee.EnabledStatus;
+import com.lee.common.business.EnabledStatus;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.role.domain.SysRole;
 import com.lee.role.exception.RoleExistException;
@@ -9,9 +9,11 @@ import com.lee.role.service.RoleService;
 import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 角色
@@ -88,4 +90,26 @@ public class RoleController {
         IPage<SysRole> sysRoles = roleService.findRolePage(name, page, limit);
         return BaseResponse.builder().data(sysRoles).build();
     }
+
+    @GetMapping(value = "/list/ids")
+    public BaseResponse findRolesByIds(@RequestParam Long[] ids) {
+
+        List<Long> list = CollectionUtils.arrayToList(ids);
+        List<SysRole> roleList = roleService.findRoleByIdList(list);
+        return BaseResponse.builder().data(roleList).build();
+    }
+
+    /**
+     * http://127.0.0.1:8300/user-api/role/findRolesByUserId?access_token=76d9bea0-7630-4c3c-8807-4093c6b4f053
+     * &user_id=1175223732468088833
+     *
+     * @param userId
+     * @return
+     */
+    @GetMapping("/findRolesByUserId")
+    public BaseResponse findRolesByUserId(@RequestParam("user_id") Long userId) {
+        List<SysRole> list = roleService.findRoleByUserId(userId);
+        return BaseResponse.builder().data(list).build();
+    }
+
 }

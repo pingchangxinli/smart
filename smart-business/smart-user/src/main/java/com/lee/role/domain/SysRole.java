@@ -4,11 +4,12 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.lee.EnabledStatus;
+
+import com.lee.common.business.EnabledStatus;
 import com.lee.common.core.BaseObject;
 import com.lee.user.domain.Permission;
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import java.util.List;
  * @author haitao.li
  */
 @Data
+@EqualsAndHashCode(callSuper=true)
 @TableName(value = "sys_role")
 public class SysRole extends BaseObject {
     /**

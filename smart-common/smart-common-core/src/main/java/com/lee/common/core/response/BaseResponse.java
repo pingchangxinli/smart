@@ -13,7 +13,7 @@ import java.io.Serializable;
  **/
 @Data
 @Builder
-public  class BaseResponse implements Serializable {
+public  class BaseResponse<T> implements Serializable {
     /**
      * 网关返回码
      */
@@ -35,5 +35,5 @@ public  class BaseResponse implements Serializable {
     @Builder.Default
     private String subMsg = HttpStatus.OK.getReasonPhrase();
 
-    private Object data;
+    private T data;
 }

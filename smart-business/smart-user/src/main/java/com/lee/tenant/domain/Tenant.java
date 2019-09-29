@@ -4,15 +4,17 @@ package com.lee.tenant.domain;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.lee.EnabledStatus;
+import com.lee.common.business.EnabledStatus;
 import com.lee.common.core.BaseObject;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 租户
  * @author haitao.li
  */
 @Data
+@EqualsAndHashCode(callSuper=true)
 @TableName("sys_tenant")
 public class Tenant extends BaseObject {
     /**

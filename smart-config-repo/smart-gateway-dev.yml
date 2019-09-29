@@ -12,10 +12,17 @@ spring:
         - Path=/auth-api/**
         filters:
         - StripPrefix=1 # 表示在转发时去掉auth api
+        - KaptchFilter # 验证码校验
       - id: smart-user
         uri: lb://smart-user
         predicates:
         - Path=/user-api/**
+        filters:
+        - StripPrefix=1 # 表示在转发时去掉user api
+      - id: smart-admin
+        uri: lb://smart-admin
+        predicates:
+        - Path=/admin-api/**
         filters:
         - StripPrefix=1 # 表示在转发时去掉user api
   redis:

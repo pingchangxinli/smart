@@ -1,14 +1,15 @@
 server:
   port: 50001
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: smart-uid-server
   datasource:
     url: jdbc:mysql://localhost:3306/generate_id?serverTimezone=UTC
     username: root
     password: root
-  main:
-    allow-bean-definition-overriding: true
+
 eureka:
   client:
     serviceUrl:

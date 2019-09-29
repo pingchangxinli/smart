@@ -1,7 +1,7 @@
 package com.lee.tenant.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.lee.EnabledStatus;
+import com.lee.common.business.EnabledStatus;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.tenant.domain.CostCenter;
 import com.lee.tenant.domain.Tenant;

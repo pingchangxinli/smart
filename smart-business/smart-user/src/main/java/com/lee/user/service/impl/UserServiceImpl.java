@@ -3,7 +3,7 @@ package com.lee.user.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.lee.EnabledStatus;
+import com.lee.common.business.EnabledStatus;
 import com.lee.common.bussiness.domain.LoginUser;
 import com.lee.role.domain.SysRole;
 import com.lee.role.mapper.RoleMapper;
@@ -16,6 +16,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,19 +53,12 @@ public class UserServiceImpl implements UserService {
         SysUser sysUser = this.findUserByName(username);
 
         if (logger.isDebugEnabled()) {
-            logger.debug("get user from database is : {},enabled:{}", sysUser, sysUser.getEnabled());
+            logger.debug("get user from database is : {},enabled:{}", sysUser, sysUser.getStatus());
         }
         if (ObjectUtils.isNotEmpty(sysUser)) {
             List<SysRole> list = roleMapper.selectRoleList(sysUser.getId());
 
-            loginUser.setUsername(sysUser.getUsername());
-            loginUser.setPassword(sysUser.getPassword());
-            int value = sysUser.getEnabled().getValue();
-            if (value == 0) {
-                loginUser.setEnabled(true);
-            } else {
-                loginUser.setEnabled(false);
-            }
+            BeanUtils.copyProperties(sysUser,loginUser);
             List<String> roles = new ArrayList<>();
             list.forEach(sysRole -> {
                 roles.add(sysRole.getCode());
@@ -78,7 +72,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean createUser(SysUser user){
-        user.setEnabled(EnabledStatus.ENABLED);
+        user.setStatus(EnabledStatus.ENABLED);
         int count = userMapper.insert(user);
         List<SysUserRole> list =  user.getRoles().stream().map(roleId -> {
             SysUserRole sysUserRole = new SysUserRole();
@@ -117,7 +111,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Integer disabledUserById(Long id) {
         SysUser sysUser = new SysUser();
-        sysUser.setEnabled(EnabledStatus.DISABLED);
+        sysUser.setStatus(EnabledStatus.DISABLED);
         sysUser.setId(id);
         return userMapper.updateById(sysUser);
     }

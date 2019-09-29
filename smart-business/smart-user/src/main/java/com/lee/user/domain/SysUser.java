@@ -2,8 +2,9 @@ package com.lee.user.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lee.EnabledStatus;
+import com.lee.common.business.EnabledStatus;
 import lombok.Data;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class SysUser {
     /**
      * 密码
      **/
+    @JsonIgnore
     private String password;
     /**
      * 邮箱
@@ -57,7 +59,8 @@ public class SysUser {
     /**
      * 是否可用
      **/
-    private EnabledStatus enabled;
+    @TableField("enabled")
+    private EnabledStatus status;
     /**
      * 用户角色集合
      */

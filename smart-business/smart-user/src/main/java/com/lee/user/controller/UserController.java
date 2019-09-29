@@ -9,6 +9,8 @@ import com.lee.user.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -93,6 +95,8 @@ public class UserController {
     }
     @DeleteMapping("/{id}")
     public BaseResponse disabledUserById(@PathVariable("id") Long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        logger.debug(">>>>>>>>>>>>>>>"+authentication);
         int count = userService.disabledUserById(id);
         return BaseResponse.builder().data(count).build();
     }

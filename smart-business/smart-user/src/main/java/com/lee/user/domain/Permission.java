@@ -10,7 +10,6 @@ import java.util.List;
  * @author haitao.li
  */
 @Data
-@AllArgsConstructor
 public class Permission {
     /**
      * 主键.

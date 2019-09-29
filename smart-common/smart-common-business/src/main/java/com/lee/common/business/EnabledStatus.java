@@ -1,4 +1,4 @@
-package com.lee;
+package com.lee.common.business;
 
 
 import com.baomidou.mybatisplus.core.enums.IEnum;

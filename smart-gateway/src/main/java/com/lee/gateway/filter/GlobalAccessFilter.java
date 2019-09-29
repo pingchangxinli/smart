@@ -7,9 +7,10 @@ import com.lee.common.core.response.BaseResponse;
 import com.lee.common.core.util.JsonUtil;
 import com.lee.gateway.AuthIgnored;
 import com.lee.gateway.feign.TenantClient;
+import com.lee.gateway.feign.TokenClient;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -28,6 +29,7 @@ import javax.annotation.Resource;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 全局过滤器,只需要配置Component,会自动加载
@@ -36,10 +38,11 @@ import java.util.List;
  *
  * @author haitao.li
  */
+@Slf4j
 @Component
-public class MyGlobalFilter implements GlobalFilter, Ordered {
-
-    private static final Logger logger = LoggerFactory.getLogger(MyGlobalFilter.class);
+public class GlobalAccessFilter implements GlobalFilter, Ordered {
+    @Resource
+    private TokenClient tokenClient;
     @Resource
     private TenantClient tenantClient;
     @Resource
@@ -54,7 +57,7 @@ public class MyGlobalFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
         ServerHttpRequest request = exchange.getRequest();
-        logger.info("[MyGlobalFilter] url: {},header:{},params:{}", request.getURI(), request.getHeaders(),
+        log.info("[GlobalAccessFilter] url: {},header:{},params:{}", request.getURI(), request.getHeaders(),
                 request.getQueryParams());
         putTenantIdInRequest(request);
 
@@ -66,12 +69,13 @@ public class MyGlobalFilter implements GlobalFilter, Ordered {
 
         //获取access token
         String accessToken = extractToken(request);
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        Boolean hasKey = redisTemplate.hasKey("access:" + accessToken);
-        if (logger.isDebugEnabled()) {
-            logger.debug("gateway access_token is exist in Redis server ?  {} ", hasKey);
-        }
-        if (hasKey) {
+        BaseResponse baseResponse =  tokenClient.token(accessToken);
+        log.debug("[GlobalAccessFilter] get user info by access token:{}",baseResponse);
+
+        Map<String,Object> map = (Map<String, Object>) baseResponse.getData();
+        boolean isValid = (Integer)map.get("expires_in") > 0 ? true : false;
+        log.debug("expires_in is : {} > 0 ? {}", map.get("expires_in"),isValid);
+        if (isValid) {
             return chain.filter(exchange);
         } else {
             BaseResponseEnum responseEnum = BaseResponseEnum.AUTH_NOT_ENOUGH;
@@ -81,9 +85,9 @@ public class MyGlobalFilter implements GlobalFilter, Ordered {
             String message = "";
             try {
                 message = JsonUtil.toJson(response);
-                logger.debug("[AccessFilter] token invalid,return message:{}", message);
+                log.debug("[AccessFilter] token invalid,return message:{}", message);
             } catch (JsonProcessingException e) {
-                logger.error("[GATEWAY],response no token: {}", e);
+                log.error("[GATEWAY],response no token: {}", e);
             }
             byte[] bits = message.getBytes(StandardCharsets.UTF_8);
             DataBuffer buffer = httpResponse.bufferFactory().wrap(bits);
@@ -119,6 +123,7 @@ public class MyGlobalFilter implements GlobalFilter, Ordered {
 
     /**
      * 将域名对应的tenant id 放入到redis缓存中,并将tenant id 返回
+     *
      * @param request
      * @return
      */
@@ -127,11 +132,12 @@ public class MyGlobalFilter implements GlobalFilter, Ordered {
         String host = uri.getHost();
         BaseResponse response = tenantClient.findTenantByDomain(host);
         String tenantId = (String) response.getData();
-        logger.debug("get tenant id : {} by domain: {}",response.getData(),host);
-        String[] tenantIdArray = new String[]{(String)response.getData()};
-        request.mutate().header(Contants.REQUEST_HEADER_TENANT_ID,tenantIdArray);
+        log.debug("get tenant id : {} by domain: {}", response.getData(), host);
+        String[] tenantIdArray = new String[]{(String) response.getData()};
+        request.mutate().header(Contants.REQUEST_HEADER_TENANT_ID, tenantIdArray);
         return tenantId;
     }
+
     @Override
     public int getOrder() {
         return -500;

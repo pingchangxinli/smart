@@ -63,4 +63,18 @@ public class RoleServiceImpl implements RoleService {
         queryWrapper.eq("code",code);
         return roleMapper.selectOne(queryWrapper);
     }
+
+    @Override
+    public List<SysRole> findRoleByIdList(List<Long> list) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.in("id",list);
+        return roleMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public List<SysRole> findRoleByCode(List<String> codes) {
+        QueryWrapper<SysRole> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("code",codes);
+        return roleMapper.selectList(queryWrapper);
+    }
 }

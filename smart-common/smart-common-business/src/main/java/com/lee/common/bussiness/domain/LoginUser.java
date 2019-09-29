@@ -1,5 +1,9 @@
 package com.lee.common.bussiness.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.lee.common.business.EnabledStatus;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,12 +13,16 @@ import org.springframework.util.CollectionUtils;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author haitao.li
  */
 @Data
-public class LoginUser  implements UserDetails {
+public class LoginUser implements UserDetails {
+    private static final long serialVersionUID = -4454296762396343607L;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
     /**
      * 用户名
      */
@@ -26,10 +34,17 @@ public class LoginUser  implements UserDetails {
     /**
      * 是否启用
      */
-    private Boolean enabled;
+    private EnabledStatus status;
 
     private List<String> roles;
+    private Set<GrantedAuthority> authorities;
 
+    /**
+     * 关注@JsonIgnore,去掉会报错，后期关注！！！
+     *
+     * @return
+     */
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> collection = new HashSet<>();
@@ -44,24 +59,29 @@ public class LoginUser  implements UserDetails {
         }
         return collection;
     }
-
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
-
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
-
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
-        return enabled;
+        if (EnabledStatus.ENABLED.equals(status)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

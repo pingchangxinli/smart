@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.common.exceptions.UserDeniedAuthorizationException;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
 import javax.annotation.Resource;
@@ -41,6 +42,10 @@ public class AuthUserDetailsServiceImpl extends JdbcUserDetailsManager {
         if(logger.isDebugEnabled()) {
             logger.debug("auth user client result is : {} ",loginUser);
         }
+        if (!loginUser.isEnabled()) {
+            throw new UsernameNotFoundException("username: "+loginUser.getUsername()+" is disabled.");
+        }
+
         return loginUser;
     }
 }

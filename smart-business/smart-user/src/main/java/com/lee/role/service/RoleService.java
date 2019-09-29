@@ -53,4 +53,18 @@ public interface RoleService {
      * @return
      */
     SysRole finRoleByCode(String code);
+
+    /**
+     * 查询多个 role id 下的 role
+     * @param list
+     * @return
+     */
+    List<SysRole> findRoleByIdList(List<Long> list);
+
+    /**
+     * role code 查询出对应的role object list
+     * @param codes code集合
+     * @return
+     */
+    List<SysRole> findRoleByCode(List<String> codes);
 }

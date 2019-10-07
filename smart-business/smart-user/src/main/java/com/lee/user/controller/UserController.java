@@ -3,9 +3,12 @@ package com.lee.user.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lee.common.bussiness.domain.LoginUser;
 import com.lee.common.core.response.BaseResponse;
+import com.lee.feign.TokenClient;
 import com.lee.role.domain.SysRole;
 import com.lee.user.domain.SysUser;
 import com.lee.user.service.UserService;
+import com.sun.corba.se.impl.oa.toa.TOA;
+import jdk.nashorn.internal.parser.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -26,7 +29,8 @@ public class UserController {
 
     @Resource
     private UserService userService;
-
+    @Resource
+    private TokenClient tokenClient;
     /**
      * http://127.0.0.1:8300/user-api/user?access_token=abfe4ce3-1043-4499-bfab-2671322f04a1
      * {"name":"costcenter1","password":"c112","user_code":"sdfa","cost_center_id":1,"roles":[1,4]}
@@ -43,7 +47,11 @@ public class UserController {
         }
 
     }
-
+    @GetMapping("/currentUser")
+    public BaseResponse currentUser(@RequestParam("access_token") String accessToken){
+        BaseResponse baseResponse = tokenClient.findUserByAccessToken(accessToken);
+        return baseResponse;
+    }
     /**
      * 分页查询当前租户下的所有用户信息
      * @param current 当前页面

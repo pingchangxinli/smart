@@ -1,5 +1,6 @@
 package com.lee.gateway.handler;
 
+import feign.FeignException;
 import feign.RetryableException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
@@ -14,6 +15,7 @@ import org.springframework.web.reactive.function.server.RequestPredicate;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
 import java.net.SocketTimeoutException;
@@ -41,7 +43,6 @@ public class GateWayErrorWebExceptionHandler extends DefaultErrorWebExceptionHan
         // 这里其实可以根据异常类型进行定制化逻辑
         Throwable error = super.getError(request);
         Map<String, Object> errorAttributes = new HashMap<>(8);
-        log.debug("exception handler:",error);
         errorAttributes.put("status",HttpStatus.OK.value());
         errorAttributes.put("code",HttpStatus.OK.value());
         errorAttributes.put("msg",HttpStatus.OK.getReasonPhrase());
@@ -53,9 +54,18 @@ public class GateWayErrorWebExceptionHandler extends DefaultErrorWebExceptionHan
             errorAttributes.put("subCode",HttpStatus.BAD_REQUEST.value());
             errorAttributes.put("subMsg",error.getMessage());
         }
-
+        if (error instanceof feign.FeignException.InternalServerError) {
+            errorAttributes.put("status",HttpStatus.INTERNAL_SERVER_ERROR.value());
+            errorAttributes.put("subCode",HttpStatus.INTERNAL_SERVER_ERROR.value());
+            errorAttributes.put("subMsg",error.getMessage());
+        }
+        if (error instanceof ResponseStatusException) {
+            errorAttributes.put("status",HttpStatus.INTERNAL_SERVER_ERROR.value());
+            errorAttributes.put("subCode",HttpStatus.INTERNAL_SERVER_ERROR.value());
+            errorAttributes.put("subMsg",error.getMessage());
+        }
         errorAttributes.put("data", null);
-        log.info("exception handler path: {},method:{},exception:",request.path(),request.methodName(),
+        log.error("exception handler path: {},method:{},exception:",request.path(),request.methodName(),
                 error);
         return errorAttributes;
     }

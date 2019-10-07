@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lee.common.bussiness.domain.LoginUser;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.feign.TokenClient;
+import com.lee.menu.MenuTreeUtil;
 import com.lee.menu.domain.SysMenu;
 import com.lee.menu.service.MenuService;
 import com.lee.role.service.RoleService;
@@ -46,7 +47,8 @@ public class MenuController {
             logger.debug("[Menu controller],get current user from token: {}", loginUser);
         }
         List<SysMenu> list = menuService.findMenusByUserId(loginUser.getId());
-        return BaseResponse.builder().data(list).build();
+
+        return BaseResponse.builder().data(MenuTreeUtil.buildMenuTree(list)).build();
     }
 
     /**

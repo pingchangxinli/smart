@@ -41,6 +41,7 @@ public class SysMenu extends BaseObject {
      */
     private Integer sort;
 
+    private String icon;
     @TableField(exist = false)
     private String permissions;
     @TableField(exist = false)

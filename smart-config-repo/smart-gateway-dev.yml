@@ -7,7 +7,7 @@ spring:
         enabled: true
       routes:
       - id: smart-auth
-        uri: lb://smart-auth-server
+        uri: lb://SMART-AUTH-SERVER
         predicates:
         - Path=/auth-api/**
         filters:

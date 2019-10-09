@@ -31,10 +31,20 @@ public class MenuTreeUtil {
         }
         return menuTree;
     }
+
+    /**
+     * 查询 menus中 currentMenu 下的所有子菜单
+     * @param menus 所有菜单
+     * @param currentMenu 当前菜单
+     * @return 当前菜单下的所有子菜单
+     */
     private static Menu findChildren(List<Menu> menus,@NotNull Menu currentMenu) {
-        Menu result = new Menu();
         for (Menu menu : menus) {
-            if (currentMenu.getId() == menu.getParentId()) {
+            log.debug("MenuTreeUtil findChildren,before query,parent menu id:{},children menu id:{}",currentMenu.getId(),
+                    menu.getId());
+            if (currentMenu.getId().equals(menu.getParentId())) {
+                log.debug("MenuTreeUtil findChildren,parent menu id:{},children menu id:{}",currentMenu.getId(),
+                        menu.getId());
                 if (CollectionUtils.isEmpty(currentMenu.getChildren())) {
                     currentMenu.setChildren(new ArrayList<>());
                 }

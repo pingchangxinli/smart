@@ -1,6 +1,7 @@
 package com.lee.gateway;
 
 import com.lee.gateway.feign.TenantClient;
+import com.lee.gateway.feign.TokenClient;
 import com.lee.gateway.handler.KatchaHandler;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -21,7 +22,7 @@ import org.springframework.web.reactive.function.server.RouterFunctions;
  */
 @SpringBootApplication
 @EnableEurekaClient
-@EnableFeignClients(basePackageClasses = {TenantClient.class})
+@EnableFeignClients(basePackages = {"com.lee.gateway.feign"})
 public class SmartGatewayApplication {
 
     public static void main(String[] args) {

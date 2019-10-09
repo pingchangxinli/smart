@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 /**
  * @author haitao.li
  */
-@FeignClient(value = "smart-auth-server")
+@FeignClient(value = "SMART-AUTH-SERVER")
 public interface TokenClient {
     /**
      * 根据token获取

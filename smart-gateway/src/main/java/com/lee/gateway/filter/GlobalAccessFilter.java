@@ -60,7 +60,6 @@ public class GlobalAccessFilter implements GlobalFilter, Ordered {
         log.info("[GlobalAccessFilter] url: {},header:{},params:{}", request.getURI(), request.getHeaders(),
                 request.getQueryParams());
         putTenantIdInRequest(request);
-
         for (String s : authIgnored.getPath()) {
             if (pathMatcher.match(s, exchange.getRequest().getPath().value())) {
                 return chain.filter(exchange);
@@ -115,6 +114,8 @@ public class GlobalAccessFilter implements GlobalFilter, Ordered {
             strings = request.getQueryParams().get("access_token");
             if (strings != null) {
                 authToken = strings.get(0);
+                //将请求参数中的access_token赋值给请求头Authorization,否则在auth模块会被默认防火墙阻挡
+                request.mutate().header("Authorization",new String[]{"Bearer "+authToken});
             }
         }
 

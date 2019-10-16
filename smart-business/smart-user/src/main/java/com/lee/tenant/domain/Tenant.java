@@ -1,6 +1,7 @@
 package com.lee.tenant.domain;
 
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -8,6 +9,8 @@ import com.lee.common.business.EnabledStatus;
 import com.lee.common.core.BaseObject;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.time.LocalDateTime;
 
 /**
  * 租户
@@ -27,6 +30,10 @@ public class Tenant extends BaseObject {
      */
     private String name;
     /**
+     * 公司名称
+     */
+    private String companyName;
+    /**
      * 状态
      */
     private EnabledStatus status;
@@ -34,5 +41,9 @@ public class Tenant extends BaseObject {
      * 域名
      */
     private String domain;
+    /**
+     * 失效时间
+     */
+    private LocalDateTime expiryTime;
 
 }

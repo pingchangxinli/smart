@@ -1,7 +1,9 @@
 package com.lee.common.business;
 
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.baomidou.mybatisplus.core.enums.IEnum;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
 /**
@@ -32,6 +34,7 @@ public enum EnabledStatus implements IEnum<Integer> {
     }
 
     @Override
+    @JsonValue
     public Integer getValue() {
         return value;
     }

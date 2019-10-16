@@ -43,11 +43,11 @@ public class MenuController {
         logger.debug("[Menu controller] feign get user result: {}", baseResponse);
         ObjectMapper objectMapper = new ObjectMapper();
         LoginUser loginUser = objectMapper.convertValue(baseResponse.getData(), LoginUser.class);
-        if (logger.isDebugEnabled()) {
-            logger.debug("[Menu controller],get current user from token: {}", loginUser);
-        }
-        List<SysMenu> list = menuService.findMenusByUserId(loginUser.getId());
 
+        List<SysMenu> list = menuService.findMenusByUserId(loginUser.getId());
+        if (logger.isDebugEnabled()) {
+            logger.debug("[Menu controller],param:{},response:{}", accessToken,list);
+        }
         return BaseResponse.builder().data(MenuTreeUtil.buildMenuTree(list)).build();
     }
 

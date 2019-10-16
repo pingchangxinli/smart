@@ -1,3 +1,7 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
 spring:
   main:
     allow-bean-definition-overriding: true
@@ -38,8 +42,5 @@ logging:
   level:
     root: DEBUG
     com.lee.gateway: DEBUG
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+
 

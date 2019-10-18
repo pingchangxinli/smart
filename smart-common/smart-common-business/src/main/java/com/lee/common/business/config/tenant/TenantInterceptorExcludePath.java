@@ -1,7 +1,7 @@
 package com.lee.common.business.config.tenant;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 public class TenantInterceptorExcludePath {
 }

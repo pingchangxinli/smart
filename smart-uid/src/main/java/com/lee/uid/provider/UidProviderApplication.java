@@ -6,7 +6,7 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 @SpringBootApplication
 @EnableEurekaClient

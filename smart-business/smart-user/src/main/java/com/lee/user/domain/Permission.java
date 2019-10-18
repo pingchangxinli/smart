@@ -7,7 +7,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 @Data
 public class Permission {

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 @Service
 public interface SysUserRoleService extends IService<SysUserRole> {

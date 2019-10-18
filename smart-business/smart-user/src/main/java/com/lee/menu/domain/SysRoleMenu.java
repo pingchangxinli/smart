@@ -8,7 +8,7 @@ import com.lee.common.business.EnabledStatus;
 import lombok.Data;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 @Data
 @TableName("sys_role_menu")

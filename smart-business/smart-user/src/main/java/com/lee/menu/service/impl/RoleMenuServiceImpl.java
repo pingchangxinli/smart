@@ -7,7 +7,7 @@ import com.lee.menu.service.RoleMenuService;
 import org.springframework.stereotype.Service;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 @Service
 public class RoleMenuServiceImpl extends ServiceImpl<SysRoleMenuMapper, SysRoleMenu> implements RoleMenuService {

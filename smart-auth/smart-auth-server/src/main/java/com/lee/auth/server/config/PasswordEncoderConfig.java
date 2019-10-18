@@ -7,7 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * 密码加密处理配置
- * @author haitao.li
+ * @author lee.li
  */
 @Configuration
 public class PasswordEncoderConfig {

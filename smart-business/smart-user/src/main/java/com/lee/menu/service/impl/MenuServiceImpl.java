@@ -10,9 +10,6 @@ import com.lee.menu.service.MenuService;
 import com.lee.menu.service.RoleMenuService;
 import com.lee.user.domain.SysUserRole;
 import com.lee.user.mapper.SysUserRoleMapper;
-import org.apache.commons.collections.ArrayStack;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,11 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 @Service
 public class MenuServiceImpl implements MenuService {
-    private static final Logger logger = LoggerFactory.getLogger(MenuServiceImpl.class);
     @Resource
     private MenuMapper menuMapper;
     @Resource

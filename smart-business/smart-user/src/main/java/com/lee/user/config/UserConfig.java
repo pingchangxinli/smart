@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.sql.DataSource;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 public class UserConfig {
 //    @Autowired

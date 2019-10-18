@@ -3,9 +3,8 @@ package com.lee;
 import com.lee.common.core.Contants;
 import com.lee.tenant.domain.Tenant;
 import com.lee.tenant.service.TenantService;
-import org.mybatis.spring.annotation.MapperScan;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -24,6 +23,7 @@ import java.util.Map;
 /**
  * @author lee
  */
+
 @SpringBootApplication
 @EnableFeignClients
 @EnableEurekaClient
@@ -38,9 +38,9 @@ public class SmartUserApplication {
 /**
  * 服务启动完毕将租户信息加载进redis
  */
+@Slf4j
 @Component
 class TenantDomainInit implements ApplicationRunner {
-    private static final Logger logger = LoggerFactory.getLogger(TenantDomainInit.class);
     @Resource
     private TenantService service;
     @Autowired
@@ -48,9 +48,15 @@ class TenantDomainInit implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args){
         List<Tenant> list = service.list();
-        logger.info("get {} tenants from database",list.size());
-        Map<String,Tenant> map = new HashMap<>();
-        list.forEach(tenant -> map.put(tenant.getDomain(),tenant));
-        redisTemplate.opsForHash().putAll(Contants.TENANT_KEY,map);
+        if (CollectionUtils.isNotEmpty(list)) {
+            log.info("get " +list.size()+ " tenants from database");
+            Map<String,Tenant> map = new HashMap<>();
+            list.forEach(tenant -> map.put(tenant.getDomain(),tenant));
+            if (log.isDebugEnabled()) {
+                log.debug("Contants.TENANT_KEY:" +Contants.TENANT_KEY);
+            }
+            redisTemplate.opsForHash().putAll(Contants.TENANT_KEY,map);
+        }
+
     }
 }

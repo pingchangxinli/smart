@@ -11,7 +11,7 @@ import org.springframework.web.reactive.function.server.RouterFunctions;
 import javax.annotation.Resource;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 @Configuration
 public class RouteConfig {

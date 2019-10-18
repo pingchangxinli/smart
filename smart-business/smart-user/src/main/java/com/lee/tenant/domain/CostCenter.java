@@ -9,7 +9,7 @@ import lombok.Data;
 
 /**
  * 成本中心
- * @author haitao.li
+ * @author lee.li
  */
 @Data
 @TableName("sys_cost_center")

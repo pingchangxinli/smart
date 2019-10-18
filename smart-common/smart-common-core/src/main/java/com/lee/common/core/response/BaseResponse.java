@@ -1,5 +1,7 @@
 package com.lee.common.core.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.lee.common.core.enums.BaseResponseEnum;
 import lombok.Builder;
 import lombok.Data;
@@ -8,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import java.io.Serializable;
 
 /**
- * @author haitao.li
+ * @author lee.li
  * 基础相应信息
  **/
 @Data
@@ -28,12 +30,14 @@ public  class BaseResponse<T> implements Serializable {
      * 服务返回码
      */
     @Builder.Default
-    private String subCode = String.valueOf(HttpStatus.OK.value());
+    @JsonProperty("sub_code")
+    private String subCode;
     /**
      * 服务返回信息
      */
     @Builder.Default
-    private String subMsg = HttpStatus.OK.getReasonPhrase();
+    @JsonProperty("sub_msg")
+    private String subMsg;
 
     private T data;
 }

@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 import java.util.List;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 @Data
 @EqualsAndHashCode(callSuper=true)

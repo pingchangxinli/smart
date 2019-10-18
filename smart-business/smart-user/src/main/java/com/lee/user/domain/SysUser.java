@@ -10,7 +10,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * @author haitao.li
+ * @author lee.li
  * 用户信息类
  */
 @Data

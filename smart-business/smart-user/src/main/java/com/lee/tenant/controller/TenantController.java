@@ -2,31 +2,33 @@ package com.lee.tenant.controller;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.lee.common.business.EnabledStatus;
 import com.lee.common.core.exception.PageException;
 import com.lee.common.core.response.BaseResponse;
+import com.lee.tenant.TenantErrorEnum;
 import com.lee.tenant.domain.Tenant;
 import com.lee.tenant.exception.TenantExistedException;
 import com.lee.tenant.exception.TenantNotExistedException;
 import com.lee.tenant.service.TenantService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
  * 租户管理
  *
- * @author haitao.li
+ * @author lee.li
  */
+@Slf4j
 @RestController
 @RequestMapping("/tenant")
 public class TenantController {
-
-    private static final Logger logger = LoggerFactory.getLogger(TenantController.class);
     @Autowired
     private HttpServletRequest request;
     @Resource
@@ -38,6 +40,7 @@ public class TenantController {
      * http://127.0.0.1:8300/user-api/tenant?access_token=f09fba50-2ad2-432a-95dc-44e61160e1fa
      * {
      * "name":"1111",
+     * "company_name":"sdfasdfas",
      * "domain":"a.b.com"
      * }
      *
@@ -45,16 +48,15 @@ public class TenantController {
      * @return
      */
     @PostMapping
-    public BaseResponse createTenant(@RequestBody Tenant tenant) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("create Tenant,request tenant: {}", tenant);
+    public BaseResponse createTenant(@RequestBody Tenant tenant) throws TenantExistedException {
+        if (StringUtils.isEmpty(tenant.getDomain())) {
+            throw new IllegalArgumentException(TenantErrorEnum.DOMAIN_PARAM_NOT_EXISTED.getErrorDes());
         }
-        Integer count = null;
-        try {
-            count = tenantService.createTenant(tenant);
-        } catch (TenantExistedException | TenantNotExistedException e) {
-            logger.info("create tenant failed,tenant name:{},domain:{}", tenant.getName(), tenant.getDomain());
-        }
+        tenant.setStatus(EnabledStatus.ENABLED);
+        LocalDateTime localDateTime = LocalDateTime.now();
+        tenant.setCreateTime(localDateTime);
+        tenant.setUpdateTime(localDateTime);
+        Integer count = tenantService.createTenant(tenant);
         final BaseResponse build = BaseResponse.builder().data(count > 0 ? true : false).build();
         return build;
     }
@@ -67,8 +69,8 @@ public class TenantController {
      */
     @PutMapping
     public BaseResponse updateTenantById(@RequestBody Tenant tenant) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("update Tenant,request tenant: {}", tenant);
+        if (log.isDebugEnabled()) {
+            log.debug("update Tenant,request tenant: {}", tenant);
         }
         Integer count = tenantService.updateTenantById(tenant);
         return BaseResponse.builder().data(count).build();
@@ -81,8 +83,11 @@ public class TenantController {
      * @return 租户集合
      */
     @GetMapping("/list")
-    public BaseResponse list() {
-        List<Tenant> list = tenantService.list();
+    public BaseResponse list(Tenant tenant) {
+        if (log.isDebugEnabled()) {
+            log.debug("[Tenant contorller],tenant:{}",tenant);
+        }
+        List<Tenant> list = tenantService.list(tenant);
         return BaseResponse.builder().data(list).build();
     }
 
@@ -103,7 +108,7 @@ public class TenantController {
         try {
             list = tenantService.pageList(name, page, limit);
         } catch (PageException e) {
-            logger.error("query tenant page failed", e);
+            log.error("query tenant page failed", e);
         }
 
         return BaseResponse.builder().data(list).build();
@@ -123,7 +128,7 @@ public class TenantController {
         try {
             tenant = tenantService.findTenantById(Long.valueOf(id));
         } catch (TenantNotExistedException e) {
-            logger.info("tenant id:" + id + " not exist");
+            log.info("tenant id:" + id + " not exist");
         }
         return BaseResponse.builder().data(tenant).build();
     }
@@ -141,7 +146,7 @@ public class TenantController {
         try {
             tenant = tenantService.findTenantByDomain(domain);
         } catch (TenantNotExistedException e) {
-            logger.info("can not found tenant by domain:" + domain);
+            log.info("can not found tenant by domain:" + domain);
         }
         return BaseResponse.builder().data(tenant).build();
     }
@@ -160,7 +165,7 @@ public class TenantController {
         try {
             tenant = tenantService.findTenantByDomain(domain);
         } catch (TenantNotExistedException e) {
-            logger.info("can not found tenant id by domain:" + domain);
+            log.info("can not found tenant id by domain:" + domain);
         }
         return BaseResponse.builder().data(tenant.getId()).build();
     }

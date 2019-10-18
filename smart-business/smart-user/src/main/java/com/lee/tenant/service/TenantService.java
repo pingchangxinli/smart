@@ -1,6 +1,7 @@
 package com.lee.tenant.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.lee.common.business.EnabledStatus;
 import com.lee.common.core.exception.PageException;
 import com.lee.tenant.domain.Tenant;
 import com.lee.tenant.exception.TenantExistedException;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 public interface TenantService {
     /**
@@ -21,13 +22,14 @@ public interface TenantService {
      */
     List<Tenant> list();
 
+    List<Tenant> list(Tenant tenant);
     /**
      * 添加新租户
      *
      * @param tenant 租户
      * @return 添加条数
      */
-    Integer createTenant(Tenant tenant) throws TenantExistedException, TenantNotExistedException;
+    Integer createTenant(Tenant tenant) throws TenantExistedException;
 
     /**
      * 查询租户信息
@@ -61,5 +63,6 @@ public interface TenantService {
      * @return 更新条数
      */
     Integer updateTenantById(Tenant tenant);
+
 
 }

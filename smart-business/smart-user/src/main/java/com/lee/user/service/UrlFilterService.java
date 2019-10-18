@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 @Service
 @Transactional(rollbackFor = Exception.class)

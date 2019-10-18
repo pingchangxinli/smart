@@ -12,10 +12,9 @@ import com.lee.user.domain.SysUserRole;
 import com.lee.user.mapper.UserMapper;
 import com.lee.user.service.SysUserRoleService;
 import com.lee.user.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -27,12 +26,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
+@Slf4j
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class UserServiceImpl implements UserService {
-    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private static final String ERROR_ROLE_ARGUMENT_NOT_FOUND = "角色参数不存在";
     @Resource
     private UserMapper userMapper;
@@ -52,8 +51,8 @@ public class UserServiceImpl implements UserService {
         LoginUser loginUser = new LoginUser();
         SysUser sysUser = this.findUserByName(username);
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("get user from database is : {},enabled:{}", sysUser, sysUser.getStatus());
+        if (log.isDebugEnabled()) {
+            log.debug("get user from database is : {},enabled:{}", sysUser, sysUser.getStatus());
         }
         if (ObjectUtils.isNotEmpty(sysUser)) {
             List<SysRole> list = roleMapper.selectRoleList(sysUser.getId());

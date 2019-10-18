@@ -3,7 +3,7 @@ package com.lee.user.enums;
 /**
  * 用户服务响应码
  *
- * @author haitao.li
+ * @author lee.li
  */
 public enum UserResponseInfo {
 

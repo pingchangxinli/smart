@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 验证码生成逻辑
- * @author haitao.li
+ * @author lee.li
  */
 @Configuration
 @Slf4j

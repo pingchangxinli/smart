@@ -7,7 +7,7 @@ import com.lee.role.exception.RoleExistException;
 import java.util.List;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 public interface RoleService {
     /**

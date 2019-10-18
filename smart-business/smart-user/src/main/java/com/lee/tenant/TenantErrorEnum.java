@@ -1,7 +1,7 @@
 package com.lee.tenant;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 public enum TenantErrorEnum {
     /**
@@ -19,7 +19,11 @@ public enum TenantErrorEnum {
     /**
      * 域名错误
      */
-    DOMAIN_ERROR("DOMAIN_ERROR","域名错误");
+    DOMAIN_ERROR("DOMAIN_ERROR","域名错误"),
+    /**
+     * 域名参数缺失
+     */
+    DOMAIN_PARAM_NOT_EXISTED("DOMAIN_PARAM_NOT_EXISTED","域名参数缺失");
     /**
      * 错误代码
      */

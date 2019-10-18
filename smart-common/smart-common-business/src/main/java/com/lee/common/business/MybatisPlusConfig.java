@@ -4,11 +4,10 @@ import com.baomidou.mybatisplus.core.parser.ISqlParser;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.tenant.TenantHandler;
 import com.baomidou.mybatisplus.extension.plugins.tenant.TenantSqlParser;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
 import org.mybatis.spring.annotation.MapperScan;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,14 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 @Configuration
+@Slf4j
 @MapperScan({"com.lee.*.mapper", "com.lee.*.*.mapper"})
 public class MybatisPlusConfig {
     @Resource
     private HttpServletRequest request;
-    private static final Logger logger = LoggerFactory.getLogger(MybatisPlusConfig.class);
     /**
      * 分页插件
      */
@@ -44,7 +43,7 @@ public class MybatisPlusConfig {
                 // 从请求中获取租户ID
                 String tenantId = request.getHeader("X-TENANT-ID");
 
-                logger.info("Tenant interceptor get tenant id from request header:{}", tenantId);
+                log.info("Tenant interceptor get tenant id from request header:{}", tenantId);
 
                 return new LongValue(tenantId);
             }

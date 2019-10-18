@@ -6,7 +6,7 @@ import com.lee.tenant.exception.CostCenterExistedException;
 import com.lee.tenant.exception.CostCenterNotExistedException;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 public interface CostCenterService {
     /**

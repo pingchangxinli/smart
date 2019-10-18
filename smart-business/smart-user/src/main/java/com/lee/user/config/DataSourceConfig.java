@@ -1,8 +1,7 @@
 package com.lee.user.config;
 
 import com.zaxxer.hikari.HikariDataSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -11,16 +10,16 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
+@Slf4j
 @Configuration
 public class DataSourceConfig {
-    private static final Logger logger = LoggerFactory.getLogger(DataSourceConfig.class);
 
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource")
     public DataSource dataSource() {
-        logger.info("[dataSourceConfig] init datasource");
+        log.info("[dataSourceConfig] init datasource");
         return DataSourceBuilder.create().type(HikariDataSource.class).build();
     }
 }

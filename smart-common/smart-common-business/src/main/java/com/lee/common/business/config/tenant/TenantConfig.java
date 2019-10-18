@@ -3,9 +3,8 @@ package com.lee.common.business.config.tenant;
 import com.lee.common.core.Contants;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.common.core.util.JsonUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,8 +18,9 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * 租户配置文件,配置租户拦截器,
- * @author haitao.li
+ * @author lee.li
  */
+@Slf4j
 public class  TenantConfig extends WebMvcConfigurerAdapter {
     private final String[] excludePathPatterns = new String[]{"/tenant/**"};
     @Override
@@ -29,9 +29,8 @@ public class  TenantConfig extends WebMvcConfigurerAdapter {
         super.addInterceptors(registry);
     }
 }
-
+@Slf4j
 class TenantInterceptor extends HandlerInterceptorAdapter {
-    private static final Logger logger = LoggerFactory.getLogger(TenantInterceptor.class);
     @Resource
     private RedisTemplate redisTemplate;
     @Override
@@ -41,7 +40,7 @@ class TenantInterceptor extends HandlerInterceptorAdapter {
             return false;
         }
         String tenantId = request.getHeader(Contants.REQUEST_HEADER_TENANT_ID);
-        logger.debug("tenant interceptor,get tenant id from request header:{}",tenantId);
+        log.debug("tenant interceptor,get tenant id from request header:{}",tenantId);
         if (StringUtils.isEmpty(tenantId)) {
             BaseResponse baseResponse = BaseResponse.builder().subCode(String.valueOf(HttpStatus.BAD_REQUEST)).subMsg(
                     "无法获取租户信息").build();
@@ -54,7 +53,7 @@ class TenantInterceptor extends HandlerInterceptorAdapter {
             String threadName = Thread.currentThread().getName();
             String key = Contants.THREAD_DOMAIN_KEY + threadName;
             redisTemplate.opsForValue().set(key,tenantId);
-            logger.debug("put redis from request header,tenant id is :{}",redisTemplate.opsForValue().get(key));
+            log.debug("put redis from request header,tenant id is :{}",redisTemplate.opsForValue().get(key));
             return true;
         }
     }

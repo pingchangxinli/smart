@@ -1,7 +1,7 @@
 package com.lee.role.exception;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 public class RoleExistException extends Exception{
     public RoleExistException() {

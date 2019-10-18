@@ -6,9 +6,8 @@ import com.lee.common.core.response.BaseResponse;
 import com.lee.role.domain.SysRole;
 import com.lee.role.exception.RoleExistException;
 import com.lee.role.service.RoleService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,12 +17,12 @@ import java.util.List;
 /**
  * 角色
  *
- * @author haitao.li
+ * @author lee.li
  */
+@Slf4j
 @RestController
 @RequestMapping("/role")
 public class RoleController {
-    private static final Logger logger = LoggerFactory.getLogger(RoleController.class);
     @Resource
     private RoleService roleService;
 

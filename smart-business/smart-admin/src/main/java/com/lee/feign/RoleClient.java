@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 @FeignClient("SMART-USER")
 @RequestMapping("/role")

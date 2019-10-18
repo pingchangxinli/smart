@@ -1,7 +1,7 @@
 package com.lee.tenant.exception;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 public class TenantNotExistedException  extends Exception{
     public TenantNotExistedException() {

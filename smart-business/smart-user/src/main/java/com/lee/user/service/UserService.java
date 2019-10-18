@@ -7,7 +7,7 @@ import com.lee.user.domain.SysUser;
 
 /**
  * 参考JdbcUserDetailsManager
- * @author haitao.li
+ * @author lee.li
  */
 public interface UserService {
     /**

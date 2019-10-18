@@ -1,7 +1,7 @@
 package com.lee.gateway.exception;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 public class KaptchInvalidException extends Exception {
     public KaptchInvalidException() {

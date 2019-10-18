@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lee.tenant.domain.CostCenter;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 public interface CostCenterMapper extends BaseMapper<CostCenter> {
 }

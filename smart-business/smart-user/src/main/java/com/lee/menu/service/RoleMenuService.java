@@ -5,7 +5,7 @@ import com.lee.menu.domain.SysRoleMenu;
 import org.springframework.stereotype.Service;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 public interface RoleMenuService extends IService<SysRoleMenu> {
 }

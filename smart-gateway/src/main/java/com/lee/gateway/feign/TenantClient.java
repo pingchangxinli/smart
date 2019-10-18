@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 /**
  * 获取租户信息
  *
- * @author haitao.li
+ * @author lee.li
  */
 @FeignClient("SMART-USER")
 @RequestMapping("/tenant")

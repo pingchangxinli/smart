@@ -3,8 +3,8 @@ package com.lee.auth.server.config;
 import com.lee.common.core.enums.BaseResponseEnum;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.common.core.util.JsonUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.log;
+import org.slf4j.logFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,11 +14,11 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 
 /**
  * Exception处理配置类
- * @author haitao.li
+ * @author lee.li
  */
 @Configuration
 public class AuthExceptionHandlerConfig {
-    private static final Logger log = LoggerFactory.getLogger(AuthExceptionHandlerConfig.class);
+    private static final log log = logFactory.getlog(AuthExceptionHandlerConfig.class);
     /**
      * 该类配合SecurityConfig中
      *  http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);

@@ -11,7 +11,7 @@ import javax.websocket.server.PathParam;
 
 /**
  * 请求用户信息,该请求会将原始请求头信息传入user服务,请求头传入逻辑为: SecuringRequestInterceptor
- * @author haitao.li
+ * @author lee.li
  */
 @FeignClient("SMART-USER")
 @RequestMapping("/user")

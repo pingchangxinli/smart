@@ -6,7 +6,7 @@ import org.springframework.cloud.config.server.EnableConfigServer;
 
 /**
  * 配置服务
- * @author haitao.li
+ * @author lee.li
  */
 @SpringBootApplication
 @EnableConfigServer

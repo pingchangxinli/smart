@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * 获取用户角色
- * @author haitao.li
+ * @author lee.li
  */
 public interface RoleMapper extends BaseMapper<SysRole> {
     /**

@@ -4,29 +4,22 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lee.common.bussiness.domain.LoginUser;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.feign.TokenClient;
-import com.lee.role.domain.SysRole;
 import com.lee.user.domain.SysUser;
 import com.lee.user.service.UserService;
-import com.sun.corba.se.impl.oa.toa.TOA;
-import jdk.nashorn.internal.parser.Token;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @author haitao.li
  */
+@Slf4j
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-
     @Resource
     private UserService userService;
     @Resource
@@ -65,8 +58,8 @@ public class UserController {
                                  @RequestParam(value = "user_code",required = false) String userCode,
                                  @RequestParam(value = "user_name",required = false) String username) {
         IPage<SysUser> iPage = userService.pageList(current,limit,userCode,username);
-        if (logger.isDebugEnabled()) {
-            logger.debug("query user page, result is : {}",iPage);
+        if (log.isDebugEnabled()) {
+            log.debug("query user page, result is : {}",iPage);
         }
         return BaseResponse.builder().data(iPage).build();
     }
@@ -82,8 +75,8 @@ public class UserController {
         SysUser userDetails = userService.findUserByName(username);
 
         BaseResponse baseResponse = BaseResponse.builder().data(userDetails).build();
-        if (logger.isDebugEnabled()) {
-            logger.debug("find user by code,response is:{}, base Response data class is: {}", userDetails,
+        if (log.isDebugEnabled()) {
+            log.debug("find user by code,response is:{}, base Response data class is: {}", userDetails,
                     baseResponse.getData().getClass().getName());
 
         }
@@ -104,7 +97,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public BaseResponse disabledUserById(@PathVariable("id") Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        logger.debug(">>>>>>>>>>>>>>>"+authentication);
+        log.debug(">>>>>>>>>>>>>>>"+authentication);
         int count = userService.disabledUserById(id);
         return BaseResponse.builder().data(count).build();
     }

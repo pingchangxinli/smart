@@ -5,7 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 /**
- * @author haitao.li
+ * @author lee.li
  */
 @FeignClient(value = "SMART-AUTH-SERVER")
 public interface TokenClient {

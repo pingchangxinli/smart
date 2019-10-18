@@ -1,26 +1,17 @@
 package com.lee.common.core.config;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
  * Redis配置文件
- * @author haitao.li
+ * @author lee.li
  */
+@Slf4j
 public class RedisConfig {
 
-    private static final Logger logger = LoggerFactory.getLogger(RedisConfig.class);
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
         return new JedisConnectionFactory();
@@ -28,7 +19,7 @@ public class RedisConfig {
 
     @Bean
     public RedisTemplate<Object, Object> getRedisTemplate() {
-        logger.info("Loader RedisTemplate [RedisConfig]");
+        log.info("Loader RedisTemplate [RedisConfig]");
         RedisTemplate<Object, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(jedisConnectionFactory());
 

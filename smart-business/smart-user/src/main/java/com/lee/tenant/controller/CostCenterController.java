@@ -10,19 +10,18 @@ import com.lee.tenant.exception.CostCenterNotExistedException;
 import com.lee.tenant.exception.TenantNotExistedException;
 import com.lee.tenant.service.CostCenterService;
 import com.lee.tenant.service.TenantService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
+@Slf4j
 @RestController
 @RequestMapping("/costCenter")
 public class CostCenterController {
-    private static final Logger logger = LoggerFactory.getLogger(CostCenterController.class);
     private static final String ERROR_TENANT_NOT_FOUND = "未找到租户信息";
     @Resource
     private CostCenterService service;

@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 动态链接 & 角色 关系
- * @author haitao.li
+ * @author lee.li
  */
 @Mapper
 public interface RoleUrlFilterMapper {

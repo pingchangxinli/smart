@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 @Data
 @TableName(value = "oauth_client_details")

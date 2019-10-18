@@ -18,7 +18,7 @@ import org.springframework.web.reactive.function.server.RouterFunctions;
 
 /**
  * 网关启动类,将网关服务注册成为 服务配置客户端
- * @author haitao.li
+ * @author lee.li
  */
 @SpringBootApplication
 @EnableEurekaClient

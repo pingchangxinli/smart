@@ -8,20 +8,16 @@ import com.lee.role.exception.RoleExistException;
 import com.lee.role.mapper.RoleMapper;
 import com.lee.role.service.RoleService;
 import org.apache.commons.lang3.ObjectUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 @Service
 public class RoleServiceImpl implements RoleService {
-    private static final Logger logger = LoggerFactory.getLogger(RoleServiceImpl.class);
     private static final String ROLE_EXISTED = "系统中已存在该权限";
     @Resource
     private RoleMapper roleMapper;

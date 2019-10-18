@@ -7,7 +7,7 @@ import com.lee.user.service.SysUserRoleService;
 import org.springframework.stereotype.Service;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 @Service
 public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleMapper, SysUserRole> implements SysUserRoleService {

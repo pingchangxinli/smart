@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lee.menu.domain.SysRoleMenu;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 public interface SysRoleMenuMapper extends BaseMapper<SysRoleMenu> {
 }

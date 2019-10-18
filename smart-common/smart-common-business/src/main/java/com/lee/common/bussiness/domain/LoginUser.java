@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 @Data
 public class LoginUser implements UserDetails {

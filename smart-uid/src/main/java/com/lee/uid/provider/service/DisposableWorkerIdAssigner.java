@@ -23,8 +23,8 @@ import com.baidu.fsg.uid.worker.dao.WorkerNodeDAO;
 import com.baidu.fsg.uid.worker.entity.WorkerNodeEntity;
 import com.lee.uid.provider.mapper.WorkerNodeMapper;
 import org.apache.commons.lang.math.RandomUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.log;
+import org.slf4j.logFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +38,7 @@ import javax.annotation.Resource;
  */
 @Service
 public class DisposableWorkerIdAssigner implements WorkerIdAssigner {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DisposableWorkerIdAssigner.class);
+    private static final log log = logFactory.getlog(DisposableWorkerIdAssigner.class);
 
     @Resource
     private WorkerNodeMapper workerNodeMapper;
@@ -58,7 +58,7 @@ public class DisposableWorkerIdAssigner implements WorkerIdAssigner {
 
         // add worker node for new (ignore the same IP + PORT)
         workerNodeMapper.addWorkerNode(workerNodeEntity);
-        LOGGER.info("Add worker node:" + workerNodeEntity);
+        log.info("Add worker node:" + workerNodeEntity);
 
         return workerNodeEntity.getId();
     }

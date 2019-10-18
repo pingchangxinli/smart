@@ -6,7 +6,7 @@ import com.lee.menu.domain.SysRoleMenu;
 import javax.annotation.Resource;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 @Resource
 public interface RoleMenuMapper extends BaseMapper<SysRoleMenu> {

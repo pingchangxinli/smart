@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lee.user.domain.SysUserRole;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 public interface SysUserRoleMapper extends BaseMapper<SysUserRole> {
 }

@@ -8,8 +8,7 @@ import com.lee.menu.MenuTreeUtil;
 import com.lee.menu.domain.SysMenu;
 import com.lee.menu.service.MenuService;
 import com.lee.role.service.RoleService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -18,12 +17,12 @@ import java.util.List;
 /**
  * 菜单处理
  *
- * @author haitao.li
+ * @author lee.li
  */
+@Slf4j
 @RestController
 @RequestMapping("/menu")
 public class MenuController {
-    private static final Logger logger = LoggerFactory.getLogger(MenuController.class);
     @Resource
     private MenuService menuService;
     @Resource
@@ -40,13 +39,13 @@ public class MenuController {
     @GetMapping("/current")
     private BaseResponse findMenusByCurrentUser(@RequestParam("access_token") String accessToken) {
         BaseResponse baseResponse = tokenClient.findUserByAccessToken(accessToken);
-        logger.debug("[Menu controller] feign get user result: {}", baseResponse);
+        log.debug("[Menu controller] feign get user result: {}", baseResponse);
         ObjectMapper objectMapper = new ObjectMapper();
         LoginUser loginUser = objectMapper.convertValue(baseResponse.getData(), LoginUser.class);
 
         List<SysMenu> list = menuService.findMenusByUserId(loginUser.getId());
-        if (logger.isDebugEnabled()) {
-            logger.debug("[Menu controller],param:{},response:{}", accessToken,list);
+        if (log.isDebugEnabled()) {
+            log.debug("[Menu controller],param:{},response:{}", accessToken,list);
         }
         return BaseResponse.builder().data(MenuTreeUtil.buildMenuTree(list)).build();
     }

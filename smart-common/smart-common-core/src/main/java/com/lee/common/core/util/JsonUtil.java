@@ -8,7 +8,7 @@ import java.io.IOException;
 /**
  * fastxml json 工具类
  *
- * @author haitao.li
+ * @author lee.li
  */
 public class JsonUtil<T> {
     public static String toJson(Object object) throws JsonProcessingException {

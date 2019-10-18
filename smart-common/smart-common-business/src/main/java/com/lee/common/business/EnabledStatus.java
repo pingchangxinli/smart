@@ -9,7 +9,7 @@ import lombok.Getter;
 /**
  * 租户状态
  *
- * @author haitao.li
+ * @author lee.li
  */
 @Getter
 public enum EnabledStatus implements IEnum<Integer> {

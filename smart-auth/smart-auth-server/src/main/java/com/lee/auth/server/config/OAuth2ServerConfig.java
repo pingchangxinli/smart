@@ -30,7 +30,7 @@ import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 @SuppressWarnings("AlibabaClassNamingShouldBeCamel")
 @Configuration

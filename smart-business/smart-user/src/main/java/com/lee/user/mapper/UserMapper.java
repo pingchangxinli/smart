@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
 public interface UserMapper extends BaseMapper<SysUser> {
 }

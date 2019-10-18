@@ -9,19 +9,18 @@ import com.lee.tenant.exception.CostCenterExistedException;
 import com.lee.tenant.exception.CostCenterNotExistedException;
 import com.lee.tenant.mapper.CostCenterMapper;
 import com.lee.tenant.service.CostCenterService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
 /**
- * @author haitao.li
+ * @author lee.li
  */
+@Slf4j
 @Service
 public class CostCenterServiceImpl implements CostCenterService {
-    private static final Logger logger = LoggerFactory.getLogger(CostCenterServiceImpl.class);
     private static final String ERROR_NOT_EXIST = "系统中不存在该成本中心";
     private static final String ERROR_EXISTED = "系统中已存在该成本中心";
     private static final String ERROR_NEED_ID = "需要ID参数";
@@ -57,8 +56,8 @@ public class CostCenterServiceImpl implements CostCenterService {
         queryWrapper.like("tenant_id",tenantId);
 
         IPage<CostCenter> iPage = mapper.selectPage(page,queryWrapper);
-        if (logger.isDebugEnabled()) {
-            logger.debug("tenant service page result: {}", iPage);
+        if (log.isDebugEnabled()) {
+            log.debug("tenant service page result: {}", iPage);
         }
         return iPage;
     }

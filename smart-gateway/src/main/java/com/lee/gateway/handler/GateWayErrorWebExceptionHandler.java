@@ -19,6 +19,8 @@ import java.util.Map;
  */
 @Slf4j
 public class GateWayErrorWebExceptionHandler extends DefaultErrorWebExceptionHandler {
+    private static final String RESP_MESS_UNAUTHORIZED = "授权验证失败，请在请求参数中添加access_token" +
+            "或者header中添加Authorization";
     public GateWayErrorWebExceptionHandler(ErrorAttributes errorAttributes, ResourceProperties resourceProperties, ErrorProperties errorProperties, ApplicationContext applicationContext) {
         super(errorAttributes, resourceProperties, errorProperties, applicationContext);
     }
@@ -45,20 +47,27 @@ public class GateWayErrorWebExceptionHandler extends DefaultErrorWebExceptionHan
                 || error instanceof feign.FeignException.InternalServerError || error instanceof ResponseStatusException) {
             HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
             errorAttributes.put("status",status.value());
-            errorAttributes.put("subCode",status.value());
-            errorAttributes.put("subCode",error.getMessage());
+            errorAttributes.put("sub_code",status.value());
+            errorAttributes.put("sub_code",error.getMessage());
             return errorAttributes;
         }
         if (error instanceof IllegalArgumentException){
-            errorAttributes.put("subCode",HttpStatus.BAD_REQUEST.value());
+            errorAttributes.put("sub_code",HttpStatus.BAD_REQUEST.value());
             errorAttributes.put("subMsg",error.getMessage());
+            return errorAttributes;
+        }
+        if (error instanceof feign.FeignException.Unauthorized) {
+            HttpStatus status = HttpStatus.UNAUTHORIZED;
+            errorAttributes.put("status",status.value());
+            errorAttributes.put("sub_code",status.value());
+            errorAttributes.put("sub_code",RESP_MESS_UNAUTHORIZED);
             return errorAttributes;
         }
         if (error instanceof Exception) {
             HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
             errorAttributes.put("status",status.value());
-            errorAttributes.put("subCode",status.value());
-            errorAttributes.put("subCode",error.getMessage());
+            errorAttributes.put("sub_code",status.value());
+            errorAttributes.put("sub_code",error.getMessage());
             return errorAttributes;
         }
         return  errorAttributes;

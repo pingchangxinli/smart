@@ -1,8 +1,7 @@
 package com.lee.auth.server.config;
 
 import com.lee.auth.server.service.impl.AuthUserDetailsServiceImpl;
-import org.slf4j.log;
-import org.slf4j.logFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,10 +28,10 @@ import javax.sql.DataSource;
 /**
  * @author lee.li
  */
+@Slf4j
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final log log = logFactory.getlog(this.getClass());
     @Resource
     private DataSource dataSource;
     @Autowired

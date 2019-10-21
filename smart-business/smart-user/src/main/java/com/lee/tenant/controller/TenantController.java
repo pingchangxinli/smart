@@ -13,6 +13,7 @@ import com.lee.tenant.service.TenantService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -73,7 +74,9 @@ public class TenantController {
             log.debug("update Tenant,request tenant: {}", tenant);
         }
         Integer count = tenantService.updateTenantById(tenant);
-        return BaseResponse.builder().data(count).build();
+        HttpStatus httpStatus = HttpStatus.OK;
+        return BaseResponse.builder().data(count).subCode(String.valueOf(httpStatus.value()))
+                .subMsg(httpStatus.getReasonPhrase()).build();
     }
 
     /**

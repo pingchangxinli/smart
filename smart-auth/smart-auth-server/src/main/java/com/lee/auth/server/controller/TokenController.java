@@ -25,17 +25,18 @@ public class TokenController {
 
     /**
      *
-     * @param athorization
+     * @param token
      * @return
      */
     @GetMapping
-    public BaseResponse token(@RequestHeader("Authorization") String athorization) {
-        log.debug("Token controller,request.getRequestURI()：{},request.getContextPath():{},request.getServletPath():{}," +
-                        "request.getPathInfo():{}"
-                ,request.getRequestURI(),request.getContextPath(),request.getServletPath(),request.getPathInfo());
-        OAuth2AccessToken tokenObject = tokenStore.readAccessToken("token");
-        return BaseResponse.builder().data(tokenObject).build();
+    public BaseResponse token(@RequestParam("access_token") String token) {
+        OAuth2AccessToken tokenObject = tokenStore.readAccessToken(token);
 
+        BaseResponse baseResponse = BaseResponse.builder().data(tokenObject).build();
+        if (log.isDebugEnabled()) {
+            log.debug("Token controller method token,response:"+baseResponse);
+        }
+        return baseResponse;
     }
 
     /**

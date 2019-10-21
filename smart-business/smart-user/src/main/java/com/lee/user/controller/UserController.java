@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author haitao.li
@@ -24,6 +25,17 @@ public class UserController {
     private UserService userService;
     @Resource
     private TokenClient tokenClient;
+
+    /**
+     * 租户下的所有用户
+     * @param tenant
+     * @return
+     */
+    @RequestMapping("/tenant")
+    public BaseResponse findUsersOfCurrentTenant() {;
+        List<SysUser> list =  userService.findUsersOfCurrentTenant();
+        return BaseResponse.builder().data(list).build();
+    }
     /**
      * http://127.0.0.1:8300/user-api/user?access_token=abfe4ce3-1043-4499-bfab-2671322f04a1
      * {"name":"costcenter1","password":"c112","user_code":"sdfa","cost_center_id":1,"roles":[1,4]}
@@ -40,6 +52,12 @@ public class UserController {
         }
 
     }
+
+    /**
+     * 当前用户信息
+     * @param accessToken token
+     * @return 用户信息
+     */
     @GetMapping("/currentUser")
     public BaseResponse currentUser(@RequestParam("access_token") String accessToken){
         BaseResponse baseResponse = tokenClient.findUserByAccessToken(accessToken);
@@ -97,7 +115,6 @@ public class UserController {
     @DeleteMapping("/{id}")
     public BaseResponse disabledUserById(@PathVariable("id") Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.debug(">>>>>>>>>>>>>>>"+authentication);
         int count = userService.disabledUserById(id);
         return BaseResponse.builder().data(count).build();
     }

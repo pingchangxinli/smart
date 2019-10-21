@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lee.common.bussiness.domain.LoginUser;
 import com.lee.user.domain.SysUser;
 
+import java.util.List;
+
 /**
  * 参考JdbcUserDetailsManager
  * @author lee.li
@@ -39,4 +41,10 @@ public interface UserService {
      * @return
      */
     Integer disabledUserById(Long id);
+
+    /**
+     * 查询出租户下的所有用户
+     * @return 用户集合
+     */
+    List<SysUser> findUsersOfCurrentTenant();
 }

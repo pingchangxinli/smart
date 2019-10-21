@@ -53,11 +53,14 @@ public class GlobalAccessFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-
         ServerHttpRequest request = exchange.getRequest();
+
         log.info("[GlobalAccessFilter] url: {},header:{},params:{}", request.getURI(), request.getHeaders(),
                 request.getQueryParams());
+
+        //根据域名获取租户信息
         putTenantIdInRequest(request);
+
         for (String s : authIgnored.getPath()) {
             if (pathMatcher.match(s, exchange.getRequest().getPath().value())) {
                 return chain.filter(exchange);
@@ -66,12 +69,18 @@ public class GlobalAccessFilter implements GlobalFilter, Ordered {
 
         //获取access token
         String accessToken = extractToken(request);
-        BaseResponse baseResponse =  tokenClient.token(accessToken);
-        log.debug("[GlobalAccessFilter] get user info by access token:{}",baseResponse);
 
+         /*
+         * 该接口调用必须要header中Authorization，
+         */
+        BaseResponse baseResponse =  tokenClient.token(Contants.AUTHORIZATION_PRE + accessToken,
+                accessToken);
+        if (log.isDebugEnabled()) {
+            log.debug("[Global access filter] tokenClient.token:"+baseResponse);
+        }
         Map<String,Object> map = (Map<String, Object>) baseResponse.getData();
-        boolean isValid = (Integer)map.get("expires_in") > 0 ? true : false;
-        log.debug("expires_in is : {} > 0 ? {}", map.get("expires_in"),isValid);
+        boolean isValid = (map != null && (Integer)map.get("expires_in") > 0) ? true : false;
+
         if (isValid) {
             return chain.filter(exchange);
         } else {
@@ -82,7 +91,6 @@ public class GlobalAccessFilter implements GlobalFilter, Ordered {
             String message = "";
             try {
                 message = JsonUtil.toJson(response);
-                log.debug("[AccessFilter] token invalid,return message:{}", message);
             } catch (JsonProcessingException e) {
                 log.error("[GATEWAY],response no token: {}", e);
             }
@@ -105,15 +113,13 @@ public class GlobalAccessFilter implements GlobalFilter, Ordered {
         List<String> strings = request.getHeaders().get("Authorization");
         String authToken = null;
         if (strings != null) {
-            authToken = strings.get(0).substring("Bearer".length()).trim();
+            authToken = strings.get(0).substring(Contants.AUTHORIZATION_PRE.length());
         }
 
         if (StringUtils.isBlank(authToken)) {
             strings = request.getQueryParams().get("access_token");
             if (strings != null) {
                 authToken = strings.get(0);
-                //将请求参数中的access_token赋值给请求头Authorization,否则在auth模块会被默认防火墙阻挡
-                request.mutate().header("Authorization",new String[]{"Bearer "+authToken});
             }
         }
 

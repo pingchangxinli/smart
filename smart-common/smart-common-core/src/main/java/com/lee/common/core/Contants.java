@@ -24,4 +24,8 @@ public class Contants {
      * 每页条数
      */
     public static final String PARAM_LIMIT = "limit";
+    /**
+     * 授权header 前缀
+     */
+    public static final String AUTHORIZATION_PRE = "Bearer ";
 }

@@ -2,8 +2,7 @@ package com.lee.auth.server.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lee.common.core.util.JsonUtil;
-import org.slf4j.log;
-import org.slf4j.logFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.oauth2.common.exceptions.InvalidClientException;
 import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
@@ -20,9 +19,9 @@ import java.util.List;
 /**
  * @author lee.li
  */
+@Slf4j
 public class RedisClientDetailService extends JdbcClientDetailsService {
     private static final String REDIS_KEY = "oauth_client_details";
-    private static final log log = logFactory.getlog(RedisClientDetailService.class);
     @Resource
     private SysClientService sysClientService;
 

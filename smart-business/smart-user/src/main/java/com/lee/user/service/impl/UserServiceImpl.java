@@ -115,4 +115,10 @@ public class UserServiceImpl implements UserService {
         return userMapper.updateById(sysUser);
     }
 
+    @Override
+    public List<SysUser> findUsersOfCurrentTenant() {
+        List<SysUser> list = userMapper.selectList(null);
+        return list;
+    }
+
 }

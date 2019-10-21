@@ -3,6 +3,7 @@ package com.lee.gateway.feign;
 import com.lee.common.core.response.BaseResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 /**
  * @author lee.li
@@ -15,6 +16,7 @@ public interface TokenClient {
      * @return
      */
     @GetMapping(value = "/token")
-    BaseResponse token(@RequestParam("access_token") String token);
+    BaseResponse token(@RequestHeader("Authorization") String authorization,
+                       @RequestParam("access_token") String token);
 
 }

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lee.common.business.EnabledStatus;
+import com.lee.common.core.BaseObject;
 import lombok.Data;
 
 /**
@@ -13,16 +14,12 @@ import lombok.Data;
  */
 @Data
 @TableName("sys_cost_center")
-public class CostCenter {
+public class CostCenter extends BaseObject {
     /**
      * 主键
      */
     @TableId(type = IdType.AUTO)
     private Long id;
-    /**
-     * 租户自定义代码，唯一
-     */
-    private String code;
     /**
      * 成本中心名称
      */

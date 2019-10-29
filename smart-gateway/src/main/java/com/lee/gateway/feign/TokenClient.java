@@ -8,15 +8,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 /**
  * @author lee.li
  */
-@FeignClient(value = "SMART-AUTH-SERVER")
+@FeignClient(value = "SMART-AUTH")
 public interface TokenClient {
     /**
      * 根据token获取
-     * @param token
+     * @param authorization 授权码
      * @return
      */
     @GetMapping(value = "/token")
-    BaseResponse token(@RequestHeader("Authorization") String authorization,
-                       @RequestParam("access_token") String token);
+    BaseResponse token(@RequestHeader("Authorization") String authorization);
 
 }

@@ -73,10 +73,9 @@ public class GlobalAccessFilter implements GlobalFilter, Ordered {
          /*
          * 该接口调用必须要header中Authorization，
          */
-        BaseResponse baseResponse =  tokenClient.token(Contants.AUTHORIZATION_PRE + accessToken,
-                accessToken);
+        BaseResponse baseResponse = tokenClient.token(Contants.AUTHORIZATION_PRE + accessToken);
         if (log.isDebugEnabled()) {
-            log.debug("[Global access filter] tokenClient.token:"+baseResponse);
+            log.debug("[GlobalAccessFilter] tokenClient.token:" + baseResponse);
         }
         Map<String,Object> map = (Map<String, Object>) baseResponse.getData();
         boolean isValid = (map != null && (Integer)map.get("expires_in") > 0) ? true : false;
@@ -98,7 +97,6 @@ public class GlobalAccessFilter implements GlobalFilter, Ordered {
             DataBuffer buffer = httpResponse.bufferFactory().wrap(bits);
             httpResponse.setStatusCode(HttpStatus.UNAUTHORIZED);
             httpResponse.getHeaders().add("Content-Type", "application/json;charset=UTF-8");
-
             return httpResponse.writeWith(Mono.just(buffer));
         }
     }

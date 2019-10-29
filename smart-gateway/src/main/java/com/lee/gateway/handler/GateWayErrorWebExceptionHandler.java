@@ -1,5 +1,7 @@
 package com.lee.gateway.handler;
 
+import com.lee.common.core.enums.BaseResponseEnum;
+import com.lee.common.core.response.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
@@ -37,37 +39,40 @@ public class GateWayErrorWebExceptionHandler extends DefaultErrorWebExceptionHan
         // 这里其实可以根据异常类型进行定制化逻辑
         Throwable error = super.getError(request);
         Map<String, Object> errorAttributes = new HashMap<>(8);
-        errorAttributes.put("status",HttpStatus.OK.value());
-        errorAttributes.put("code",HttpStatus.OK.value());
-        errorAttributes.put("msg",HttpStatus.OK.getReasonPhrase());
+        BaseResponseEnum baseResponse = BaseResponseEnum.SUCCESS;
+        errorAttributes.put("status", baseResponse.getCode());
+        errorAttributes.put("code", baseResponse.getCode());
+        errorAttributes.put("msg", baseResponse.getMessage());
         errorAttributes.put("data", null);
-        log.error("exception handler path: {},method:{},exception name:{};",request.path(),request.methodName(),
+        log.error("[GatewayErrorWebExceptionHandler],path: {},method:{},exception name:{};",
+                request.path(),
+                request.methodName(),
                 error.getClass().getName(),error);
         if ( error instanceof feign.RetryableException ||  error instanceof SocketTimeoutException
                 || error instanceof feign.FeignException.InternalServerError || error instanceof ResponseStatusException) {
             HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
             errorAttributes.put("status",status.value());
             errorAttributes.put("sub_code",status.value());
-            errorAttributes.put("sub_code",error.getMessage());
+            errorAttributes.put("sub_msg", error.getMessage());
             return errorAttributes;
         }
         if (error instanceof IllegalArgumentException){
             errorAttributes.put("sub_code",HttpStatus.BAD_REQUEST.value());
-            errorAttributes.put("subMsg",error.getMessage());
+            errorAttributes.put("sub_msg", error.getMessage());
             return errorAttributes;
         }
         if (error instanceof feign.FeignException.Unauthorized) {
             HttpStatus status = HttpStatus.UNAUTHORIZED;
             errorAttributes.put("status",status.value());
             errorAttributes.put("sub_code",status.value());
-            errorAttributes.put("sub_code",RESP_MESS_UNAUTHORIZED);
+            errorAttributes.put("sub_msg", RESP_MESS_UNAUTHORIZED);
             return errorAttributes;
         }
         if (error instanceof Exception) {
             HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
             errorAttributes.put("status",status.value());
             errorAttributes.put("sub_code",status.value());
-            errorAttributes.put("sub_code",error.getMessage());
+            errorAttributes.put("sub_msg", error.getMessage());
             return errorAttributes;
         }
         return  errorAttributes;

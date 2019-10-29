@@ -30,7 +30,7 @@ public class PasswordFilter extends AbstractGatewayFilterFactory {
     private String aseIv;
     private static final String PAPRAM_PASSWORD = "password";
 
-    public String decode(String pass) {
+    private String decode(String pass) {
         AES aes = new AES(Mode.CBC, Padding.PKCS5Padding,
                 new SecretKeySpec(aseKey.getBytes(), "AES"),
                 new IvParameterSpec(aseIv.getBytes()));

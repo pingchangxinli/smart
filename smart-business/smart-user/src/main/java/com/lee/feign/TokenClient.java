@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 /**
  * @author lee.li
  */
-@FeignClient("SMART-AUTH-SERVER")
+@FeignClient("SMART-AUTH")
 public interface TokenClient {
     @GetMapping("/token/user")
     BaseResponse findUserByAccessToken(@RequestParam("access_token") String accessToken);

@@ -43,8 +43,9 @@ public interface UserService {
     Integer disabledUserById(Long id);
 
     /**
-     * 查询出租户下的所有用户
-     * @return 用户集合
+     * 查询用户列表
+     * @param sysUser
+     * @return
      */
-    List<SysUser> findUsersOfCurrentTenant();
+    List<SysUser> findUsers(SysUser sysUser);
 }

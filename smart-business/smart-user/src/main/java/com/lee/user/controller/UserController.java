@@ -9,6 +9,7 @@ import com.lee.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -28,12 +29,15 @@ public class UserController {
 
     /**
      * 租户下的所有用户
-     * @param tenant
+     * @param sysUser
      * @return
      */
-    @RequestMapping("/tenant")
-    public BaseResponse findUsersOfCurrentTenant() {;
-        List<SysUser> list =  userService.findUsersOfCurrentTenant();
+    @RequestMapping("/list")
+    public BaseResponse findUsers(SysUser sysUser) {
+        if (log.isDebugEnabled()) {
+            log.debug("[user controller] findUsers,params:" + sysUser);
+        }
+        List<SysUser> list = userService.findUsers(sysUser);
         return BaseResponse.builder().data(list).build();
     }
     /**
@@ -44,6 +48,12 @@ public class UserController {
      */
     @PostMapping
     public BaseResponse createUser(@RequestBody SysUser user) {
+        if (log.isDebugEnabled()) {
+            log.debug("[user controller] createUser request params:" + user);
+        }
+        String passwordEncode = passwordEncode(user.getPassword());
+
+        user.setPassword(passwordEncode);
         boolean isSuccess = userService.createUser(user);
         if(isSuccess) {
             return BaseResponse.builder().build();
@@ -51,6 +61,18 @@ public class UserController {
             return BaseResponse.builder().subCode("999").subMsg("新增用户失败").build();
         }
 
+    }
+
+    /**
+     * 加密用户密码
+     *
+     * @param password 明文
+     * @return
+     */
+    private String passwordEncode(String password) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String passwordEncoder = bCryptPasswordEncoder.encode(password);
+        return passwordEncoder;
     }
 
     /**
@@ -89,7 +111,7 @@ public class UserController {
      * @return 用户信息
      */
     @GetMapping
-    public BaseResponse findUserByUserCode(@RequestParam("username") String username) {
+    public BaseResponse findUserByUserName(@RequestParam("username") String username) {
         SysUser userDetails = userService.findUserByName(username);
 
         BaseResponse baseResponse = BaseResponse.builder().data(userDetails).build();

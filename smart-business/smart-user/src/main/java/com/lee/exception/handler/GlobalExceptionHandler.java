@@ -69,6 +69,7 @@ public class GlobalExceptionHandler {
         return response(status,e);
     }
     private BaseResponse response(HttpStatus status,Exception e) {
+        log.error("[GlobalExceptionHandler.response]", e);
         return BaseResponse.builder().subCode(String.valueOf(status.value()))
                 .subMsg(e.getLocalizedMessage()).build();
     }

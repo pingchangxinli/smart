@@ -3,6 +3,7 @@ package com.lee.tenant.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lee.common.business.EnabledStatus;
 import com.lee.common.core.response.BaseResponse;
+import com.lee.tenant.TenantErrorEnum;
 import com.lee.tenant.domain.CostCenter;
 import com.lee.tenant.domain.Tenant;
 import com.lee.tenant.exception.CostCenterExistedException;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author lee.li
@@ -22,29 +24,36 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/costCenter")
 public class CostCenterController {
-    private static final String ERROR_TENANT_NOT_FOUND = "未找到租户信息";
     @Resource
     private CostCenterService service;
     @Resource
     private TenantService tenantService;
 
     /**
-     * http://127.0.0.1:8300/user-api/costCenter?access_token=52af721c-9425-4fee-a46b-8fee4f068ec8
-     * {"name":"costcenter1","code":"c11"}
-     * 新增成本中心
+     * 查询成本中心列表
      *
+     * @param costCenter
+     * @return
+     */
+    @GetMapping
+    public BaseResponse findCostCenter(CostCenter costCenter) {
+        if (log.isDebugEnabled()) {
+            log.debug("[CostCenterController.findCostCenter]  request params: " + costCenter);
+        }
+        List<CostCenter> list = service.findCostCenter(costCenter);
+        return BaseResponse.builder().data(list).build();
+    }
+    /**
+     * http://127.0.0.1:8300/user-api/costCenter?access_token=52af721c-9425-4fee-a46b-8fee4f068ec8
+     * {"name":"costcenter1"}
+     * 新增成本中心
      * @param costCenter 成本中心
      * @return 新增条数
      */
     @PostMapping
-    public BaseResponse createCostCenter(@RequestBody CostCenter costCenter,
-                                         @RequestHeader("X-TENANT-ID") Long tenantId)
-            throws CostCenterExistedException, TenantNotExistedException {
-        if (tenantId == null || tenantId.longValue() <= 0) {
-            throw new TenantNotExistedException(ERROR_TENANT_NOT_FOUND);
-        }
-        costCenter.setTenantId(tenantId);
-        costCenter.setEnabled(EnabledStatus.ENABLED);
+    public BaseResponse createCostCenter(@RequestBody CostCenter costCenter)
+            throws CostCenterExistedException {
+        costCenter.setStatus(EnabledStatus.ENABLED);
         int count = service.createCostCenter(costCenter);
         return BaseResponse.builder().data(count).build();
     }
@@ -90,8 +99,8 @@ public class CostCenterController {
     @GetMapping(value = "/page", params = {"page", "limit"})
     public BaseResponse findCostCenterByTenantId(@RequestHeader("X-TENANT-ID") Long tenantId, int page, int limit)
             throws TenantNotExistedException {
-        if (tenantId == null || tenantId.longValue() <= 0) {
-            throw new TenantNotExistedException(ERROR_TENANT_NOT_FOUND);
+        if (tenantId == null || tenantId <= 0) {
+            throw new TenantNotExistedException(TenantErrorEnum.NOT_EXISTED.getErrorCode());
         }
         Tenant tenant = tenantService.findTenantById(tenantId);
         IPage<CostCenter> iPage = service.pageList(tenantId, page, limit);

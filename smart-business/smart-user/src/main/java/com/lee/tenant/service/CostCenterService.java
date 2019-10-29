@@ -5,6 +5,8 @@ import com.lee.tenant.domain.CostCenter;
 import com.lee.tenant.exception.CostCenterExistedException;
 import com.lee.tenant.exception.CostCenterNotExistedException;
 
+import java.util.List;
+
 /**
  * @author lee.li
  */
@@ -23,13 +25,7 @@ public interface CostCenterService {
      */
     CostCenter findCostCenterById(Long id);
 
-    /**
-     * 租户自定义code查询成本中心
-     * @param code 自定义code
-     * @param tenantId 租户ID
-     * @return 成本中心
-     */
-    CostCenter findCostCenterByCode(String code,Long tenantId);
+
 
     /**
      * 分页查询成本中心
@@ -47,4 +43,12 @@ public interface CostCenterService {
      * @throws CostCenterNotExistedException
      */
     Integer updateCostCenterById(CostCenter costCenter) throws CostCenterNotExistedException;
+
+    /**
+     * 成本中心列表
+     *
+     * @param costCenter
+     * @return
+     */
+    List<CostCenter> findCostCenter(CostCenter costCenter);
 }

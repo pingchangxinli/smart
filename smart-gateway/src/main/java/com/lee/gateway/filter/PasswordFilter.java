@@ -21,6 +21,9 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+/**
+ * @author lee.li
+ */
 @Slf4j
 @Component
 public class PasswordFilter extends AbstractGatewayFilterFactory {

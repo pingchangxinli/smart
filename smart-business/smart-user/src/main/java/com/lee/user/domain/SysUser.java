@@ -21,11 +21,11 @@ public class SysUser {
      **/
     private Long id;
     /**
-     * 用户自定义Code
+     * 中文名称
      */
-    @JsonProperty("user_code")
-    @TableField("user_code")
-    private String userCode;
+    @JsonProperty("chinese_name")
+    @TableField("chinese_name")
+    private String chineseName;
     /**
      * 用户名
      **/
@@ -33,7 +33,6 @@ public class SysUser {
     /**
      * 密码
      **/
-    @JsonIgnore
     private String password;
     /**
      * 邮箱

@@ -13,6 +13,7 @@ import com.lee.user.mapper.UserMapper;
 import com.lee.user.service.SysUserRoleService;
 import com.lee.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -71,6 +72,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean createUser(SysUser user){
+
         user.setStatus(EnabledStatus.ENABLED);
         int count = userMapper.insert(user);
         List<SysUserRole> list =  user.getRoles().stream().map(roleId -> {
@@ -116,9 +118,39 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<SysUser> findUsersOfCurrentTenant() {
-        List<SysUser> list = userMapper.selectList(null);
-        return list;
+    public List<SysUser> findUsers(SysUser sysUser) {
+        QueryWrapper<SysUser> queryWrapper = createQueryWhere(sysUser);
+        return userMapper.selectList(queryWrapper);
     }
 
+    /**
+     * 创建查询用户Where条件
+     *
+     * @param sysUser 用户实体类
+     * @return 查询条件
+     */
+    private QueryWrapper<SysUser> createQueryWhere(SysUser sysUser) {
+        QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
+        Long id = sysUser.getId();
+        if (id != null && id > 0) {
+            queryWrapper.eq("id", id);
+        }
+        EnabledStatus status = sysUser.getStatus();
+        if (status != null) {
+            queryWrapper.eq("status", status.getValue());
+        }
+        String username = sysUser.getUsername();
+        if (StringUtils.isNotEmpty(username)) {
+            queryWrapper.like("username", username);
+        }
+        String email = sysUser.getEmail();
+        if (StringUtils.isNotEmpty(email)) {
+            queryWrapper.eq("email", email);
+        }
+        String phone = sysUser.getPhone();
+        if (StringUtils.isNotEmpty(phone)) {
+            queryWrapper.eq("phone", phone);
+        }
+        return queryWrapper;
+    }
 }

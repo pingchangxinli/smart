@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lee.common.business.EnabledStatus;
+import com.lee.common.core.Pagination;
 import com.lee.common.core.exception.PageException;
 import com.lee.tenant.TenantErrorEnum;
 import com.lee.tenant.domain.Tenant;
@@ -124,13 +125,23 @@ public class TenantServiceImpl implements TenantService {
     }
 
     @Override
-    public IPage<Tenant> pageList(String name,Integer currentPage,Integer limit) throws PageException {
+    public IPage<Tenant> pageList(Tenant tenant, Pagination pagination) throws PageException {
 
-        Page<Tenant> page = new Page<>(currentPage, limit);
+        Page<Tenant> page = new Page<>(pagination.getCurrent(), pagination.getPageSize());
 
         QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.like("name",name);
-
+        String name = tenant.getName();
+        if (StringUtils.isNotEmpty(name)) {
+            queryWrapper.like("name", name);
+        }
+        String domain = tenant.getDomain();
+        if (StringUtils.isNotEmpty(domain)) {
+            queryWrapper.like("domain", domain);
+        }
+        EnabledStatus status = tenant.getStatus();
+        if (status != null) {
+            queryWrapper.eq("status", status);
+        }
         IPage<Tenant> iPage = tenantMapper.selectPage(page,queryWrapper);
         if (log.isDebugEnabled()) {
             log.debug("tenant service page result: {}", iPage);

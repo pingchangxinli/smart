@@ -50,8 +50,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         UserDetailsService userDetailsService =  new AuthUserDetailsServiceImpl(dataSource);
         log.info("[SecurityConfig.userDetailsService] init " + userDetailsService);
 
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        String finalPassword = "{bcrypt}" + bCryptPasswordEncoder.encode("password");
+//        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+//        String finalPassword = "{bcrypt}" + bCryptPasswordEncoder.encode("password");
 
         return userDetailsService;
     }

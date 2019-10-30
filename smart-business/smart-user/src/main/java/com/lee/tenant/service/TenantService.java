@@ -2,6 +2,7 @@ package com.lee.tenant.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lee.common.business.EnabledStatus;
+import com.lee.common.core.Pagination;
 import com.lee.common.core.exception.PageException;
 import com.lee.tenant.domain.Tenant;
 import com.lee.tenant.exception.TenantExistedException;
@@ -55,7 +56,7 @@ public interface TenantService {
      * @return
      * @throws PageException
      */
-    IPage<Tenant> pageList(String name,Integer page,Integer limit) throws PageException;
+    IPage<Tenant> pageList(Tenant tenant, Pagination pagination) throws PageException;
 
     /**
      * 修改租户信息

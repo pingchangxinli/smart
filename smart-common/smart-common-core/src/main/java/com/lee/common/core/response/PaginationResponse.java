@@ -1,5 +1,7 @@
-package com.lee.common.core;
+package com.lee.common.core.response;
 
+import com.lee.common.core.Pagination;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,10 +12,11 @@ import java.util.List;
  * @author lee.li
  */
 @Data
+@AllArgsConstructor
 @Builder
-public class PageResult<T> {
+public class PaginationResponse<T> {
     /** 总数量 **/
     private Pagination pagination;
     /**结果集合**/
-    private List<T> data;
+    private List<T> list;
 }

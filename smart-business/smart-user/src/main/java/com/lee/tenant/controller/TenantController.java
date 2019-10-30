@@ -3,8 +3,11 @@ package com.lee.tenant.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lee.common.business.EnabledStatus;
+import com.lee.common.core.Pagination;
 import com.lee.common.core.exception.PageException;
 import com.lee.common.core.response.BaseResponse;
+import com.lee.common.core.response.PaginationResponse;
+import com.lee.common.core.util.IPageToPaginationResponse;
 import com.lee.tenant.TenantErrorEnum;
 import com.lee.tenant.domain.Tenant;
 import com.lee.tenant.exception.TenantExistedException;
@@ -13,6 +16,7 @@ import com.lee.tenant.service.TenantService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -85,6 +89,7 @@ public class TenantController {
      *
      * @return 租户集合
      */
+    @Deprecated
     @GetMapping("/list")
     public BaseResponse list(Tenant tenant) {
         if (log.isDebugEnabled()) {
@@ -95,26 +100,21 @@ public class TenantController {
     }
 
     /**
-     * http://127.0.0.1:8300/user-api/tenant/page?access_token=be60825d-f94a-48dd-ba1d-b6dde0ff3329&page=1&limit=20
-     * &name=nam
-     * 分页查询
-     *
-     * @param page  当前页数
-     * @param limit 每页条数
-     * @param name  租户名称模糊查询
+     * 分页查询租户信息
+     * @param pagination 分页信息
+     * @param tenant 查询条件
      * @return 分页查询结果
      */
-    @GetMapping(value = "/page", params = {"page", "limit", "name"})
-    public BaseResponse pageList(Integer page, Integer limit, String name) {
-
+    @GetMapping(value = "/page")
+    public BaseResponse pageList(Pagination pagination, Tenant tenant) {
         IPage<Tenant> list = null;
         try {
-            list = tenantService.pageList(name, page, limit);
+            list = tenantService.pageList(tenant, pagination);
         } catch (PageException e) {
             log.error("query tenant page failed", e);
         }
-
-        return BaseResponse.builder().data(list).build();
+        PaginationResponse<Tenant> paginationResponse = IPageToPaginationResponse.convertIPageToPagination(list);
+        return BaseResponse.builder().data(paginationResponse).build();
 
     }
 

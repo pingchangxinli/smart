@@ -21,7 +21,7 @@ public class IPageToPaginationResponse {
         Pagination pagination = new Pagination();
         pagination.setCurrent(iPage.getCurrent());
         pagination.setTotal(iPage.getTotal());
-        pagination.setPageSize(iPage.getPages());
+        pagination.setPageSize(iPage.getSize());
         PaginationResponse<T> response = new PaginationResponse<T>(pagination, iPage.getRecords());
         return response;
     }

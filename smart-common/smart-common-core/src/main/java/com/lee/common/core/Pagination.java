@@ -9,6 +9,6 @@ import lombok.Data;
 @Data
 public class Pagination {
     private Long total;
-    private Long current;
-    private Long pageSize;
+    private Long current = 1L;
+    private Long pageSize = 10L;
 }

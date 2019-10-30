@@ -50,9 +50,8 @@ public interface TenantService {
 
     /**
      * 按照条件分页查询租户信息
-     * @param name 租户名称
-     * @param page 当前页数
-     * @param limit 每页条数
+     * @param tenant 住户条件
+     * @param pagination 分页条件
      * @return
      * @throws PageException
      */

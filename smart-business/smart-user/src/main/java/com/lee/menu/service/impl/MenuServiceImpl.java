@@ -1,7 +1,7 @@
 package com.lee.menu.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.lee.common.business.EnabledStatus;
+import com.lee.common.business.enums.EnabledStatusEnum;
 import com.lee.menu.domain.SysMenu;
 import com.lee.menu.domain.SysRoleMenu;
 import com.lee.menu.mapper.MenuMapper;
@@ -31,7 +31,7 @@ public class MenuServiceImpl implements MenuService {
     private RoleMenuService roleMenuService;
     @Override
     public Integer createMenu(SysMenu sysMenu) {
-        sysMenu.setEnabled(EnabledStatus.ENABLED);
+        sysMenu.setEnabled(EnabledStatusEnum.ENABLED);
         return menuMapper.insert(sysMenu);
     }
 
@@ -50,7 +50,7 @@ public class MenuServiceImpl implements MenuService {
         roles.forEach(roleId -> {
             SysRoleMenu sysRoleMenu = new SysRoleMenu();
             sysRoleMenu.setMenuId(id);
-            sysRoleMenu.setEnabled(EnabledStatus.ENABLED);
+            sysRoleMenu.setEnabled(EnabledStatusEnum.ENABLED);
             sysRoleMenu.setRoleId(roleId);
             roleMenuMapper.insert(sysRoleMenu);
         });

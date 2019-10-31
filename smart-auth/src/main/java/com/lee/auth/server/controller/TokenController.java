@@ -1,6 +1,6 @@
 package com.lee.auth.server.controller;
 
-import com.lee.common.bussiness.domain.LoginUser;
+import com.lee.common.business.domain.LoginUser;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.common.core.util.WebUtil;
 import lombok.extern.slf4j.Slf4j;

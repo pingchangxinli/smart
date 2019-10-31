@@ -2,12 +2,16 @@ package com.lee.gateway.filter;
 
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.codec.Base64Decoder;
+import cn.hutool.core.codec.Base64Encoder;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.HexUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.symmetric.AES;
 import cn.hutool.http.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.util.encoders.Hex;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -34,10 +38,13 @@ public class PasswordFilter extends AbstractGatewayFilterFactory {
     private static final String PAPRAM_PASSWORD = "password";
 
     private String decode(String pass) {
+        if (log.isDebugEnabled()) {
+            log.debug("pass:{},aseKey:{},aseIv:{}", pass, aseKey, aseIv);
+        }
         AES aes = new AES(Mode.CBC, Padding.PKCS5Padding,
                 new SecretKeySpec(aseKey.getBytes(), "AES"),
                 new IvParameterSpec(aseIv.getBytes()));
-        byte[] result = aes.decrypt(Base64.decode(pass.getBytes(StandardCharsets.UTF_8)));
+        byte[] result = aes.decrypt(HexUtil.decodeHex(pass.toCharArray()));
         return new String(result, StandardCharsets.UTF_8);
     }
 

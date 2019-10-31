@@ -3,12 +3,12 @@ package com.lee.tenant.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.lee.common.business.EnabledStatus;
+import com.lee.common.business.enums.EnabledStatusEnum;
 import com.lee.common.core.Pagination;
 import com.lee.common.core.exception.PageException;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.common.core.response.PaginationResponse;
-import com.lee.common.core.util.IPageToPaginationResponse;
+import com.lee.common.business.util.IPageToPaginationResponse;
 import com.lee.common.core.util.JsonUtil;
 import com.lee.tenant.TenantErrorEnum;
 import com.lee.tenant.domain.Tenant;
@@ -59,7 +59,7 @@ public class TenantController {
         if (StringUtils.isEmpty(tenant.getDomain())) {
             throw new IllegalArgumentException(TenantErrorEnum.DOMAIN_PARAM_NOT_EXISTED.getErrorDes());
         }
-        tenant.setStatus(EnabledStatus.ENABLED);
+        tenant.setStatus(EnabledStatusEnum.ENABLED);
         LocalDateTime localDateTime = LocalDateTime.now();
         tenant.setCreateTime(localDateTime);
         tenant.setUpdateTime(localDateTime);

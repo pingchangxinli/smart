@@ -33,7 +33,7 @@ spring:
       timeout: 0
 logging:
   level:
-    root: DEBUG
+    root: INFO
     com.lee.gateway: DEBUG
 web:
   password:

@@ -1,7 +1,7 @@
 package com.lee.tenant.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.lee.common.business.EnabledStatus;
+import com.lee.common.business.enums.EnabledStatusEnum;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.tenant.TenantErrorEnum;
 import com.lee.tenant.domain.CostCenter;
@@ -53,7 +53,7 @@ public class CostCenterController {
     @PostMapping
     public BaseResponse createCostCenter(@RequestBody CostCenter costCenter)
             throws CostCenterExistedException {
-        costCenter.setStatus(EnabledStatus.ENABLED);
+        costCenter.setStatus(EnabledStatusEnum.ENABLED);
         int count = service.createCostCenter(costCenter);
         return BaseResponse.builder().data(count).build();
     }

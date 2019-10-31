@@ -3,8 +3,8 @@ package com.lee.user.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.lee.common.business.EnabledStatus;
-import com.lee.common.bussiness.domain.LoginUser;
+import com.lee.common.business.enums.EnabledStatusEnum;
+import com.lee.common.business.domain.LoginUser;
 import com.lee.role.domain.SysRole;
 import com.lee.role.mapper.RoleMapper;
 import com.lee.user.domain.SysUser;
@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean createUser(SysUser user){
 
-        user.setStatus(EnabledStatus.ENABLED);
+        user.setStatus(EnabledStatusEnum.ENABLED);
         int count = userMapper.insert(user);
         List<SysUserRole> list =  user.getRoles().stream().map(roleId -> {
             SysUserRole sysUserRole = new SysUserRole();
@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Integer disabledUserById(Long id) {
         SysUser sysUser = new SysUser();
-        sysUser.setStatus(EnabledStatus.DISABLED);
+        sysUser.setStatus(EnabledStatusEnum.DISABLED);
         sysUser.setId(id);
         return userMapper.updateById(sysUser);
     }
@@ -135,7 +135,7 @@ public class UserServiceImpl implements UserService {
         if (id != null && id > 0) {
             queryWrapper.eq("id", id);
         }
-        EnabledStatus status = sysUser.getStatus();
+        EnabledStatusEnum status = sysUser.getStatus();
         if (status != null) {
             queryWrapper.eq("status", status.getValue());
         }

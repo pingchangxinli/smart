@@ -2,7 +2,7 @@ package com.lee.user.service;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.lee.common.bussiness.domain.LoginUser;
+import com.lee.common.business.domain.LoginUser;
 import com.lee.user.domain.SysUser;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.lee.auth.server.feign;
 
-import com.lee.common.bussiness.domain.LoginUser;
+import com.lee.common.business.domain.LoginUser;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 

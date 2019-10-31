@@ -1,4 +1,4 @@
-package com.lee.common.business;
+package com.lee.common.business.enums;
 
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
@@ -12,7 +12,7 @@ import lombok.Getter;
  * @author lee.li
  */
 @Getter
-public enum EnabledStatus implements IEnum<Integer> {
+public enum EnabledStatusEnum implements IEnum<Integer> {
     /**
      * 启用
      */
@@ -28,7 +28,7 @@ public enum EnabledStatus implements IEnum<Integer> {
      */
     private String description;
 
-    EnabledStatus(Integer value, String description) {
+    EnabledStatusEnum(Integer value, String description) {
         this.value = value;
         this.description = description;
     }

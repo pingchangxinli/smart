@@ -2,7 +2,7 @@ package com.lee.auth.server.service.impl;
 
 
 import com.lee.auth.server.feign.UserClient;
-import com.lee.common.bussiness.domain.LoginUser;
+import com.lee.common.business.domain.LoginUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

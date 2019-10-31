@@ -2,9 +2,8 @@ package com.lee.user.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lee.common.business.EnabledStatus;
+import com.lee.common.business.enums.EnabledStatusEnum;
 import lombok.Data;
 
 import java.util.List;
@@ -59,7 +58,7 @@ public class SysUser {
      * 是否可用
      **/
     @TableField("enabled")
-    private EnabledStatus status;
+    private EnabledStatusEnum status;
     /**
      * 用户角色集合
      */

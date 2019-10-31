@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.Query;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.lee.common.business.EnabledStatus;
+import com.lee.common.business.enums.EnabledStatusEnum;
 import com.lee.tenant.domain.CostCenter;
 import com.lee.tenant.domain.Tenant;
 import com.lee.tenant.exception.CostCenterExistedException;
@@ -82,7 +82,7 @@ public class CostCenterServiceImpl implements CostCenterService {
                 queryWrapper.like("name", name);
             }
 
-            EnabledStatus status = costCenter.getStatus();
+            EnabledStatusEnum status = costCenter.getStatus();
 
             if (status != null) {
                 queryWrapper.eq("status", status.getValue());

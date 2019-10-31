@@ -1,7 +1,7 @@
 package com.lee.menu.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lee.common.bussiness.domain.LoginUser;
+import com.lee.common.business.domain.LoginUser;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.feign.TokenClient;
 import com.lee.menu.MenuTreeUtil;

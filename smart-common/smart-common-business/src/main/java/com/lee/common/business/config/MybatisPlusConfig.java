@@ -1,4 +1,4 @@
-package com.lee.common.business;
+package com.lee.common.business.config;
 
 import com.baomidou.mybatisplus.core.parser.ISqlParser;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;

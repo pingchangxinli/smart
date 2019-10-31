@@ -1,4 +1,4 @@
-package com.lee.common.core.util;
+package com.lee.common.business.util;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lee.common.core.Pagination;

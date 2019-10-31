@@ -1,7 +1,7 @@
 package com.lee.user.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.lee.common.bussiness.domain.LoginUser;
+import com.lee.common.business.domain.LoginUser;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.feign.TokenClient;
 import com.lee.user.domain.SysUser;

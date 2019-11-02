@@ -22,6 +22,7 @@ spring:
         - Path=/user-api/**
         filters:
         - StripPrefix=1 # 表示在转发时去掉user api
+        - PasswordFilter # 密码处理
   redis:
     host: localhost
     port: 6379

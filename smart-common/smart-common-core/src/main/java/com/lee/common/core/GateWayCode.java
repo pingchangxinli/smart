@@ -1,11 +1,11 @@
-package com.lee.common.core.enums;
+package com.lee.common.core;
 
 /**
  * 网关返回状态
  *
  * @author: lee.li
  **/
-public enum BaseResponseEnum {
+public enum GateWayCode {
     /**
      *交易成功
      */
@@ -31,8 +31,7 @@ public enum BaseResponseEnum {
     private String message;
 
 
-
-    BaseResponseEnum(String code, String message) {
+    GateWayCode(String code, String message) {
         this.code = code;
         this.message = message;
     }

@@ -1,11 +1,9 @@
 package com.lee.common.core.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.lee.common.core.enums.BaseResponseEnum;
+import com.lee.common.core.GateWayCode;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.http.HttpStatus;
 
 import java.io.Serializable;
 
@@ -20,12 +18,12 @@ public  class BaseResponse<T> implements Serializable {
      * 网关返回码
      */
     @Builder.Default
-    private String code = BaseResponseEnum.SUCCESS.getCode();
+    private String code = GateWayCode.SUCCESS.getCode();
     /**
      * 网关返回码描述
      */
     @Builder.Default
-    private String msg =BaseResponseEnum.SUCCESS.getMessage();
+    private String msg = GateWayCode.SUCCESS.getMessage();
     /**
      * 服务返回码
      */

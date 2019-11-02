@@ -3,7 +3,7 @@ package com.lee.common.business.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.lee.common.business.enums.EnabledStatusEnum;
+import com.lee.common.business.EnabledStatus;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -34,7 +34,7 @@ public class LoginUser implements UserDetails {
     /**
      * 是否启用
      */
-    private EnabledStatusEnum status;
+    private EnabledStatus status;
 
     private List<String> roles;
     private Set<GrantedAuthority> authorities;
@@ -78,7 +78,7 @@ public class LoginUser implements UserDetails {
     @JsonIgnore
     @Override
     public boolean isEnabled() {
-        if (EnabledStatusEnum.ENABLED.equals(status)) {
+        if (EnabledStatus.ENABLED.equals(status)) {
             return true;
         } else {
             return false;

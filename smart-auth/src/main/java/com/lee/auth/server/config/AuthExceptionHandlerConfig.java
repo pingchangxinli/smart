@@ -1,6 +1,6 @@
 package com.lee.auth.server.config;
 
-import com.lee.common.core.enums.BaseResponseEnum;
+import com.lee.common.core.GateWayCode;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.common.core.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class AuthExceptionHandlerConfig {
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return (request, response, authException) -> {
             log.error("url: {},exception:{}",request.getRequestURI(),authException);
-            BaseResponseEnum responseEnum = BaseResponseEnum.SUCCESS;
+            GateWayCode responseEnum = GateWayCode.SUCCESS;
             HttpStatus status = HttpStatus.UNAUTHORIZED;
             BaseResponse response1 =
                     BaseResponse.builder().code(responseEnum.getCode()).msg(responseEnum.getMessage())

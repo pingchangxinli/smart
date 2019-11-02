@@ -1,8 +1,7 @@
-package com.lee.common.business.enums;
+package com.lee.common.business;
 
-
-import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.baomidou.mybatisplus.core.enums.IEnum;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
@@ -12,7 +11,7 @@ import lombok.Getter;
  * @author lee.li
  */
 @Getter
-public enum EnabledStatusEnum implements IEnum<Integer> {
+public enum EnabledStatus implements IEnum<Integer> {
     /**
      * 启用
      */
@@ -28,11 +27,10 @@ public enum EnabledStatusEnum implements IEnum<Integer> {
      */
     private String description;
 
-    EnabledStatusEnum(Integer value, String description) {
+    EnabledStatus(Integer value, String description) {
         this.value = value;
         this.description = description;
     }
-
     @Override
     @JsonValue
     public Integer getValue() {
@@ -42,4 +40,5 @@ public enum EnabledStatusEnum implements IEnum<Integer> {
     public String getDescription() {
         return description;
     }
+
 }

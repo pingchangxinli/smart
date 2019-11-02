@@ -1,6 +1,7 @@
 package com.lee.tenant.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.lee.common.core.Pagination;
 import com.lee.tenant.domain.CostCenter;
 import com.lee.tenant.exception.CostCenterExistedException;
 import com.lee.tenant.exception.CostCenterNotExistedException;
@@ -27,14 +28,6 @@ public interface CostCenterService {
 
 
 
-    /**
-     * 分页查询成本中心
-     * @param tenantId 租户Id
-     * @param page 当前页码
-     * @param limit 每页条数
-     * @return
-     */
-    IPage<CostCenter> pageList(long tenantId, int page, int limit);
 
     /**
      * 根据ID更新成本中心
@@ -51,4 +44,13 @@ public interface CostCenterService {
      * @return
      */
     List<CostCenter> findCostCenter(CostCenter costCenter);
+
+    /**
+     * 分页查询成本中心
+     *
+     * @param pagination
+     * @param costCenter
+     * @return
+     */
+    IPage<CostCenter> pageList(Pagination pagination, CostCenter costCenter);
 }

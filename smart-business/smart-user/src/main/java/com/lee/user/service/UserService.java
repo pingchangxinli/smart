@@ -3,7 +3,10 @@ package com.lee.user.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lee.common.business.domain.LoginUser;
+import com.lee.common.core.Pagination;
 import com.lee.user.domain.SysUser;
+import com.lee.user.domain.SysUserRequest;
+import com.lee.user.domain.SysUserResponse;
 
 import java.util.List;
 
@@ -31,9 +34,16 @@ public interface UserService {
      * @param user
      * @return
      */
-    boolean createUser(SysUser user);
+    boolean createUser(SysUserRequest user);
 
-    IPage<SysUser> pageList(Integer page, Integer limit, String userCode, String username);
+    /**
+     * 分页查询用户信息
+     *
+     * @param pagination 分页
+     * @param sysUser    用户
+     * @return 分页用户信息
+     */
+    IPage<SysUserResponse> pageList(Pagination pagination, SysUser sysUser);
 
     /**
      * 作废用户
@@ -48,4 +58,6 @@ public interface UserService {
      * @return
      */
     List<SysUser> findUsers(SysUser sysUser);
+
+    int updateUserById(SysUserRequest sysUserRequest);
 }

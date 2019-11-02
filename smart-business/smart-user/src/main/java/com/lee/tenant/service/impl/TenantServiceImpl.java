@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.lee.common.business.enums.EnabledStatusEnum;
+import com.lee.common.business.EnabledStatus;
 import com.lee.common.core.Pagination;
 import com.lee.common.core.exception.PageException;
 import com.lee.tenant.TenantErrorEnum;
@@ -57,7 +57,7 @@ public class TenantServiceImpl implements TenantService {
         if (StringUtils.isNotEmpty(domain)) {
             wrapper.like("domain",domain);
         }
-        EnabledStatusEnum status = tenant.getStatus();
+        EnabledStatus status = tenant.getStatus();
         if (status != null) {
             wrapper.eq("status",status);
         }
@@ -138,7 +138,7 @@ public class TenantServiceImpl implements TenantService {
         if (StringUtils.isNotEmpty(domain)) {
             queryWrapper.like("domain", domain);
         }
-        EnabledStatusEnum status = tenant.getStatus();
+        EnabledStatus status = tenant.getStatus();
         if (status != null) {
             queryWrapper.eq("status", status);
         }

@@ -1,12 +1,11 @@
 package com.lee.tenant.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.Query;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.lee.common.business.enums.EnabledStatusEnum;
+import com.lee.common.business.EnabledStatus;
+import com.lee.common.core.Pagination;
 import com.lee.tenant.domain.CostCenter;
-import com.lee.tenant.domain.Tenant;
 import com.lee.tenant.exception.CostCenterExistedException;
 import com.lee.tenant.exception.CostCenterNotExistedException;
 import com.lee.tenant.mapper.CostCenterMapper;
@@ -42,16 +41,21 @@ public class CostCenterServiceImpl implements CostCenterService {
 
 
     @Override
-    public IPage<CostCenter> pageList(long tenantId, int currentPage, int limit) {
-        Page<CostCenter> page = new Page<>(currentPage, limit);
+    public IPage<CostCenter> pageList(Pagination pagination, CostCenter costCenter) {
+        Page<CostCenter> page = new Page<>(pagination.getCurrent(), pagination.getPageSize());
 
         QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.like("tenant_id",tenantId);
 
-        IPage<CostCenter> iPage = mapper.selectPage(page,queryWrapper);
-        if (log.isDebugEnabled()) {
-            log.debug("tenant service page result: {}", iPage);
+        String name = costCenter.getName();
+        if (StringUtils.isNotEmpty(name)) {
+            queryWrapper.like("name", name);
         }
+        EnabledStatus status = costCenter.getStatus();
+        if (status != null) {
+            queryWrapper.eq("status", status.getValue());
+        }
+        IPage<CostCenter> iPage = mapper.selectPage(page,queryWrapper);
+
         return iPage;
     }
 
@@ -82,7 +86,7 @@ public class CostCenterServiceImpl implements CostCenterService {
                 queryWrapper.like("name", name);
             }
 
-            EnabledStatusEnum status = costCenter.getStatus();
+            EnabledStatus status = costCenter.getStatus();
 
             if (status != null) {
                 queryWrapper.eq("status", status.getValue());

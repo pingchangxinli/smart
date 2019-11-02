@@ -3,7 +3,7 @@ package com.lee.tenant.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.lee.common.business.enums.EnabledStatusEnum;
+import com.lee.common.business.EnabledStatus;
 import com.lee.common.core.Pagination;
 import com.lee.common.core.exception.PageException;
 import com.lee.common.core.response.BaseResponse;
@@ -50,7 +50,7 @@ public class TenantController {
         if (StringUtils.isEmpty(tenant.getDomain())) {
             throw new IllegalArgumentException(TenantErrorEnum.DOMAIN_PARAM_NOT_EXISTED.getErrorDes());
         }
-        tenant.setStatus(EnabledStatusEnum.ENABLED);
+        tenant.setStatus(EnabledStatus.ENABLED);
         LocalDateTime localDateTime = LocalDateTime.now();
         tenant.setCreateTime(localDateTime);
         tenant.setUpdateTime(localDateTime);

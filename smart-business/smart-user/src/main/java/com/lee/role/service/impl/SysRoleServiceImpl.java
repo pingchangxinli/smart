@@ -6,8 +6,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lee.role.domain.SysRole;
 import com.lee.role.exception.RoleExistException;
 import com.lee.role.mapper.RoleMapper;
-import com.lee.role.service.RoleService;
+import com.lee.role.service.SysRoleService;
+import com.lee.user.domain.SysUser;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -17,7 +19,7 @@ import java.util.List;
  * @author lee.li
  */
 @Service
-public class RoleServiceImpl implements RoleService {
+public class SysRoleServiceImpl implements SysRoleService {
     private static final String ROLE_EXISTED = "系统中已存在该权限";
     @Resource
     private RoleMapper roleMapper;
@@ -68,9 +70,9 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<SysRole> findRoleByCode(List<String> codes) {
-        QueryWrapper<SysRole> queryWrapper = new QueryWrapper<>();
-        queryWrapper.in("code",codes);
-        return roleMapper.selectList(queryWrapper);
+    public List<SysRole> findAllRoles() {
+        return roleMapper.selectList(null);
     }
+
+
 }

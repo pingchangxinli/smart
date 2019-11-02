@@ -3,17 +3,24 @@ package com.lee.user.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.lee.common.business.enums.EnabledStatusEnum;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.lee.common.business.EnabledStatus;
 import com.lee.common.business.domain.LoginUser;
+import com.lee.common.core.Pagination;
+import com.lee.common.core.util.JsonUtil;
 import com.lee.role.domain.SysRole;
 import com.lee.role.mapper.RoleMapper;
+import com.lee.role.service.SysRoleService;
+import com.lee.tenant.domain.CostCenter;
+import com.lee.tenant.service.CostCenterService;
 import com.lee.user.domain.SysUser;
+import com.lee.user.domain.SysUserRequest;
+import com.lee.user.domain.SysUserResponse;
 import com.lee.user.domain.SysUserRole;
 import com.lee.user.mapper.UserMapper;
 import com.lee.user.service.SysUserRoleService;
 import com.lee.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -39,7 +46,11 @@ public class UserServiceImpl implements UserService {
     @Resource
     private RoleMapper roleMapper;
     @Resource
+    private SysRoleService sysRoleService;
+    @Resource
     private SysUserRoleService sysUserRoleService;
+    @Resource
+    private CostCenterService costCenterService;
 
     @Override
     public SysUser findUserByName(String username) {
@@ -58,7 +69,7 @@ public class UserServiceImpl implements UserService {
         if (ObjectUtils.isNotEmpty(sysUser)) {
             List<SysRole> list = roleMapper.selectRoleList(sysUser.getId());
 
-            BeanUtils.copyProperties(sysUser,loginUser);
+            BeanUtils.copyProperties(sysUser, loginUser);
             List<String> roles = new ArrayList<>();
             list.forEach(sysRole -> {
                 roles.add(sysRole.getCode());
@@ -71,14 +82,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean createUser(SysUser user){
-
-        user.setStatus(EnabledStatusEnum.ENABLED);
+    public boolean createUser(SysUserRequest userRequest) {
+        //新增用户信息
+        SysUser user = new SysUser();
+        user.setStatus(EnabledStatus.ENABLED);
+        BeanUtils.copyProperties(userRequest, user);
         int count = userMapper.insert(user);
-        List<SysUserRole> list =  user.getRoles().stream().map(roleId -> {
+        //增加用户角色
+        List<SysUserRole> list = userRequest.getRoles().stream().map(roleId -> {
             SysUserRole sysUserRole = new SysUserRole();
             sysUserRole.setRoleId(roleId);
-            sysUserRole.setUserId(user.getId());
+            sysUserRole.setUserId(userRequest.getId());
             return sysUserRole;
         }).collect(Collectors.toList());
 
@@ -86,33 +100,43 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public IPage<SysUser> pageList(Integer currentPage, Integer limit, String userCode, String username) {
-        Page<SysUser> page = new Page<>(currentPage,limit);
-        QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
-        if (StringUtils.isNotEmpty(userCode)) {
-            queryWrapper.like("user_code", userCode);
-        }
-        if (StringUtils.isNotEmpty(username)){
-            queryWrapper.like("user_name",username);
-        }
-        IPage<SysUser> iPage  = userMapper.selectPage(page,queryWrapper);
+    public IPage<SysUserResponse> pageList(Pagination pagination, SysUser sysUser) {
+
+
+        Page<SysUser> page = new Page<>(pagination.getCurrent(), pagination.getPageSize());
+
+        QueryWrapper<SysUser> queryWrapper = createQueryWhere(sysUser);
+
+        IPage<SysUser> iPage = userMapper.selectPage(page, queryWrapper);
+        //用户权限集合
         List<SysUser> list = iPage.getRecords();
-        List<Long> roleIdList = new ArrayList<>();
-        list.forEach(sysUser -> {
-            List<SysRole> listTmp = roleMapper.selectRoleList(sysUser.getId());
-            listTmp.forEach(temp -> {
-                roleIdList.add(temp.getId());
-            });
-            sysUser.setRoles(roleIdList);
+
+        List<SysUserResponse> responseList = new ArrayList<>();
+        list.stream().forEach(sysUser1 -> {
+            //用户角色
+            List<SysRole> roles = sysRoleService.findRoleByUserId(sysUser1.getId());
+            SysUserResponse sysUserResponse = new SysUserResponse();
+            BeanUtils.copyProperties(sysUser1, sysUserResponse);
+            sysUserResponse.setRoles(roles);
+            //用户所在成本中心详情
+            CostCenter costCenter = costCenterService.findCostCenterById(sysUser1.getCostCenterId());
+            if (log.isDebugEnabled()) {
+                log.debug("[UserService] costCenter id:{},costCenter:{}", sysUser1.getCostCenterId(),
+                        costCenter);
+            }
+            sysUserResponse.setCostCenter(costCenter);
+            responseList.add(sysUserResponse);
         });
-        return iPage;
+        IPage<SysUserResponse> returnIpage = new Page<>(iPage.getCurrent(), iPage.getSize(), iPage.getTotal());
+        returnIpage.setRecords(responseList);
+        return returnIpage;
 
     }
 
     @Override
     public Integer disabledUserById(Long id) {
         SysUser sysUser = new SysUser();
-        sysUser.setStatus(EnabledStatusEnum.DISABLED);
+        sysUser.setStatus(EnabledStatus.DISABLED);
         sysUser.setId(id);
         return userMapper.updateById(sysUser);
     }
@@ -121,6 +145,24 @@ public class UserServiceImpl implements UserService {
     public List<SysUser> findUsers(SysUser sysUser) {
         QueryWrapper<SysUser> queryWrapper = createQueryWhere(sysUser);
         return userMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public int updateUserById(SysUserRequest sysUserRequest) {
+        //更新用户信息
+        SysUser sysUser = new SysUser();
+        BeanUtils.copyProperties(sysUserRequest, sysUser);
+        int count = userMapper.updateById(sysUser);
+        //更新用户角色
+        QueryWrapper<SysUserRole> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", sysUserRequest.getId());
+        sysUserRoleService.remove(queryWrapper);
+        sysUserRequest.getRoles().stream().forEach(role -> {
+            SysUserRole sysUserRole = new SysUserRole();
+            sysUserRole.setUserId(sysUserRequest.getId());
+        });
+
+        return 0;
     }
 
     /**
@@ -135,13 +177,13 @@ public class UserServiceImpl implements UserService {
         if (id != null && id > 0) {
             queryWrapper.eq("id", id);
         }
-        EnabledStatusEnum status = sysUser.getStatus();
+        EnabledStatus status = sysUser.getStatus();
         if (status != null) {
             queryWrapper.eq("status", status.getValue());
         }
         String username = sysUser.getUsername();
         if (StringUtils.isNotEmpty(username)) {
-            queryWrapper.like("username", username);
+            queryWrapper.eq("username", username);
         }
         String email = sysUser.getEmail();
         if (StringUtils.isNotEmpty(email)) {

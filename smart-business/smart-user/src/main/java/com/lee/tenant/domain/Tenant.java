@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lee.common.business.enums.EnabledStatusEnum;
+import com.lee.common.business.EnabledStatus;
 import com.lee.common.core.BaseObject;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -37,7 +37,7 @@ public class Tenant extends BaseObject {
     /**
      * 状态
      */
-    private EnabledStatusEnum status;
+    private EnabledStatus status;
     /**
      * 域名
      */

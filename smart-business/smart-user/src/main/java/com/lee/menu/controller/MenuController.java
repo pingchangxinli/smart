@@ -7,7 +7,7 @@ import com.lee.feign.TokenClient;
 import com.lee.menu.MenuTreeUtil;
 import com.lee.menu.domain.SysMenu;
 import com.lee.menu.service.MenuService;
-import com.lee.role.service.RoleService;
+import com.lee.role.service.SysRoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +28,7 @@ public class MenuController {
     @Resource
     private TokenClient tokenClient;
     @Resource
-    private RoleService roleService;
+    private SysRoleService roleService;
 
     /**
      * http://127.0.0.1:8300/user-api/menu/current?access_token=8667c329-4011-436b-a6dd-26177368379f

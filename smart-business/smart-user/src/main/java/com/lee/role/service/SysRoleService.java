@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author lee.li
  */
-public interface RoleService {
+public interface SysRoleService {
     /**
      * 根据用户ID查询权限
      * @param userId 用户ID
@@ -62,9 +62,8 @@ public interface RoleService {
     List<SysRole> findRoleByIdList(List<Long> list);
 
     /**
-     * role code 查询出对应的role object list
-     * @param codes code集合
-     * @return
+     * 租户下的所有权限
+     * @return 权限列表
      */
-    List<SysRole> findRoleByCode(List<String> codes);
+    List<SysRole> findAllRoles();
 }

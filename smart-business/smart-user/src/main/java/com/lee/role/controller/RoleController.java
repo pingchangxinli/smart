@@ -1,11 +1,11 @@
 package com.lee.role.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.lee.common.business.enums.EnabledStatusEnum;
+import com.lee.common.business.EnabledStatus;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.role.domain.SysRole;
 import com.lee.role.exception.RoleExistException;
-import com.lee.role.service.RoleService;
+import com.lee.role.service.SysRoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.util.CollectionUtils;
@@ -24,7 +24,7 @@ import java.util.List;
 @RequestMapping("/role")
 public class RoleController {
     @Resource
-    private RoleService roleService;
+    private SysRoleService roleService;
 
     /**
      * http://127.0.0.1:8300/user-api/role?access_token=52af721c-9425-4fee-a46b-8fee4f068ec8
@@ -38,7 +38,7 @@ public class RoleController {
     @PostMapping
     public BaseResponse createRole(@RequestBody SysRole role) throws RoleExistException {
         Integer count = null;
-        role.setEnabled(EnabledStatusEnum.ENABLED);
+        role.setEnabled(EnabledStatus.ENABLED);
         count = roleService.createRole(role);
         return BaseResponse.builder().data(count).build();
     }
@@ -105,10 +105,15 @@ public class RoleController {
      * @param userId
      * @return
      */
-    @GetMapping("/findRolesByUserId")
-    public BaseResponse findRolesByUserId(@RequestParam("user_id") Long userId) {
+    @GetMapping("/user_id/{user_id}")
+    public BaseResponse findRolesByUserId(@PathVariable("user_id") Long userId) {
         List<SysRole> list = roleService.findRoleByUserId(userId);
         return BaseResponse.builder().data(list).build();
     }
 
+    @GetMapping
+    public BaseResponse<List> findAllRoles() {
+        List<SysRole> list = roleService.findAllRoles();
+        return BaseResponse.<List>builder().data(list).build();
+    }
 }

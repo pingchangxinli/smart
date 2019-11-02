@@ -3,7 +3,7 @@ package com.lee.user.domain;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lee.common.business.enums.EnabledStatusEnum;
+import com.lee.common.business.EnabledStatus;
 import lombok.Data;
 
 import java.util.List;
@@ -48,7 +48,7 @@ public class SysUser {
     @TableField("tenant_id")
     private Long tenantId;
     /**
-     * 客户门店编号
+     * 客户成本中心编号
      **/
     @JsonProperty("cost_center_id")
     @TableField("cost_center_id")
@@ -57,12 +57,7 @@ public class SysUser {
     /**
      * 是否可用
      **/
-    @TableField("enabled")
-    private EnabledStatusEnum status;
-    /**
-     * 用户角色集合
-     */
-    @TableField(exist = false)
-    private List<Long> roles;
+    private EnabledStatus status;
+
 
 }

@@ -1,10 +1,18 @@
 package com.lee.user.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.lee.common.business.EnabledStatus;
 import com.lee.common.business.domain.LoginUser;
+import com.lee.common.business.util.IPageToPaginationResponse;
+import com.lee.common.core.Pagination;
 import com.lee.common.core.response.BaseResponse;
+import com.lee.common.core.response.PaginationResponse;
+import com.lee.common.core.util.JsonUtil;
 import com.lee.feign.TokenClient;
 import com.lee.user.domain.SysUser;
+import com.lee.user.domain.SysUserRequest;
+import com.lee.user.domain.SysUserResponse;
 import com.lee.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -47,12 +55,14 @@ public class UserController {
      * @return
      */
     @PostMapping
-    public BaseResponse createUser(@RequestBody SysUser user) {
+    public BaseResponse createUser(@RequestBody SysUserRequest user) {
         if (log.isDebugEnabled()) {
             log.debug("[user controller] createUser request params:" + user);
         }
+        //状态为 生效状态
+        user.setStatus(EnabledStatus.ENABLED);
+        //密码AES加密
         String passwordEncode = passwordEncode(user.getPassword());
-
         user.setPassword(passwordEncode);
         boolean isSuccess = userService.createUser(user);
         if(isSuccess) {
@@ -65,7 +75,6 @@ public class UserController {
 
     /**
      * 加密用户密码
-     *
      * @param password 明文
      * @return
      */
@@ -87,21 +96,22 @@ public class UserController {
     }
     /**
      * 分页查询当前租户下的所有用户信息
-     * @param current 当前页面
-     * @param limit 每页总条数
-     * @param userCode 用户自定义code 模糊查询
-     * @param username 用户名 模糊查询
+     * @param pagination 分页
+     * @param sysUser 用户
      * @return
      */
     @GetMapping(value = "/page")
-    public BaseResponse pageList(@RequestParam("page") Integer current,@RequestParam("limit") Integer limit,
-                                 @RequestParam(value = "user_code",required = false) String userCode,
-                                 @RequestParam(value = "user_name",required = false) String username) {
-        IPage<SysUser> iPage = userService.pageList(current,limit,userCode,username);
+    public BaseResponse pageList(Pagination pagination, SysUser sysUser) {
+        IPage<SysUserResponse> iPage = userService.pageList(pagination, sysUser);
+        PaginationResponse<SysUser> paginationResponse = IPageToPaginationResponse.convertIPageToPagination(iPage);
         if (log.isDebugEnabled()) {
-            log.debug("query user page, result is : {}",iPage);
+            try {
+                log.debug("query user page, result is : {}", JsonUtil.toJson(paginationResponse));
+            } catch (JsonProcessingException e) {
+                log.error("[UserController pageList]", e);
+            }
         }
-        return BaseResponse.builder().data(iPage).build();
+        return BaseResponse.builder().data(paginationResponse).build();
     }
 
     /**
@@ -138,6 +148,12 @@ public class UserController {
     public BaseResponse disabledUserById(@PathVariable("id") Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         int count = userService.disabledUserById(id);
+        return BaseResponse.builder().data(count).build();
+    }
+
+    @PutMapping
+    public BaseResponse updateUserById(SysUserRequest sysUserRequest) {
+        int count = userService.updateUserById(sysUserRequest);
         return BaseResponse.builder().data(count).build();
     }
 }

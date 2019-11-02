@@ -2,7 +2,7 @@ package com.lee.gateway.filter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lee.common.core.Contants;
-import com.lee.common.core.enums.BaseResponseEnum;
+import com.lee.common.core.GateWayCode;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.common.core.util.JsonUtil;
 import com.lee.gateway.AuthIgnored;
@@ -83,7 +83,7 @@ public class GlobalAccessFilter implements GlobalFilter, Ordered {
         if (isValid) {
             return chain.filter(exchange);
         } else {
-            BaseResponseEnum responseEnum = BaseResponseEnum.AUTH_NOT_ENOUGH;
+            GateWayCode responseEnum = GateWayCode.AUTH_NOT_ENOUGH;
             BaseResponse response =
                     BaseResponse.builder().code(responseEnum.getCode()).msg(responseEnum.getMessage()).build();
             ServerHttpResponse httpResponse = exchange.getResponse();

@@ -11,6 +11,7 @@ import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.symmetric.AES;
 import cn.hutool.http.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.util.encoders.Hex;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -53,23 +54,22 @@ public class PasswordFilter extends AbstractGatewayFilterFactory {
         return (exchange, chain) -> {
             URI uri = exchange.getRequest().getURI();
             String queryParam = uri.getRawQuery();
-            if (log.isDebugEnabled()) {
-                log.debug("[PasswordFilter apply] queryParam: " + queryParam);
-            }
             Map<String, String> paramMap = HttpUtil.decodeParamMap(queryParam, CharsetUtil.UTF_8);
             String passwordValue = paramMap.get(PAPRAM_PASSWORD);
-            String pd = this.decode(passwordValue);
-            if (log.isDebugEnabled()) {
-                log.debug("[PasswordFilter apply] password:" + pd);
-            }
-            paramMap.put(PAPRAM_PASSWORD, pd);
-            URI newUri = UriComponentsBuilder.fromUri(uri)
-                    .replaceQuery(HttpUtil.toParams(paramMap))
-                    .build(true)
-                    .toUri();
+            //根据是否包含password参数判断 是否需要解密处理
+            if (StringUtils.isNotEmpty(passwordValue)) {
+                String pd = this.decode(passwordValue);
+                paramMap.put(PAPRAM_PASSWORD, pd);
+                URI newUri = UriComponentsBuilder.fromUri(uri)
+                        .replaceQuery(HttpUtil.toParams(paramMap))
+                        .build(true)
+                        .toUri();
 
-            ServerHttpRequest newRequest = exchange.getRequest().mutate().uri(newUri).build();
-            return chain.filter(exchange.mutate().request(newRequest).build());
+                ServerHttpRequest newRequest = exchange.getRequest().mutate().uri(newUri).build();
+                return chain.filter(exchange.mutate().request(newRequest).build());
+            } else {
+                return chain.filter(exchange);
+            }
         };
     }
 }

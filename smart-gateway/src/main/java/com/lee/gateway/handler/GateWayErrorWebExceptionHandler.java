@@ -1,6 +1,6 @@
 package com.lee.gateway.handler;
 
-import com.lee.common.core.enums.BaseResponseEnum;
+import com.lee.common.core.GateWayCode;
 import com.lee.common.core.response.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
@@ -39,7 +39,7 @@ public class GateWayErrorWebExceptionHandler extends DefaultErrorWebExceptionHan
         // 这里其实可以根据异常类型进行定制化逻辑
         Throwable error = super.getError(request);
         Map<String, Object> errorAttributes = new HashMap<>(8);
-        BaseResponseEnum baseResponse = BaseResponseEnum.SUCCESS;
+        GateWayCode baseResponse = GateWayCode.SUCCESS;
         errorAttributes.put("status", baseResponse.getCode());
         errorAttributes.put("code", baseResponse.getCode());
         errorAttributes.put("msg", baseResponse.getMessage());

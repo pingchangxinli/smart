@@ -1,6 +1,5 @@
 package com.lee.user.domain;
 
-import com.lee.user.domain.SysUser;
 import lombok.Data;
 
 import java.util.List;

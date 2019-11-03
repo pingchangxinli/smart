@@ -18,46 +18,46 @@ public class SysUser {
     /**
      * 自生成ID
      **/
-    private Long id;
+    protected Long id;
     /**
      * 中文名称
      */
     @JsonProperty("chinese_name")
     @TableField("chinese_name")
-    private String chineseName;
+    protected String chineseName;
     /**
      * 用户名
      **/
-    private String username;
+    protected String username;
     /**
      * 密码
      **/
-    private String password;
+    protected String password;
     /**
      * 邮箱
      **/
-    private String email;
+    protected String email;
     /**
      * 手机号
      **/
-    private String phone;
+    protected String phone;
     /**
      * 租户ID
      **/
     @JsonProperty("tenant_id")
     @TableField("tenant_id")
-    private Long tenantId;
+    protected Long tenantId;
     /**
      * 客户成本中心编号
      **/
     @JsonProperty("cost_center_id")
     @TableField("cost_center_id")
-    private Long costCenterId;
+    protected Long costCenterId;
 
     /**
      * 是否可用
      **/
-    private EnabledStatus status;
+    protected EnabledStatus status;
 
 
 }

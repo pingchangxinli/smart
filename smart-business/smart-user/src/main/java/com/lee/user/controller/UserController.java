@@ -15,6 +15,7 @@ import com.lee.user.domain.SysUserRequest;
 import com.lee.user.domain.SysUserResponse;
 import com.lee.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -103,15 +104,11 @@ public class UserController {
     @GetMapping(value = "/page")
     public BaseResponse pageList(Pagination pagination, SysUser sysUser) {
         IPage<SysUserResponse> iPage = userService.pageList(pagination, sysUser);
+
         PaginationResponse<SysUser> paginationResponse = IPageToPaginationResponse.convertIPageToPagination(iPage);
-        if (log.isDebugEnabled()) {
-            try {
-                log.debug("query user page, result is : {}", JsonUtil.toJson(paginationResponse));
-            } catch (JsonProcessingException e) {
-                log.error("[UserController pageList]", e);
-            }
-        }
-        return BaseResponse.builder().data(paginationResponse).build();
+
+        BaseResponse response = BaseResponse.builder().data(paginationResponse).build();
+        return response;
     }
 
     /**
@@ -152,8 +149,10 @@ public class UserController {
     }
 
     @PutMapping
-    public BaseResponse updateUserById(SysUserRequest sysUserRequest) {
+    public BaseResponse updateUserById(@RequestBody SysUserRequest sysUserRequest) {
+        HttpStatus status = HttpStatus.OK;
         int count = userService.updateUserById(sysUserRequest);
-        return BaseResponse.builder().data(count).build();
+        return BaseResponse.builder().data(count).subCode(String.valueOf(status.value()))
+                .subMsg(status.getReasonPhrase()).build();
     }
 }

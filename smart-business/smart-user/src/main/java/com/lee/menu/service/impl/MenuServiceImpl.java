@@ -2,6 +2,7 @@ package com.lee.menu.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lee.common.business.EnabledStatus;
+import com.lee.menu.domain.Menu;
 import com.lee.menu.domain.SysMenu;
 import com.lee.menu.domain.SysRoleMenu;
 import com.lee.menu.mapper.MenuMapper;
@@ -10,6 +11,7 @@ import com.lee.menu.service.MenuService;
 import com.lee.menu.service.RoleMenuService;
 import com.lee.user.domain.SysUserRole;
 import com.lee.user.mapper.SysUserRoleMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -27,8 +29,6 @@ public class MenuServiceImpl implements MenuService {
     private RoleMenuMapper roleMenuMapper;
     @Resource
     private SysUserRoleMapper userRoleMapper;
-    @Resource
-    private RoleMenuService roleMenuService;
     @Override
     public Integer createMenu(SysMenu sysMenu) {
         sysMenu.setEnabled(EnabledStatus.ENABLED);
@@ -68,5 +68,17 @@ public class MenuServiceImpl implements MenuService {
             menus.addAll(list1);
         });
         return menus;
+    }
+
+    @Override
+    public List<SysMenu> findAllMenus(SysMenu menu) {
+        QueryWrapper<SysMenu> queryWrapper = new QueryWrapper<>();
+
+        String name = menu.getName();
+        if (StringUtils.isNotEmpty(name)) {
+            queryWrapper.eq("name", name);
+        }
+
+        return menuMapper.selectList(queryWrapper);
     }
 }

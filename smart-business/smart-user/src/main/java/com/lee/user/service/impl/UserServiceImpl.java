@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
         List<SysUserRole> list = userRequest.getRoles().stream().map(roleId -> {
             SysUserRole sysUserRole = new SysUserRole();
             sysUserRole.setRoleId(roleId);
-            sysUserRole.setUserId(userRequest.getId());
+            sysUserRole.setUserId(user.getId());
             return sysUserRole;
         }).collect(Collectors.toList());
 
@@ -152,17 +152,23 @@ public class UserServiceImpl implements UserService {
         //更新用户信息
         SysUser sysUser = new SysUser();
         BeanUtils.copyProperties(sysUserRequest, sysUser);
+        if (log.isDebugEnabled()) {
+            log.debug("[UserService updateUserById],sysUser:"+sysUser);
+        }
         int count = userMapper.updateById(sysUser);
         //更新用户角色
         QueryWrapper<SysUserRole> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", sysUserRequest.getId());
         sysUserRoleService.remove(queryWrapper);
+        List<SysUserRole> list = new ArrayList<>();
         sysUserRequest.getRoles().stream().forEach(role -> {
             SysUserRole sysUserRole = new SysUserRole();
             sysUserRole.setUserId(sysUserRequest.getId());
+            sysUserRole.setRoleId(role);
+            list.add(sysUserRole);
         });
-
-        return 0;
+        sysUserRoleService.saveBatch(list);
+        return count;
     }
 
     /**

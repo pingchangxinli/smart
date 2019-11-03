@@ -1,5 +1,6 @@
 package com.lee.menu.service;
 
+import com.lee.menu.domain.Menu;
 import com.lee.menu.domain.SysMenu;
 
 import java.util.List;
@@ -43,4 +44,11 @@ public interface MenuService {
      * @return
      */
     List<SysMenu> findMenusByUserId(Long userId);
+
+    /**
+     * 查询菜单
+     * @param menu
+     * @return
+     */
+    List<SysMenu> findAllMenus(SysMenu menu);
 }

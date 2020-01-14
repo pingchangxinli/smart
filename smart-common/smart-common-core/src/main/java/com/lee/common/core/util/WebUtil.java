@@ -1,5 +1,7 @@
 package com.lee.common.core.util;
 
+import com.lee.common.core.response.BaseResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.ServletRequestUtils;
 
 /**
@@ -26,4 +28,6 @@ public class WebUtil {
     public static String[] createAuthorization(String accessToken) {
         return new String[]{"Bearer " + accessToken};
     }
+
+
 }

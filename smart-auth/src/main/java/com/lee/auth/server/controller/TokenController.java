@@ -37,24 +37,22 @@ public class TokenController {
         }
         OAuth2AccessToken tokenObject = tokenStore.readAccessToken(token);
 
-        BaseResponse baseResponse = BaseResponse.builder().data(tokenObject).build();
-        if (log.isDebugEnabled()) {
-            log.debug("[TokenController.token] response:" + baseResponse);
-        }
-        return baseResponse;
+        return BaseResponse.ok(tokenObject);
+
     }
 
     /**
      * 通过access token 得到 用户名
+     *
      * @param accessToken
      * @return
      */
     @GetMapping("/user")
-    public BaseResponse getUserNameByAccessToken(@RequestParam("access_token") String accessToken) {
-        OAuth2Authentication auth2Authenitication= tokenStore.readAuthentication(accessToken);
+    public BaseResponse<LoginUser> getUserNameByAccessToken(@RequestParam("access_token") String accessToken) {
+        OAuth2Authentication auth2Authenitication = tokenStore.readAuthentication(accessToken);
 
         LoginUser loginUser = (LoginUser) auth2Authenitication.getPrincipal();
-        log.debug("[Token controller],{}",loginUser);
-        return BaseResponse.builder().data(loginUser).build();
+        log.debug("[Token controller],{}", loginUser);
+        return BaseResponse.ok(loginUser);
     }
 }

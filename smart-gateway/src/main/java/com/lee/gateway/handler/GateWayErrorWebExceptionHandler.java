@@ -23,7 +23,9 @@ import java.util.Map;
 public class GateWayErrorWebExceptionHandler extends DefaultErrorWebExceptionHandler {
     private static final String RESP_MESS_UNAUTHORIZED = "授权验证失败，请在请求参数中添加access_token" +
             "或者header中添加Authorization";
-    public GateWayErrorWebExceptionHandler(ErrorAttributes errorAttributes, ResourceProperties resourceProperties, ErrorProperties errorProperties, ApplicationContext applicationContext) {
+
+    public GateWayErrorWebExceptionHandler(ErrorAttributes errorAttributes, ResourceProperties resourceProperties,
+                                           ErrorProperties errorProperties, ApplicationContext applicationContext) {
         super(errorAttributes, resourceProperties, errorProperties, applicationContext);
     }
 
@@ -51,30 +53,30 @@ public class GateWayErrorWebExceptionHandler extends DefaultErrorWebExceptionHan
         if ( error instanceof feign.RetryableException ||  error instanceof SocketTimeoutException
                 || error instanceof feign.FeignException.InternalServerError || error instanceof ResponseStatusException) {
             HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-            errorAttributes.put("status",status.value());
-            errorAttributes.put("sub_code",status.value());
-            errorAttributes.put("sub_msg", error.getMessage());
+            errorAttributes = put(status.value(), error.getMessage());
             return errorAttributes;
         }
         if (error instanceof IllegalArgumentException){
-            errorAttributes.put("sub_code",HttpStatus.BAD_REQUEST.value());
-            errorAttributes.put("sub_msg", error.getMessage());
+            errorAttributes = put(HttpStatus.BAD_REQUEST.value(), error.getMessage());
             return errorAttributes;
         }
         if (error instanceof feign.FeignException.Unauthorized) {
             HttpStatus status = HttpStatus.UNAUTHORIZED;
-            errorAttributes.put("status",status.value());
-            errorAttributes.put("sub_code",status.value());
-            errorAttributes.put("sub_msg", RESP_MESS_UNAUTHORIZED);
+            errorAttributes = put(status.value(), RESP_MESS_UNAUTHORIZED);
             return errorAttributes;
         }
         if (error instanceof Exception) {
             HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-            errorAttributes.put("status",status.value());
-            errorAttributes.put("sub_code",status.value());
-            errorAttributes.put("sub_msg", error.getMessage());
+            errorAttributes = put(status.value(), status.getReasonPhrase());
             return errorAttributes;
         }
-        return  errorAttributes;
+        return errorAttributes;
+    }
+
+    private Map<String, Object> put(Integer status, String statusText) {
+        Map<String, Object> errorAttributes = new HashMap<>(8);
+        errorAttributes.put("subCode", status);
+        errorAttributes.put("subMessage", statusText);
+        return errorAttributes;
     }
 }

@@ -26,12 +26,11 @@ public class AuthExceptionHandlerConfig {
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return (request, response, authException) -> {
-            log.error("url: {},exception:{}",request.getRequestURI(),authException);
+            log.error("url: {},exception:{}", request.getRequestURI(), authException);
             GateWayCode responseEnum = GateWayCode.SUCCESS;
             HttpStatus status = HttpStatus.UNAUTHORIZED;
-            BaseResponse response1 =
-                    BaseResponse.builder().code(responseEnum.getCode()).msg(responseEnum.getMessage())
-                            .subCode(String.valueOf(status.value())).subMsg(status.getReasonPhrase()).build();
+            BaseResponse response1 = BaseResponse.error(responseEnum.getCode(), responseEnum.getMessage(),
+                    String.valueOf(status.value()), status.getReasonPhrase());
             response.setContentType("application/json;charset=UTF-8");
             response.getWriter().write(JsonUtil.toJson(response1));
             response.getWriter().flush();

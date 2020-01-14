@@ -18,6 +18,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.http.server.reactive.ServerHttpResponseDecorator;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.server.ServerWebExchange;
@@ -59,7 +60,7 @@ public class GlobalAccessFilter implements GlobalFilter, Ordered {
                 request.getQueryParams());
 
         //根据域名获取租户信息
-        putTenantIdInRequest(request);
+        //putTenantIdInRequest(request);
 
         for (String s : authIgnored.getPath()) {
             if (pathMatcher.match(s, exchange.getRequest().getPath().value())) {
@@ -85,7 +86,7 @@ public class GlobalAccessFilter implements GlobalFilter, Ordered {
         } else {
             GateWayCode responseEnum = GateWayCode.AUTH_NOT_ENOUGH;
             BaseResponse response =
-                    BaseResponse.builder().code(responseEnum.getCode()).msg(responseEnum.getMessage()).build();
+                    BaseResponse.builder().code(responseEnum.getCode()).message(responseEnum.getMessage()).build();
             ServerHttpResponse httpResponse = exchange.getResponse();
             String message = "";
             try {
@@ -134,9 +135,12 @@ public class GlobalAccessFilter implements GlobalFilter, Ordered {
         URI uri = request.getURI();
         String host = uri.getHost();
         BaseResponse response = tenantClient.findTenantByDomain(host);
-        String tenantId = (String) response.getData();
-        log.debug("get tenant id : {} by domain: {}", response.getData(), host);
-        String[] tenantIdArray = new String[]{(String) response.getData()};
+        if (log.isDebugEnabled()) {
+            log.debug("[GlobalAccessFilter putTenantIdInRequest] host:" + host + ",response:" + response + ",data class:" +
+                    response.getData().getClass().getName());
+        }
+        String tenantId = response.getData().toString();
+        String[] tenantIdArray = new String[]{tenantId};
         request.mutate().header(Contants.REQUEST_HEADER_TENANT_ID, tenantIdArray);
         return tenantId;
     }

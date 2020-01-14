@@ -22,14 +22,14 @@ public class SysClientController {
     @GetMapping("/list")
     public BaseResponse list() {
         List<SysClient> list = sysClientService.findList();
-        return BaseResponse.builder().data(list).build();
+        return BaseResponse.ok(list);
 
     }
 
     @GetMapping
     public BaseResponse findClientById(@PathVariable("client_id") String clientId) {
         SysClient client = sysClientService.findClientById(clientId);
-        return BaseResponse.builder().data(client).build();
+        return BaseResponse.ok(client);
     }
 
     @PostMapping
@@ -38,6 +38,6 @@ public class SysClientController {
             log.debug("[SysClientController createClient] param:" + client);
         }
         Integer count = sysClientService.createClient(client);
-        return BaseResponse.builder().data(null).build();
+        return BaseResponse.ok(null);
     }
 }

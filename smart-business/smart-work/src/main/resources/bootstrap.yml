@@ -1,0 +1,13 @@
+spring:
+  cloud:
+    config:
+      uri: http://localhost:8200
+      profile: dev
+      label: master
+  application:
+    name: smart-work
+server:
+  port: 8600
+mybatis-plus:
+  type-enums-package: com.lee.common.business
+

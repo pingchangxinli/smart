@@ -2,6 +2,7 @@ package com.lee.gateway.config;
 
 import com.lee.gateway.handler.KatchaHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.gateway.filter.factory.SetStatusGatewayFilterFactory;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,7 @@ import javax.annotation.Resource;
 public class RouteConfig {
     @Resource
     private KatchaHandler katchaHandler;
+
     @Bean
     public RouterFunction testFunRouterFunction() {
         return RouterFunctions.route(
@@ -28,5 +30,6 @@ public class RouteConfig {
                         .and(RequestPredicates.accept(MediaType.TEXT_PLAIN)), katchaHandler);
 
     }
+
 
 }

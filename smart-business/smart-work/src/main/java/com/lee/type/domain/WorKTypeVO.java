@@ -3,7 +3,7 @@ package com.lee.type.domain;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.lee.common.business.EnabledStatus;
+import com.lee.enums.EnabledStatus;
 import lombok.Data;
 
 import java.time.LocalDateTime;

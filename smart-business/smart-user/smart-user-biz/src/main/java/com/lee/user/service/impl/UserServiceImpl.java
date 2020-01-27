@@ -4,14 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lee.api.entity.SysUser;
-import com.lee.common.business.EnabledStatus;
 import com.lee.common.business.domain.LoginUser;
 import com.lee.common.core.Pagination;
+import com.lee.enums.EnabledStatus;
 import com.lee.role.domain.SysRole;
 import com.lee.role.mapper.RoleMapper;
 import com.lee.role.service.SysRoleService;
-import com.lee.tenant.domain.Shop;
-import com.lee.tenant.service.ShopService;
+import com.lee.api.entity.BusinessUnit;
+import com.lee.tenant.service.BusinessUnitService;
 import com.lee.user.domain.SysUserRequest;
 import com.lee.user.domain.SysUserVO;
 import com.lee.user.domain.SysUserRole;
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
     @Resource
     private SysUserRoleService sysUserRoleService;
     @Resource
-    private ShopService shopService;
+    private BusinessUnitService BusinessUnitService;
 
     @Override
     public SysUser findUserByName(String username) {
@@ -116,13 +116,13 @@ public class UserServiceImpl implements UserService {
             SysUserVO sysUserVO = new SysUserVO();
             BeanUtils.copyProperties(sysUser1, sysUserVO);
             sysUserVO.setRoles(roles);
-            //用户所在成本中心详情
-            Shop shop = shopService.findShopById(sysUser1.getBusinessUnitId());
+            //用户所在分部详情
+            BusinessUnit businessUnit = BusinessUnitService.findBusinessUnitById(sysUser1.getBusinessUnitId());
             if (log.isDebugEnabled()) {
-                log.debug("[UserService] shop id:{},shop:{}", sysUser1.getBusinessUnitId(),
-                        shop);
+                log.debug("[UserService] BusinessUnit id:{},BusinessUnit:{}", sysUser1.getBusinessUnitId(),
+                        businessUnit);
             }
-            sysUserVO.setShop(shop);
+            sysUserVO.setBusinessUnit(businessUnit);
             responseList.add(sysUserVO);
         });
         IPage<SysUserVO> returnIpage = new Page<>(iPage.getCurrent(), iPage.getSize(), iPage.getTotal());

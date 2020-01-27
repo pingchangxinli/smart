@@ -1,13 +1,15 @@
 package com.lee.setting.controller;
 
-import com.lee.ErrorMsgEnum;
+import com.lee.enums.ErrorMsgEnum;
+import com.lee.api.entity.BusinessUnit;
 import com.lee.api.entity.SysUser;
-import com.lee.api.feign.UserClient;
+import com.lee.api.feign.RemoteUserClient;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.common.core.util.WebUtil;
+import com.lee.enums.PeriodEnum;
 import com.lee.setting.model.*;
-import com.lee.setting.service.SettingBusinessUnitService;
-import com.lee.setting.service.SettingPartnerService;
+import com.lee.setting.service.BusinessUnitService;
+import com.lee.setting.service.PartnerService;
 import com.lee.setting.service.SettingService;
 import com.lee.worker.model.WorkerDTO;
 import com.lee.worker.service.WorkerService;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,24 +32,116 @@ import java.util.List;
 @RequestMapping("setting")
 @Slf4j
 public class SettingController {
+    private static final long DEFAULT_DAYS = 30L;
     @Resource
-    private UserClient userClient;
+    private RemoteUserClient remoteUserClient;
     @Resource
-    private SettingBusinessUnitService settingBusinessUnitService;
+    private BusinessUnitService businessUnitService;
     @Resource
-    private SettingPartnerService settingPartnerService;
+    private PartnerService partnerService;
     @Resource
     private ModelMapper modelMapper;
     @Resource
     private WorkerService workerService;
     @Resource
     private SettingService settingService;
+    @Resource
+    private RemoteUserClient businessUnitClient;
+
+    @GetMapping("init")
+    public BaseResponse<SettingReportInitVO> init(@RequestHeader("authorization") String authorization) {
+        BusinessUnit businessUnit = null;
+        Long businessUnitId1 = getBusinessUnitIdByAuthorization(authorization);
+        if (businessUnitId1 != null && businessUnitId1 > 0) {
+            businessUnit = new BusinessUnit();
+            businessUnit.setId(businessUnitId1);
+        }
+        BaseResponse<List<BusinessUnit>> businessUnitRes = businessUnitClient.getBusinessUnits(0L);
+        BaseResponse<List<Period>> periodRes = this.getPeriods();
+
+        List<BusinessUnit> businessUnits = businessUnitRes.getData();
+        List<Period> periods = periodRes.getData();
+
+        Long businessUnitId = businessUnits.get(0).getId();
+        String type = periods.get(0).getType();
+
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate date = LocalDate.now();
+        LocalDate beginDate = date.with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate endDate = date.with(TemporalAdjusters.lastDayOfMonth());
+        PeriodEnum periodTypeEnum = Enum.valueOf(PeriodEnum.class, type);
+        if (log.isDebugEnabled()) {
+            log.debug("SettingController,businessUnitReport,businessUnitId:{},periodTypeEnum:{}," +
+                    "beginDate:{},endDate:{}", businessUnitId, periodTypeEnum, beginDate, endDate);
+        }
+        SettingReportDTO settingReportDTO = settingService.businessUnitReport(businessUnitId, periodTypeEnum,
+                beginDate, endDate);
+        SettingReportVO settingReportVO = convertSettingReportDTOToVO(settingReportDTO);
+
+        SettingReportInitVO settingReportInitVO = new SettingReportInitVO();
+        settingReportInitVO.setBusinessUnitList(businessUnitRes.getData());
+        settingReportInitVO.setPeriodList(periodRes.getData());
+        settingReportInitVO.setSettingReportVO(settingReportVO);
+        return BaseResponse.ok(settingReportInitVO);
+    }
+
+    private SettingReportVO convertSettingReportDTOToVO(SettingReportDTO settingReportDTO) {
+        SettingReportVO settingReportVO = new SettingReportVO();
+
+        List<AmountReportDTO> amountReportDTOS = settingReportDTO.getAmountList();
+        List<AmountReportVO> amountReportVOS = new ArrayList<>();
+
+        amountReportDTOS.stream().forEach(amountReportDTO -> {
+            AmountReportVO amountReportVO = modelMapper.map(amountReportDTO, AmountReportVO.class);
+            amountReportVOS.add(amountReportVO);
+        });
+
+        List<WorkTimeReportDTO> workTimeReportDTOS = settingReportDTO.getWorkTimeList();
+        List<WorkTimeReportVO> workTimeReportVOS = new ArrayList<>();
+        workTimeReportDTOS.stream().forEach(workTimeReportDTO -> {
+            WorkTimeReportVO workTimeReportVO = modelMapper.map(workTimeReportDTO, WorkTimeReportVO.class);
+            workTimeReportVOS.add(workTimeReportVO);
+        });
+
+        List<WorkEfficiencyReportDTO> workEfficiencyReportDTOS = settingReportDTO.getWorkEfficiencyList();
+        List<WorkEfficiencyReportVO> workEfficiencyReportVOS = new ArrayList<>();
+        workEfficiencyReportDTOS.stream().forEach(workEfficiencyReportDTO -> {
+            WorkEfficiencyReportVO workEfficiencyReportVO = modelMapper.map(workEfficiencyReportDTO,
+                    WorkEfficiencyReportVO.class);
+            workEfficiencyReportVOS.add(workEfficiencyReportVO);
+        });
+        settingReportVO.setAmountList(amountReportVOS);
+        settingReportVO.setWorkTimeList(workTimeReportVOS);
+        settingReportVO.setWorkEfficiencyList(workEfficiencyReportVOS);
+        settingReportVO.setBusinessUnitId(settingReportDTO.getBusinessUnitId());
+        settingReportVO.setBusinessPeriodType(settingReportDTO.getBusinessPeriodType());
+        settingReportVO.setBeginDate(settingReportDTO.getBeginDate());
+        settingReportVO.setEndDate(settingReportDTO.getEndDate());
+        return settingReportVO;
+    }
+
+    /**
+     * 营业时段集合
+     *
+     * @return
+     */
+    @GetMapping("businessPeriod")
+    public BaseResponse<List<Period>> getPeriods() {
+        List<Period> periods = new ArrayList<>();
+        for (PeriodEnum period : PeriodEnum.values()) {
+            Period period1 = new Period();
+            period1.setType(period.name());
+            period1.setDescription(period.getDescription());
+            periods.add(period1);
+        }
+        return BaseResponse.ok(periods);
+    }
 
     /**
      * 更新排班
      *
-     * @param authorization
-     * @param settingVO
+     * @param authorization 授权信息
+     * @param settingVO     排班信息
      * @return
      */
     @PostMapping
@@ -62,9 +157,12 @@ public class SettingController {
             ErrorMsgEnum errorMsgEnum = ErrorMsgEnum.AUTHORIZATION_ERROR;
             return BaseResponse.error(errorMsgEnum.getCode(), errorMsgEnum.getMessage());
         }
-        SettingDTO settingDTO = convertVoToDto(settingVO);
+        SettingDTO settingDTO = convertVoToDto(settingVO, businessUnitId);
+        if (log.isDebugEnabled()) {
+            log.debug("[Setting Controller],settingVO: {},settingDTO:{}", settingVO, settingDTO);
+        }
         settingService.mergeSetting(settingDTO);
-        return null;
+        return BaseResponse.ok("success");
     }
 
     /**
@@ -73,25 +171,27 @@ public class SettingController {
      * @param settingVO
      * @return
      */
-    private SettingDTO convertVoToDto(SettingVO settingVO) {
-        List<SettingBusinessUnitDataVO> settingBusinessUnitDataVOS = settingVO.getBusinessUnitList();
-        List<SettingPartnerDataVO> settingPartnerDataVOS = settingVO.getPartnerReportList();
+    private SettingDTO convertVoToDto(SettingVO settingVO, Long businessUnitId) {
+        List<BusinessUnitDataVO> businessUnitDataVOS = settingVO.getBusinessUnitList();
+        List<PartnerDataVO> partnerDataVOS = settingVO.getPartnerReportList();
 
-        List<SettingBusinessUnitDataDTO> settingBusinessUnitDataDTOS = new ArrayList<>();
-        List<SettingPartnerDataDTO> settingPartnerDataDTOS = new ArrayList<>();
+        List<BusinessUnitDataDTO> businessUnitDataDTOS = new ArrayList<>();
+        List<PartnerDataDTO> partnerDataDTOS = new ArrayList<>();
         SettingDTO settingDTO = new SettingDTO();
-        settingBusinessUnitDataVOS.stream().forEach(settingBusinessUnitDataVO -> {
-            settingBusinessUnitDataVO.setReportDate(settingVO.getReportDate());
-            SettingBusinessUnitDataDTO settingBusinessUnitDataDTO = modelMapper.map(settingBusinessUnitDataVO, SettingBusinessUnitDataDTO.class);
-            settingBusinessUnitDataDTOS.add(settingBusinessUnitDataDTO);
+        businessUnitDataVOS.stream().forEach(businessUnitDataVO -> {
+            businessUnitDataVO.setBusinessUnitId(businessUnitId);
+            businessUnitDataVO.setReportDate(settingVO.getReportDate());
+            BusinessUnitDataDTO businessUnitDataDTO = modelMapper.map(businessUnitDataVO, BusinessUnitDataDTO.class);
+            businessUnitDataDTOS.add(businessUnitDataDTO);
         });
-        settingPartnerDataVOS.stream().forEach(settingPartnerDataVO -> {
-            settingPartnerDataVO.setReportDate(settingVO.getReportDate());
-            SettingPartnerDataDTO settingPartnerDataDTO1 = modelMapper.map(settingPartnerDataVO, SettingPartnerDataDTO.class);
-            settingPartnerDataDTOS.add(settingPartnerDataDTO1);
+        partnerDataVOS.stream().forEach(partnerDataVO -> {
+            partnerDataVO.setBusinessUnitId(businessUnitId);
+            partnerDataVO.setReportDate(settingVO.getReportDate());
+            PartnerDataDTO partnerDataDTO1 = modelMapper.map(partnerDataVO, PartnerDataDTO.class);
+            partnerDataDTOS.add(partnerDataDTO1);
         });
-        settingDTO.setBusinessUnitList(settingBusinessUnitDataDTOS);
-        settingDTO.setPartnerReportList(settingPartnerDataDTOS);
+        settingDTO.setBusinessUnitList(businessUnitDataDTOS);
+        settingDTO.setPartnerReportList(partnerDataDTOS);
         return settingDTO;
     }
 
@@ -106,7 +206,7 @@ public class SettingController {
             return null;
         }
         String accessToken = WebUtil.getAccessToken(authorization);
-        BaseResponse<SysUser> userBaseResponse = userClient.getCurrentUser(accessToken);
+        BaseResponse<SysUser> userBaseResponse = remoteUserClient.getCurrentUser(accessToken);
         if (userBaseResponse == null) {
             return null;
         }
@@ -122,15 +222,15 @@ public class SettingController {
     }
 
     /**
-     * 得到业务单元数据
+     * 查询排班信息
      *
-     * @param authorization 授权信息
-     * @param reportDate    报表日期,默认为服务器当前日期
+     * @param authorization
+     * @param reportDate
      * @return
      */
-    @GetMapping("businessUnit")
-    public BaseResponse<SettingBusinessUnitDataVO> getBusinessUnitData(@RequestHeader("authorization") String authorization,
-                                                                       @RequestParam(value = "reportDate", required = false) String reportDate) {
+    @GetMapping
+    private BaseResponse<SettingVO> getSettingData(@RequestHeader("authorization") String authorization,
+                                                   @RequestParam(value = "reportDate", required = false) String reportDate) {
         Long businessUnitId = getBusinessUnitIdByAuthorization(authorization);
         if (businessUnitId == null) {
             ErrorMsgEnum error = ErrorMsgEnum.AUTHORIZATION_ERROR;
@@ -142,78 +242,115 @@ public class SettingController {
             DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             localDate = LocalDate.parse(reportDate, fmt);
         }
-        SettingBusinessUnitDataDTO settingBusinessUnitDataDTO =
-                settingBusinessUnitService.getBusinessUnitByBusinessUnitId(businessUnitId, localDate);
-        SettingBusinessUnitDataVO vo = null;
-        if (settingBusinessUnitDataDTO == null) {
-            vo = new SettingBusinessUnitDataVO();
-            vo.setBusinessUnitId(businessUnitId);
-            vo.setReportDate(localDate);
-        } else {
-            vo = modelMapper.map(settingBusinessUnitDataDTO, SettingBusinessUnitDataVO.class);
-        }
-        return BaseResponse.ok(vo);
+
+        List<BusinessUnitDataVO> businessUnitDataVOS = dealBusinessUnitData(businessUnitId, localDate);
+        List<PartnerDataVO> partnerDataVOS = dealPartnerData(businessUnitId, localDate);
+
+        SettingVO settingVO = new SettingVO();
+        settingVO.setReportDate(localDate);
+        settingVO.setBusinessUnitList(businessUnitDataVOS);
+        settingVO.setPartnerReportList(partnerDataVOS);
+        return BaseResponse.ok(settingVO);
     }
 
     /**
-     * 得到业务单元数据
+     * 处理分部数据,
      *
-     * @param authorization 授权信息
-     * @param reportDate    报表日期,默认为服务器当前日期
+     * @param businessUnitId 分部ID
+     * @param reportDate     查询日期
      * @return
      */
-    @GetMapping("partner")
-    public BaseResponse<List<SettingPartnerDataVO>> getPartnerData(@RequestHeader("authorization") String authorization,
-                                                                   @RequestParam(value = "reportDate", required = false) String reportDate) {
-        //报表请求日期为null,设置为当前日期
-        LocalDate localDate = LocalDate.now();
-        if (StringUtils.isNotEmpty(reportDate)) {
-            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            localDate = LocalDate.parse(reportDate, fmt);
-        }
+    private List<BusinessUnitDataVO> dealBusinessUnitData(Long businessUnitId, LocalDate reportDate) {
+        List<BusinessUnitDataVO> list = new ArrayList<>();
 
-        //授权信息获取部门ID
-        Long businessUnitId = getBusinessUnitIdByAuthorization(authorization);
-        if (businessUnitId == null) {
-            ErrorMsgEnum errorMsgEnum = ErrorMsgEnum.AUTHORIZATION_ERROR;
-            return BaseResponse.error(errorMsgEnum.getCode(), errorMsgEnum.getMessage());
+        List<BusinessUnitDataDTO> businessUnitDataDTOS =
+                businessUnitService.getBusinessUnitById(businessUnitId, reportDate);
+        if (businessUnitDataDTOS == null || businessUnitDataDTOS.size() == 0) {
+            return null;
         }
-
-        SettingPartnerDataDTO dto = new SettingPartnerDataDTO();
-        dto.setBusinessUnitId(businessUnitId);
-        dto.setReportDate(localDate);
-        List<SettingPartnerDataDTO> list = settingPartnerService.list(dto);
-        return dealResponse(businessUnitId, list);
+        for (int i = 0; i < businessUnitDataDTOS.size(); i++) {
+            BusinessUnitDataVO businessUnitDataVO = modelMapper.map(businessUnitDataDTOS.get(i),
+                    BusinessUnitDataVO.class);
+            list.add(businessUnitDataVO);
+        }
+        return list;
     }
 
-    private BaseResponse<List<SettingPartnerDataVO>> dealResponse(Long businessUnitId, List<SettingPartnerDataDTO> list) {
-        List<SettingPartnerDataVO> settingPartnerDataVOS = new ArrayList<>();
+
+    /**
+     * 处理伙伴排班信息
+     *
+     * @param businessUnitId
+     * @param reportDate
+     * @return
+     */
+    private List<PartnerDataVO> dealPartnerData(Long businessUnitId, LocalDate reportDate) {
+
+        PartnerDataDTO dto = new PartnerDataDTO();
+        dto.setBusinessUnitId(businessUnitId);
+        dto.setReportDate(reportDate);
+        List<PartnerDataDTO> list = partnerService.list(dto);
+
+        List<PartnerDataVO> partnerDataVOS = new ArrayList<>();
         //报表中无数据,根据伙伴信息,返回 只包含伙伴ID的 虚拟空数据
         if (list == null || list.size() == 0) {
             WorkerDTO workerDTO = new WorkerDTO();
             workerDTO.setBusinessUitId(businessUnitId);
             List<WorkerDTO> workerDTOS = workerService.list(workerDTO);
-            if (workerDTOS == null) {
-                ErrorMsgEnum errorMsgEnum = ErrorMsgEnum.NO_PARTNER_DATA;
-                return BaseResponse.error(errorMsgEnum.getCode(), errorMsgEnum.getMessage());
-            }
             workerDTOS.stream().forEach(workerDTO1 -> {
-                SettingPartnerDataVO settingPartnerDataVO = new SettingPartnerDataVO();
-                settingPartnerDataVO.setBusinessUnitId(businessUnitId);
-                settingPartnerDataVO.setPartnerId(workerDTO1.getId());
-                settingPartnerDataVO.setPartnerName(workerDTO1.getName());
-                settingPartnerDataVOS.add(settingPartnerDataVO);
+                PartnerDataVO partnerDataVO = new PartnerDataVO();
+                partnerDataVO.setBusinessUnitId(businessUnitId);
+                partnerDataVO.setPartnerId(workerDTO1.getId());
+                partnerDataVO.setPartnerName(workerDTO1.getName());
+                partnerDataVOS.add(partnerDataVO);
             });
         } else {
             //转换成对外信息
             list.stream().forEach(settingPartnerDataDTO -> {
-                SettingPartnerDataVO settingPartnerDataVO = modelMapper.map(settingPartnerDataDTO, SettingPartnerDataVO.class);
+                PartnerDataVO partnerDataVO = modelMapper.map(settingPartnerDataDTO, PartnerDataVO.class);
                 WorkerDTO workerDTO = workerService.getById(settingPartnerDataDTO.getPartnerId());
-                settingPartnerDataVO.setPartnerId(workerDTO.getId());
-                settingPartnerDataVO.setPartnerName(workerDTO.getName());
-                settingPartnerDataVOS.add(settingPartnerDataVO);
+                if (log.isDebugEnabled()) {
+                    log.debug("[SettingController] dealResponse,workerDTO:{}", workerDTO);
+                }
+                partnerDataVO.setPartnerId(workerDTO.getId());
+                partnerDataVO.setPartnerName(workerDTO.getName());
+                partnerDataVOS.add(partnerDataVO);
             });
         }
-        return BaseResponse.ok(settingPartnerDataVOS);
+        return partnerDataVOS;
+    }
+
+    /**
+     * 分部展示报表
+     *
+     * @param businessUnitId 分部ID
+     * @param periodType     营业时段类型
+     * @param beginDate      查询开始时间
+     * @param endDate        查询截至时间
+     * @return
+     */
+    @GetMapping("report")
+    public BaseResponse<SettingReportVO> report(@RequestParam("businessUnitId") Long businessUnitId,
+                                                @RequestParam("businessPeriodType") String periodType,
+                                                @RequestParam("beginDate") LocalDate beginDate,
+                                                @RequestParam("endDate") LocalDate endDate) {
+        SettingReportVO settingReportVO = new SettingReportVO();
+        if (businessUnitId == null || businessUnitId.equals(0L)) {
+            return BaseResponse.ok(new SettingReportVO());
+        }
+        if (StringUtils.isEmpty(periodType)) {
+            return BaseResponse.ok(new SettingReportVO());
+        }
+        if (beginDate == null || endDate == null) {
+            return BaseResponse.ok(new SettingReportVO());
+        }
+        if (endDate.toEpochDay() - beginDate.toEpochDay() > DEFAULT_DAYS) {
+            return BaseResponse.ok(new SettingReportVO());
+        }
+        PeriodEnum periodTypeEnum = Enum.valueOf(PeriodEnum.class, periodType);
+        SettingReportDTO settingReportDTO = settingService.businessUnitReport(businessUnitId, periodTypeEnum,
+                beginDate, endDate);
+        settingReportVO = modelMapper.map(settingReportDTO, SettingReportVO.class);
+        return BaseResponse.ok(settingReportVO);
     }
 }

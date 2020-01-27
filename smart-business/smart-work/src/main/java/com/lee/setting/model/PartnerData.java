@@ -1,6 +1,7 @@
 package com.lee.setting.model;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -12,22 +13,26 @@ import java.time.LocalDateTime;
  */
 @Data
 @TableName("work_partner_report")
-public class SettingPartnerData {
+public class PartnerData {
     /**
      * 租户ID
      */
+    @TableId
     private Long tenantId;
     /**
      * 门店ID
      */
+    @TableId
     private Long businessUnitId;
     /**
      * 伙伴ID
      */
+    @TableId
     private Long partnerId;
     /**
      * 排班日期
      */
+    @TableId
     @TableField("report_date")
     private LocalDate reportDate;
     /**
@@ -190,6 +195,16 @@ public class SettingPartnerData {
      */
     @TableField(value = "_2330")
     private String type2330;
+    /**
+     *
+     */
+    @TableField(value = "_0000")
+    private String type0000;
+    /**
+     *
+     */
+    @TableField(value = "_0030")
+    private String type0030;
     /**
      * 创建日期
      */

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
  * @author lee.li
  */
 @Data
-public class SettingPartnerDataDTO {
+public class PartnerDataDTO {
     /**
      * 租户ID
      */
@@ -157,6 +157,14 @@ public class SettingPartnerDataDTO {
      *
      */
     private String type2330;
+    /**
+     *
+     */
+    private String type0000;
+    /**
+     *
+     */
+    private String type0030;
     /**
      * 创建日期
      */

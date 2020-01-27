@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.lee.common.business.EnabledStatus;
+import com.lee.enums.EnabledStatus;
 import com.lee.common.core.Pagination;
 import com.lee.type.domain.WorKTypeDTO;
 import com.lee.type.mapper.TypeMapper;

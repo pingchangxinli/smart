@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.xml.ws.RequestWrapper;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -45,7 +46,8 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     public WorkerDTO getById(Object id) {
-        return null;
+        WorkerDO workerDO = mapper.selectById((Serializable) id);
+        return modelMapper.map(workerDO, WorkerDTO.class);
     }
 
     @Override

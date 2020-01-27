@@ -1,4 +1,4 @@
-package com.lee;
+package com.lee.enums;
 
 /**
  * 错误信息枚举

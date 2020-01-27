@@ -13,9 +13,9 @@ public class SettingDTO {
     /**
      * 门店预估营业额
      */
-    private List<SettingBusinessUnitDataDTO> businessUnitList;
+    private List<BusinessUnitDataDTO> businessUnitList;
     /**
      * 伙伴排班类型
      */
-    private List<SettingPartnerDataDTO> partnerReportList;
+    private List<PartnerDataDTO> partnerReportList;
 }

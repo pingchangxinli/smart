@@ -1,0 +1,3 @@
+mybatis-plus:
+  type-enums-package: com.lee.enums
+

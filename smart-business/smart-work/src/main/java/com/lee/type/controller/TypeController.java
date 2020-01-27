@@ -1,7 +1,7 @@
 package com.lee.type.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.lee.ErrorMsgEnum;
+import com.lee.enums.ErrorMsgEnum;
 import com.lee.common.business.util.PaginationResponseUtil;
 import com.lee.common.core.Pagination;
 import com.lee.common.core.response.BaseResponse;

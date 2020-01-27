@@ -1,8 +1,8 @@
 package com.lee.role.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.lee.common.business.EnabledStatus;
 import com.lee.common.core.response.BaseResponse;
+import com.lee.enums.EnabledStatus;
 import com.lee.role.domain.SysRole;
 import com.lee.role.exception.RoleExistException;
 import com.lee.role.service.SysRoleService;

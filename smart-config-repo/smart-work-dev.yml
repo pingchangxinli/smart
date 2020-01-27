@@ -1,6 +1,6 @@
 spring:
   datasource:
-    jdbc-url: jdbc:mysql://localhost:3306/smart_report?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    jdbc-url: jdbc:mysql://localhost:3306/smart_report?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
     username: root
     password: root
 eureka:

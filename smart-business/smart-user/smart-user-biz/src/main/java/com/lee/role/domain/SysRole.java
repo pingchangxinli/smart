@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
-import com.lee.common.business.EnabledStatus;
 import com.lee.common.core.BaseObject;
+import com.lee.enums.EnabledStatus;
 import com.lee.user.domain.Permission;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

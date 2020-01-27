@@ -1,6 +1,6 @@
 package com.lee.type.domain;
 
-import com.lee.common.business.EnabledStatus;
+import com.lee.enums.EnabledStatus;
 import lombok.Data;
 
 import java.time.LocalDateTime;

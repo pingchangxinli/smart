@@ -1,4 +1,4 @@
-package com.lee.tenant.domain;
+package com.lee.api.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -7,25 +7,25 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.lee.common.business.EnabledStatus;
+import com.lee.enums.EnabledStatus;
 import com.lee.common.core.BaseObject;
 import lombok.Data;
 
 /**
- * 成本中心
+ * 分部
  *
  * @author lee.li
  */
 @Data
-@TableName("sys_shop")
-public class Shop extends BaseObject {
+@TableName("sys_business_unit")
+public class BusinessUnit extends BaseObject {
     /**
      * 主键
      */
     @TableId(type = IdType.AUTO)
     private Long id;
     /**
-     * 成本中心名称
+     * 分部名称
      */
     private String name;
     /**

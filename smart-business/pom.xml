@@ -13,7 +13,7 @@
     <artifactId>smart-business</artifactId>
     <modules>
         <module>smart-admin</module>
-        <!--用户 租户 成本中心-->
+        <!--用户 租户 分部-->
         <module>smart-user</module>
         <module>smart-work</module>
         <module>smart-user</module>

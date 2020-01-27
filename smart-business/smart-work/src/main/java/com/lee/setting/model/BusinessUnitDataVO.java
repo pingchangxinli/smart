@@ -1,5 +1,6 @@
 package com.lee.setting.model;
 
+import com.lee.enums.LineTypeEnum;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -9,7 +10,7 @@ import java.time.LocalDate;
  * 门店每天营业额预估
  */
 @Data
-public class SettingBusinessUnitDataVO {
+public class BusinessUnitDataVO {
     /**
      * 门店ID
      */
@@ -25,23 +26,31 @@ public class SettingBusinessUnitDataVO {
     /**
      * 早餐金额(分为单位)
      */
-    private Long breakfastAmount;
+    private Double breakfastAmount;
     /**
      * 午餐金额(分为单位)
      */
-    private Long lunchAmount;
+    private Double lunchAmount;
     /**
      * 晚餐第一阶段金额(分为单位)
      */
-    private Long supperFirstPhaseAmount;
+    private Double supperFirstPhaseAmount;
 
     /**
      * 晚餐第二阶段金额(分为单位)
      */
-    private Long supperSecondPhaseAmount;
+    private Double supperSecondPhaseAmount;
 
     /**
      * 晚餐第三阶段金额(分为单位)
      */
-    private Long supperThirdPhaseAmount;
+    private Double supperThirdPhaseAmount;
+    /**
+     * 中文描述
+     */
+    private String description;
+    /**
+     * 行类型
+     */
+    private LineTypeEnum lineType;
 }

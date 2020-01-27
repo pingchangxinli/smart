@@ -1,10 +1,8 @@
 package com.lee.worker.controller;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lee.api.entity.SysUser;
-import com.lee.api.feign.UserClient;
-import com.lee.common.business.domain.LoginUser;
+import com.lee.api.feign.RemoteUserClient;
 import com.lee.common.business.util.PaginationResponseUtil;
 import com.lee.common.core.Pagination;
 import com.lee.common.core.response.BaseResponse;
@@ -39,7 +37,7 @@ public class WorkerController {
     @Resource
     private ModelMapper modelMapper;
     @Resource
-    private UserClient userClient;
+    private RemoteUserClient remoteUserClient;
 
     /**
      * 通过名称获取伙伴信息
@@ -52,7 +50,7 @@ public class WorkerController {
                                                          @RequestParam("name") String name) {
         //通過token得到用戶信息
         String accessToken = WebUtil.getAccessToken(authorization);
-        BaseResponse<SysUser> baseResponse = userClient.getCurrentUser(accessToken);
+        BaseResponse<SysUser> baseResponse = remoteUserClient.getCurrentUser(accessToken);
         Long userId = baseResponse.getData().getId();
         WorkerDTO workerDTO = new WorkerDTO();
         workerDTO.setName(name);

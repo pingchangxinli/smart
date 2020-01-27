@@ -1,10 +1,10 @@
 package com.lee.tenant.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.lee.tenant.domain.Shop;
+import com.lee.api.entity.BusinessUnit;
 
 /**
  * @author lee.li
  */
-public interface ShopMapper extends BaseMapper<Shop> {
+public interface BusinessUnitMapper extends BaseMapper<BusinessUnit> {
 }

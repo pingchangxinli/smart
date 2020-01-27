@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
  * 门店所有伙伴不同时段排班类型
  */
 @Data
-public class SettingPartnerDataVO {
+public class PartnerDataVO {
     /**
      * 租户ID
      */
@@ -163,7 +163,14 @@ public class SettingPartnerDataVO {
      *
      */
     private String type2330;
-
+    /**
+     *
+     */
+    private String type0000;
+    /**
+     *
+     */
+    private String type0030;
     /**
      * 创建日期
      */

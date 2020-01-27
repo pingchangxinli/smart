@@ -3,13 +3,13 @@ package com.lee.tenant.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.lee.common.business.EnabledStatus;
 import com.lee.common.core.Pagination;
 import com.lee.common.core.exception.PageException;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.common.core.response.PaginationResponse;
 import com.lee.common.business.util.PaginationResponseUtil;
 import com.lee.common.core.util.JsonUtil;
+import com.lee.enums.EnabledStatus;
 import com.lee.tenant.TenantErrorEnum;
 import com.lee.tenant.domain.Tenant;
 import com.lee.tenant.exception.TenantExistedException;

@@ -1,4 +1,4 @@
-package com.lee.common.business;
+package com.lee.enums;
 
 import com.baomidou.mybatisplus.core.enums.IEnum;
 import com.fasterxml.jackson.annotation.JsonCreator;

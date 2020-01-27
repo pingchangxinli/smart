@@ -1,13 +1,12 @@
 package com.lee.user.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.lee.api.dto.SysUserDTO;
-import com.lee.common.business.EnabledStatus;
 import com.lee.common.business.domain.LoginUser;
 import com.lee.common.business.util.PaginationResponseUtil;
 import com.lee.common.core.Pagination;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.common.core.response.PaginationResponse;
+import com.lee.enums.EnabledStatus;
 import com.lee.feign.TokenClient;
 import com.lee.api.entity.SysUser;
 import com.lee.user.domain.SysUserRequest;

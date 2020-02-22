@@ -1,8 +1,8 @@
 package com.lee.exception.handler;
 
 import com.lee.common.core.response.BaseResponse;
-import com.lee.role.exception.RoleExistException;
-import com.lee.tenant.exception.BusinessUnitNotExistedException;
+import com.lee.exception.RoleExistException;
+import com.lee.exception.BusinessUnitNotExistedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;

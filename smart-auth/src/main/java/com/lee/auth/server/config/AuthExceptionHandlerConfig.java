@@ -1,6 +1,6 @@
 package com.lee.auth.server.config;
 
-import com.lee.common.core.GateWayCode;
+import com.lee.common.core.enums.ResponseStatusEnum;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.common.core.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.provider.expression.OAuth2WebSecurityExpressionHandler;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
+import javax.xml.ws.Response;
+
 /**
  * Exception处理配置类
+ *
  * @author lee.li
  */
 @Slf4j
@@ -27,10 +30,9 @@ public class AuthExceptionHandlerConfig {
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return (request, response, authException) -> {
             log.error("url: {},exception:{}", request.getRequestURI(), authException);
-            GateWayCode responseEnum = GateWayCode.SUCCESS;
+            ResponseStatusEnum responseEnum = ResponseStatusEnum.SUCCESS;
             HttpStatus status = HttpStatus.UNAUTHORIZED;
-            BaseResponse response1 = BaseResponse.error(responseEnum.getCode(), responseEnum.getMessage(),
-                    String.valueOf(status.value()), status.getReasonPhrase());
+            BaseResponse response1 = BaseResponse.error(responseEnum.getCode(), responseEnum.getMessage());
             response.setContentType("application/json;charset=UTF-8");
             response.getWriter().write(JsonUtil.toJson(response1));
             response.getWriter().flush();

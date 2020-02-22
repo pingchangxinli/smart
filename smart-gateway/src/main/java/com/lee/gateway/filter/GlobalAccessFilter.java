@@ -2,12 +2,10 @@ package com.lee.gateway.filter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lee.common.core.Contants;
-import com.lee.common.core.GateWayCode;
+import com.lee.common.core.enums.ResponseStatusEnum;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.common.core.util.JsonUtil;
 import com.lee.gateway.AuthIgnored;
-import com.lee.gateway.feign.TenantClient;
-import com.lee.gateway.feign.TokenClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -18,7 +16,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.http.server.reactive.ServerHttpResponseDecorator;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.server.ServerWebExchange;
@@ -40,10 +37,6 @@ import java.util.Map;
 @Slf4j
 @Component
 public class GlobalAccessFilter implements GlobalFilter, Ordered {
-    @Resource
-    private TokenClient tokenClient;
-    @Resource
-    private TenantClient tenantClient;
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
@@ -70,36 +63,37 @@ public class GlobalAccessFilter implements GlobalFilter, Ordered {
 
         //获取access token
         String accessToken = extractToken(request);
-
-         /*
+        return chain.filter(exchange);
+        /*
          * 该接口调用必须要header中Authorization，
          */
-        BaseResponse baseResponse = tokenClient.token(Contants.AUTHORIZATION_PRE + accessToken);
-        if (log.isDebugEnabled()) {
-            log.debug("[GlobalAccessFilter] tokenClient.token:" + baseResponse);
-        }
-        Map<String,Object> map = (Map<String, Object>) baseResponse.getData();
-        boolean isValid = (map != null && (Integer)map.get("expires_in") > 0) ? true : false;
-
-        if (isValid) {
-            return chain.filter(exchange);
-        } else {
-            GateWayCode responseEnum = GateWayCode.AUTH_NOT_ENOUGH;
-            BaseResponse response =
-                    BaseResponse.builder().code(responseEnum.getCode()).message(responseEnum.getMessage()).build();
-            ServerHttpResponse httpResponse = exchange.getResponse();
-            String message = "";
-            try {
-                message = JsonUtil.toJson(response);
-            } catch (JsonProcessingException e) {
-                log.error("[GATEWAY],response no token: {}", e);
-            }
-            byte[] bits = message.getBytes(StandardCharsets.UTF_8);
-            DataBuffer buffer = httpResponse.bufferFactory().wrap(bits);
-            httpResponse.setStatusCode(HttpStatus.UNAUTHORIZED);
-            httpResponse.getHeaders().add("Content-Type", "application/json;charset=UTF-8");
-            return httpResponse.writeWith(Mono.just(buffer));
-        }
+        //BaseResponse baseResponse = tokenClient.token(Contants.AUTHORIZATION_PRE + accessToken);
+//        BaseResponse baseResponse = null;
+//        if (log.isDebugEnabled()) {
+//            log.debug("[GlobalAccessFilter] tokenClient.token:" + baseResponse);
+//        }
+//        Map<String,Object> map = (Map<String, Object>) baseResponse.getData();
+//        boolean isValid = (map != null && (Integer)map.get("expires_in") > 0) ? true : false;
+//
+//        if (isValid) {
+//            return chain.filter(exchange);
+//        } else {
+//            ResponseStatusEnum responseEnum = ResponseStatusEnum.AUTH_NOT_ENOUGH;
+//            BaseResponse response =
+//                    BaseResponse.builder().code(responseEnum.getCode()).message(responseEnum.getMessage()).build();
+//            ServerHttpResponse httpResponse = exchange.getResponse();
+//            String message = "";
+//            try {
+//                message = JsonUtil.toJson(response);
+//            } catch (JsonProcessingException e) {
+//                log.error("[GATEWAY],response no token: {}", e);
+//            }
+//            byte[] bits = message.getBytes(StandardCharsets.UTF_8);
+//            DataBuffer buffer = httpResponse.bufferFactory().wrap(bits);
+//            httpResponse.setStatusCode(HttpStatus.UNAUTHORIZED);
+//            httpResponse.getHeaders().add("Content-Type", "application/json;charset=UTF-8");
+//            return httpResponse.writeWith(Mono.just(buffer));
+//        }
     }
 
     /**
@@ -134,7 +128,8 @@ public class GlobalAccessFilter implements GlobalFilter, Ordered {
     private String putTenantIdInRequest(ServerHttpRequest request) {
         URI uri = request.getURI();
         String host = uri.getHost();
-        BaseResponse response = tenantClient.findTenantByDomain(host);
+//        BaseResponse response = tenantClient.findTenantByDomain(host);
+        BaseResponse response = null;
         if (log.isDebugEnabled()) {
             log.debug("[GlobalAccessFilter putTenantIdInRequest] host:" + host + ",response:" + response + ",data class:" +
                     response.getData().getClass().getName());

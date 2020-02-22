@@ -1,9 +1,5 @@
 package com.lee.common.core.util;
 
-import com.lee.common.core.response.BaseResponse;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.ServletRequestUtils;
-
 /**
  * web公共类
  * @author lee.li

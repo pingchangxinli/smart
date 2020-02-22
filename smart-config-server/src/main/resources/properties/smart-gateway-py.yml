@@ -1,0 +1,50 @@
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://localhost:8761/eureka/
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    gateway:
+      routes:
+        - id: smart-auth
+          uri: lb://smart-auth
+          predicates:
+            - Path=/auth-api/**
+          filters:
+            - StripPrefix=1 # 表示在转发时去掉auth api
+            #- KaptchFilter # 验证码校验
+            - PasswordFilter # 密码处理
+        - id: smart-user
+          uri: lb://smart-user
+          predicates:
+            - Path=/user-api/**
+          filters:
+            - StripPrefix=1 # 表示在转发时去掉user api
+            - PasswordFilter # 密码处理
+        - id: smart-user
+          uri: lb://smart-work
+          predicates:
+            - Path=/work-api/**
+          filters:
+            - StripPrefix=1 # 表示在转发时去掉work api
+  redis:
+    host: localhost
+    port: 6379
+    pool:
+      max-active: 8
+      max-wait: 1
+      max-idle: 8
+      min-idle: 0
+      timeout: 0
+logging:
+  level:
+    root: INFO
+    com.lee.gateway: DEBUG
+web:
+  password:
+    security:
+      key: 1234123412ABCDEF
+      iv: ABCDEF1234123412
+

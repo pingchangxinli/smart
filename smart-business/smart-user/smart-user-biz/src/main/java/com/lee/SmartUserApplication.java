@@ -1,8 +1,9 @@
 package com.lee;
 
 import com.lee.common.core.Contants;
-import com.lee.tenant.domain.Tenant;
-import com.lee.tenant.service.TenantService;
+import com.lee.common.security.annotation.EnableSmartResourceServer;
+import com.lee.domain.Tenant;
+import com.lee.service.TenantService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,13 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.web.WebApplicationInitializer;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -27,7 +31,12 @@ import java.util.Map;
 @SpringBootApplication
 @EnableFeignClients
 @EnableEurekaClient
-public class SmartUserApplication {
+@EnableSmartResourceServer
+public class SmartUserApplication extends SpringBootServletInitializer implements WebApplicationInitializer {
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(SmartUserApplication.class);
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(SmartUserApplication.class, args);

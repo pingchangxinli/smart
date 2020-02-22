@@ -15,4 +15,5 @@ spring:
         ##  password:
         ##配置本地路径
         native:
-          search-locations: file:D:\private\smartSpace\smart\smart-config-repo
+          ##search-locations: file:D:\private\smartSpace\smart\smart-config-repo
+          search-locations: classpath:properties/

@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.lee.common.core.config.RedisConfig
+  com.lee.common.core.config.RedisConfig,\
+  com.lee.common.core.config.WhiteListProperties

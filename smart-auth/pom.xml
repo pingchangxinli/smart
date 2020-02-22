@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>smart-auth</artifactId>
+    <packaging>war</packaging>
     <dependencies>
         <!--配置客户端-->
         <dependency>
@@ -33,7 +34,7 @@
         </dependency>
         <dependency>
             <groupId>com.lee</groupId>
-            <artifactId>smart-common-core</artifactId>
+            <artifactId>smart-common-business</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -66,6 +67,12 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lee</groupId>
+            <artifactId>smart-common-security</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>

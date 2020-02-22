@@ -16,6 +16,7 @@ public interface UserClient {
      * @param username 用户名
      * @return 用户信息
      */
+
     @GetMapping(value = "/internal/{username}")
     LoginUser findUserByUserName(@PathVariable("username") String username);
 

@@ -3,7 +3,7 @@ spring:
     ##配置文件服务
     config:
       uri: http://localhost:8200
-      profile: dev
+      profile: ${SMART_CONFIG_PROFILE:dev}
       label: master
   application:
     name: smart-gateway

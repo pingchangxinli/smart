@@ -22,7 +22,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.lee.common.core.response.BaseResponse.ok;
 
 /**
  * @author lee.li
@@ -59,7 +58,7 @@ public class TypeController {
             log.debug("[TypeController] request params: {}", worKType);
         }
         WorKType worKType1 = typeService.findType(worKType);
-        return ok(worKType1);
+        return BaseResponse.ok(worKType1);
     }
 
     @GetMapping("list")

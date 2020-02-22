@@ -2,7 +2,7 @@ spring:
   cloud:
     config:
       uri: http://localhost:8200
-      profile: dev
+      profile: ${SMART_CONFIG_PROFILE:dev}
       label: master
   application:
     name: smart-user
@@ -10,4 +10,8 @@ server:
   port: 8500
 mybatis-plus:
   type-enums-package: com.lee
+
+white-list:
+  urls:
+    - /user/internal/*
 

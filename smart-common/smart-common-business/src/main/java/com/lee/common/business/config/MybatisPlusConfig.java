@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Configuration
 @Slf4j
-@MapperScan(basePackages = {"com.lee.*.mapper", "com.lee.*.*.mapper", "com.lee.*.*.*.mapper"})
+@MapperScan(basePackages = {"com.lee.mapper", "com.lee.*.mapper", "com.lee.*.*.mapper", "com.lee.*.*.*.mapper"})
 public class MybatisPlusConfig {
     @Resource
     private HttpServletRequest request;

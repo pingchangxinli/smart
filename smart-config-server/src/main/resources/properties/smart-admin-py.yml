@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    jdbc-url: jdbc:mysql://localhost:3306/smart_auth?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    username: root
+    password: Greate@20200216
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+logging:
+  level:
+    root: DEBUG
+    com.lee: DEBUG

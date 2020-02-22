@@ -36,6 +36,7 @@ import javax.sql.DataSource;
 @Configuration
 public class OAuth2ServerConfig {
     @Autowired
+
     private DataSource dataSource;
     @Resource
     private RedisTemplate redisTemplate;

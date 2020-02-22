@@ -1,9 +1,8 @@
 package com.lee.common.core.response;
 
-import com.lee.common.core.GateWayCode;
+import com.lee.common.core.enums.ResponseStatusEnum;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.http.HttpStatus;
 
 import java.io.Serializable;
 
@@ -14,11 +13,7 @@ import java.io.Serializable;
 @Data
 @Builder
 public class BaseResponse<T> implements Serializable {
-    private static final GateWayCode DEFAULT_GATEWAY_CODE = GateWayCode.SUCCESS;
-    /**
-     * 默认应用服务返回状态
-     */
-    private static final HttpStatus DEFAULT_STATUS = HttpStatus.OK;
+    private static final ResponseStatusEnum RESPONSE_STATUS_OK = ResponseStatusEnum.OK;
     /**
      * 网关返回码
      */
@@ -29,16 +24,6 @@ public class BaseResponse<T> implements Serializable {
      */
     @Builder.Default
     private String message;
-    /**
-     * 应用服务状态码
-     */
-    @Builder.Default
-    private String subCode;
-    /**
-     * 应用服务状态信息
-     */
-    @Builder.Default
-    private String subMessage;
 
     private T data;
 
@@ -51,36 +36,26 @@ public class BaseResponse<T> implements Serializable {
      */
     public static <T> BaseResponse<T> ok(T data) {
         return BaseResponse.<T>builder()
-                .code(DEFAULT_GATEWAY_CODE.getCode()).message(DEFAULT_GATEWAY_CODE.getMessage())
+                .code(RESPONSE_STATUS_OK.getCode()).message(RESPONSE_STATUS_OK.getMessage())
                 .data(data)
-                .subCode(String.valueOf(DEFAULT_STATUS.value())).subMessage(DEFAULT_STATUS.getReasonPhrase())
                 .build();
     }
 
-    /**
-     * 错误提示返回信息
-     *
-     * @param subCode    应用服务状态
-     * @param subMessage 应用服务状态信息
-     * @return 返回应答信息
-     */
-    public static BaseResponse error(String subCode, String subMessage) {
-        return error(DEFAULT_GATEWAY_CODE.getCode(), DEFAULT_GATEWAY_CODE.getMessage(), subCode, subMessage);
+
+    public static BaseResponse error(Exception e) {
+        return error(ResponseStatusEnum.FAILED.getCode(), e.getMessage());
     }
 
     /**
      * 错误提示返回信息
      *
-     * @param code       网关返回code
-     * @param codeText   网关返回信息解释
-     * @param subCode    应用服务状态
-     * @param subMessage 应用服务状态信息
+     * @param code     网关返回code
+     * @param codeText 网关返回信息解释
      * @return 返回应答信息
      */
-    public static BaseResponse error(String code, String codeText, String subCode, String subMessage) {
+    public static BaseResponse error(String code, String codeText) {
         return BaseResponse.builder()
                 .code(code).message(codeText)
-                .subCode(subCode).subMessage(subMessage)
                 .build();
     }
 }

@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>smart-config-server</artifactId>
+    <artifactId>smart-config</artifactId>
     <packaging>war</packaging>
 
     <dependencies>

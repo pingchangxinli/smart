@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -34,9 +35,12 @@ public class UserController {
     private UserService userService;
     @Resource
     private TokenClient tokenClient;
+    @Resource
+    private PasswordEncoder passwordEncoder;
 
     /**
      * 租户下的所有用户
+     *
      * @param sysUser
      * @return
      */
@@ -61,21 +65,10 @@ public class UserController {
         //状态为 生效状态
         user.setStatus(EnabledStatus.ENABLED);
         //密码AES加密
-        String passwordEncode = passwordEncode(user.getPassword());
+        String passwordEncode = passwordEncoder.encode(user.getPassword());
         user.setPassword(passwordEncode);
         boolean isSuccess = userService.createUser(user);
         return BaseResponse.ok(1);
-    }
-
-    /**
-     * 加密用户密码
-     * @param password 明文
-     * @return
-     */
-    private String passwordEncode(String password) {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        String passwordEncoder = bCryptPasswordEncoder.encode(password);
-        return passwordEncoder;
     }
 
     /**
@@ -86,7 +79,13 @@ public class UserController {
      */
     @GetMapping("/currentUser")
     public BaseResponse<SysUser> currentUser(@RequestParam("access_token") String accessToken) {
+        if (log.isDebugEnabled()) {
+            log.debug("UserController, currentUser,param:{}", accessToken);
+        }
         BaseResponse<LoginUser> baseResponse = tokenClient.findUserByAccessToken(accessToken);
+        if (log.isDebugEnabled()) {
+            log.debug("UserController, currentUser token,param:{}", baseResponse.getData());
+        }
         LoginUser loginUser = baseResponse.getData();
         if (loginUser == null) {
             UserErrorMessageTipEnum tip = UserErrorMessageTipEnum.PARAM_ERROR;

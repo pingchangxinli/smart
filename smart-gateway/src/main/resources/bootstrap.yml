@@ -8,5 +8,5 @@ spring:
   application:
     name: smart-gateway
 server:
-  port: 3000
+  port: 8300
 

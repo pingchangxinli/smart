@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -32,11 +33,9 @@ import javax.sql.DataSource;
 /**
  * @author lee.li
  */
-@SuppressWarnings("AlibabaClassNamingShouldBeCamel")
 @Configuration
-public class OAuth2ServerConfig {
+public class Oauth2AuthorizationServerConfig {
     @Autowired
-
     private DataSource dataSource;
     @Resource
     private RedisTemplate redisTemplate;
@@ -55,16 +54,13 @@ public class OAuth2ServerConfig {
     class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
         @Autowired
         private AuthenticationManager authenticationManager;
-        @Autowired
-        private JdbcClientDetailsService clientDetailsService;
-        @Resource
-        private RedisClientDetailService redisClientDetailService;
 
         @Override
         public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
             //该配置需要正确的数据库, 数据库的报错级别在DEBUG,不是ERROR,报错信息和数据库表无关
+            JdbcClientDetailsService clientDetailsService = this.jdbcClientDetailsService();
+            clientDetailsService.setPasswordEncoder(NoOpPasswordEncoder.getInstance());
             clients.jdbc(dataSource).clients(clientDetailsService);
-            //clients.withClientDetails(redisClientDetailService);
         }
 
         @Override
@@ -75,7 +71,11 @@ public class OAuth2ServerConfig {
 
         @Override
         public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-            security.allowFormAuthenticationForClients();
+            security
+                    //配置其他作为资源服务器来认证服务器做token校验，全部通过
+                    .checkTokenAccess("permitAll()")
+                    .allowFormAuthenticationForClients();
+
         }
 
         @Bean
@@ -88,6 +88,12 @@ public class OAuth2ServerConfig {
             return new RedisTokenStore(connectionFactory);
         }
 
+        @Bean
+        public JdbcClientDetailsService jdbcClientDetailsService() {
+            JdbcClientDetailsService service = new JdbcClientDetailsService(dataSource);
+            service.setPasswordEncoder(NoOpPasswordEncoder.getInstance());
+            return service;
+        }
 
     }
 

@@ -1,10 +1,9 @@
-package com.lee.auth.server.config;
+package com.lee.common.security.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
@@ -18,6 +17,5 @@ public class PasswordEncoderConfig {
     public PasswordEncoder passwordEncoder() {
         log.info("[PasswordEncoderConfig.passwordEncoder] init use BCryptPasswordEncoder");
         return new BCryptPasswordEncoder();
-        //return NoOpPasswordEncoder.getInstance();
     }
 }

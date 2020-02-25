@@ -42,19 +42,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * 该配置配合oauth2 password模式,根据request提交
      * username 和 password 判断是否存在
+     *
      * @return
      */
     @Override
     @Bean
     public UserDetailsService userDetailsService() {
-        UserDetailsService userDetailsService =  new AuthUserDetailsServiceImpl(dataSource);
+        UserDetailsService userDetailsService = new AuthUserDetailsServiceImpl(dataSource);
         log.info("[SecurityConfig.userDetailsService] init " + userDetailsService);
-
-//        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-//        String finalPassword = "{bcrypt}" + bCryptPasswordEncoder.encode("password");
 
         return userDetailsService;
     }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         // @formatter:off
@@ -76,12 +75,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        super.configure(http);
         http
-                .requestMatchers().anyRequest()
-                .and()
                 .authorizeRequests()
-                .antMatchers("/oauth/*").permitAll();
+                .antMatchers(
+                        "/oauth/**", "/token/**").permitAll()
+                .anyRequest().authenticated();
+
         http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
     }
 

@@ -91,23 +91,22 @@ public class Oauth2AuthorizationServerConfig {
         @Bean
         public JdbcClientDetailsService jdbcClientDetailsService() {
             JdbcClientDetailsService service = new JdbcClientDetailsService(dataSource);
-            service.setPasswordEncoder(NoOpPasswordEncoder.getInstance());
             return service;
         }
 
     }
 
-    @EnableResourceServer
-    @Configuration
-    class ResourceServerConfig extends ResourceServerConfigurerAdapter {
-        @Override
-        public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-            super.configure(resources);
-        }
-
-        @Override
-        public void configure(HttpSecurity http) throws Exception {
-            http.authorizeRequests().antMatchers("/clients/**").authenticated();
-        }
-    }
+//    @EnableResourceServer
+//    @Configuration
+//    class ResourceServerConfig extends ResourceServerConfigurerAdapter {
+//        @Override
+//        public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
+//            super.configure(resources);
+//        }
+//
+//        @Override
+//        public void configure(HttpSecurity http) throws Exception {
+//            http.authorizeRequests().antMatchers("/clients/**").authenticated();
+//        }
+//    }
 }

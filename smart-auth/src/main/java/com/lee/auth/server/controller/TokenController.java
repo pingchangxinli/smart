@@ -44,11 +44,12 @@ public class TokenController {
     /**
      * 通过access token 得到 用户名
      *
-     * @param accessToken
+     * @param authorization 授权码
      * @return
      */
     @GetMapping("/user")
-    public BaseResponse<LoginUser> getUserNameByAccessToken(@RequestParam("access_token") String accessToken) {
+    public BaseResponse<LoginUser> getUserNameByAccessToken(@RequestHeader("Authorization") String authorization) {
+        String accessToken = WebUtil.getAccessToken(authorization);
         OAuth2Authentication auth2Authenitication = tokenStore.readAuthentication(accessToken);
 
         LoginUser loginUser = (LoginUser) auth2Authenitication.getPrincipal();

@@ -3,6 +3,7 @@ spring:
     jdbc-url: jdbc:mysql://smart-mysql:3306/smart_auth?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
     username: root
     password: Greate@20200216
+    driverClassName: com.mysql.jdbc.Driver
   main:
     allow-bean-definition-overriding: true
 logging:

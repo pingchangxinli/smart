@@ -32,7 +32,7 @@ import java.util.Map;
  * 过滤是否请求链接
  * param带入access_token参数 或者 header 带入 Authorization 格式为 Bearer ******
  *
- * @author haitao.li
+ * @author lee.li
  */
 @Slf4j
 @Component
@@ -55,45 +55,8 @@ public class GlobalAccessFilter implements GlobalFilter, Ordered {
         //根据域名获取租户信息
         //putTenantIdInRequest(request);
 
-        for (String s : authIgnored.getPath()) {
-            if (pathMatcher.match(s, exchange.getRequest().getPath().value())) {
-                return chain.filter(exchange);
-            }
-        }
-
-        //获取access token
-        String accessToken = extractToken(request);
         return chain.filter(exchange);
-        /*
-         * 该接口调用必须要header中Authorization，
-         */
-        //BaseResponse baseResponse = tokenClient.token(Contants.AUTHORIZATION_PRE + accessToken);
-//        BaseResponse baseResponse = null;
-//        if (log.isDebugEnabled()) {
-//            log.debug("[GlobalAccessFilter] tokenClient.token:" + baseResponse);
-//        }
-//        Map<String,Object> map = (Map<String, Object>) baseResponse.getData();
-//        boolean isValid = (map != null && (Integer)map.get("expires_in") > 0) ? true : false;
-//
-//        if (isValid) {
-//            return chain.filter(exchange);
-//        } else {
-//            ResponseStatusEnum responseEnum = ResponseStatusEnum.AUTH_NOT_ENOUGH;
-//            BaseResponse response =
-//                    BaseResponse.builder().code(responseEnum.getCode()).message(responseEnum.getMessage()).build();
-//            ServerHttpResponse httpResponse = exchange.getResponse();
-//            String message = "";
-//            try {
-//                message = JsonUtil.toJson(response);
-//            } catch (JsonProcessingException e) {
-//                log.error("[GATEWAY],response no token: {}", e);
-//            }
-//            byte[] bits = message.getBytes(StandardCharsets.UTF_8);
-//            DataBuffer buffer = httpResponse.bufferFactory().wrap(bits);
-//            httpResponse.setStatusCode(HttpStatus.UNAUTHORIZED);
-//            httpResponse.getHeaders().add("Content-Type", "application/json;charset=UTF-8");
-//            return httpResponse.writeWith(Mono.just(buffer));
-//        }
+
     }
 
     /**
@@ -102,6 +65,7 @@ public class GlobalAccessFilter implements GlobalFilter, Ordered {
      * @param request 请求
      * @return token
      */
+    @Deprecated
     private String extractToken(ServerHttpRequest request) {
         List<String> strings = request.getHeaders().get("Authorization");
         String authToken = null;
@@ -125,6 +89,7 @@ public class GlobalAccessFilter implements GlobalFilter, Ordered {
      * @param request
      * @return
      */
+    @Deprecated
     private String putTenantIdInRequest(ServerHttpRequest request) {
         URI uri = request.getURI();
         String host = uri.getHost();

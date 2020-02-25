@@ -1,7 +1,6 @@
 package com.lee.enums;
 
 import com.baomidou.mybatisplus.core.enums.IEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
@@ -10,8 +9,7 @@ import lombok.Getter;
  *
  * @author lee.li
  */
-@Getter
-public enum EnabledStatus implements IEnum<Integer> {
+public enum EnabledStatusEnum implements IEnum<Integer> {
     /**
      * 启用
      */
@@ -21,16 +19,17 @@ public enum EnabledStatus implements IEnum<Integer> {
      */
     DISABLED(1, "失效");
 
-    private Integer value;
+    private int value;
     /**
      * 描述
      */
     private String description;
 
-    EnabledStatus(Integer value, String description) {
+    EnabledStatusEnum(final Integer value, final String description) {
         this.value = value;
         this.description = description;
     }
+
     @Override
     @JsonValue
     public Integer getValue() {

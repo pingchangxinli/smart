@@ -6,7 +6,8 @@ import com.lee.common.business.util.PaginationResponseUtil;
 import com.lee.common.core.Pagination;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.common.core.response.PaginationResponse;
-import com.lee.enums.EnabledStatus;
+import com.lee.common.core.util.WebUtil;
+import com.lee.enums.EnabledStatusEnum;
 import com.lee.feign.TokenClient;
 import com.lee.api.entity.SysUser;
 import com.lee.domain.SysUserRequest;
@@ -14,10 +15,10 @@ import com.lee.domain.SysUserVO;
 import com.lee.enums.UserErrorMessageTipEnum;
 import com.lee.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerTokenServicesConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,7 +64,7 @@ public class UserController {
             log.debug("[user controller] createUser request params:" + user);
         }
         //状态为 生效状态
-        user.setStatus(EnabledStatus.ENABLED);
+        user.setStatus(EnabledStatusEnum.ENABLED);
         //密码AES加密
         String passwordEncode = passwordEncoder.encode(user.getPassword());
         user.setPassword(passwordEncode);
@@ -74,15 +75,12 @@ public class UserController {
     /**
      * 当前用户信息
      *
-     * @param accessToken token
+     * @param authorization 头部授权信息
      * @return 用户信息
      */
     @GetMapping("/currentUser")
-    public BaseResponse<SysUser> currentUser(@RequestParam("access_token") String accessToken) {
-        if (log.isDebugEnabled()) {
-            log.debug("UserController, currentUser,param:{}", accessToken);
-        }
-        BaseResponse<LoginUser> baseResponse = tokenClient.findUserByAccessToken(accessToken);
+    public BaseResponse<SysUser> currentUser(@RequestHeader("authorization") String authorization) {
+        BaseResponse<LoginUser> baseResponse = tokenClient.findUserByAccessToken(authorization);
         if (log.isDebugEnabled()) {
             log.debug("UserController, currentUser token,param:{}", baseResponse.getData());
         }
@@ -110,6 +108,7 @@ public class UserController {
         return BaseResponse.ok(sysUser);
     }
 
+    @Deprecated
     @GetMapping("/currentUser1")
     public BaseResponse<LoginUser> currentUser1(@RequestParam("access_token") String accessToken) {
         BaseResponse<LoginUser> baseResponse = tokenClient.findUserByAccessToken(accessToken);
@@ -136,7 +135,7 @@ public class UserController {
     public BaseResponse pageList(Pagination pagination, SysUser sysUser) {
         IPage<SysUserVO> iPage = userService.pageList(pagination, sysUser);
 
-        PaginationResponse<SysUser> paginationResponse = PaginationResponseUtil.convertIPageToPagination(iPage);
+        PaginationResponse<SysUserVO> paginationResponse = PaginationResponseUtil.convertIPageToPagination(iPage);
 
         return BaseResponse.ok(paginationResponse);
     }
@@ -162,8 +161,10 @@ public class UserController {
     @GetMapping("/internal/{username}")
     public LoginUser internalFindUserByUsername(@PathVariable("username") String username) {
         LoginUser loginUser = userService.internalFindUserByUserName(username);
+
         return loginUser;
     }
+
     @DeleteMapping("/{id}")
     public BaseResponse disabledUserById(@PathVariable("id") Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

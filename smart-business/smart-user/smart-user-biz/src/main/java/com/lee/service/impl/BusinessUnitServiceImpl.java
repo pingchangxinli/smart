@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lee.common.core.Pagination;
 import com.lee.api.entity.BusinessUnit;
-import com.lee.enums.EnabledStatus;
+import com.lee.enums.EnabledStatusEnum;
 import com.lee.exception.BusinessUnitExistedException;
 import com.lee.exception.BusinessUnitNotExistedException;
 import com.lee.mapper.BusinessUnitMapper;
@@ -52,7 +52,7 @@ public class BusinessUnitServiceImpl implements BusinessUnitService {
         if (StringUtils.isNotEmpty(name)) {
             queryWrapper.like("name", name);
         }
-        EnabledStatus status = businessUnit.getStatus();
+        EnabledStatusEnum status = businessUnit.getStatus();
         if (status != null) {
             queryWrapper.eq("status", status.getValue());
         }
@@ -75,20 +75,20 @@ public class BusinessUnitServiceImpl implements BusinessUnitService {
     }
 
     @Override
-    public List<BusinessUnit> findBusinessUnit(BusinessUnit costCenter) {
+    public List<BusinessUnit> findBusinessUnit(BusinessUnit businessUnit) {
         QueryWrapper<BusinessUnit> queryWrapper = new QueryWrapper<>();
-        if (costCenter != null) {
-            Long id = costCenter.getId();
+        if (businessUnit != null) {
+            Long id = businessUnit.getId();
             if (id != null && id > 0) {
                 queryWrapper.eq("id", id);
             }
 
-            String name = costCenter.getName();
+            String name = businessUnit.getName();
             if (StringUtils.isNotEmpty(name)) {
                 queryWrapper.like("name", name);
             }
 
-            EnabledStatus status = costCenter.getStatus();
+            EnabledStatusEnum status = businessUnit.getStatus();
 
             if (status != null) {
                 queryWrapper.eq("status", status.getValue());

@@ -3,7 +3,7 @@ package com.lee.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lee.common.core.util.JsonUtil;
-import com.lee.enums.EnabledStatus;
+import com.lee.enums.EnabledStatusEnum;
 import com.lee.util.MenuTreeUtil;
 import com.lee.domain.SysMenu;
 import com.lee.domain.SysMenuRequest;
@@ -62,7 +62,7 @@ public class MenuServiceImpl implements MenuService {
         if (sysMenu.getSort() == null) {
             sysMenu.setSort(0);
         }
-        sysMenu.setStatus(EnabledStatus.ENABLED);
+        sysMenu.setStatus(EnabledStatusEnum.ENABLED);
         int count = menuMapper.insert(sysMenu);
         if (log.isDebugEnabled()) {
             log.debug("[MenuService] create Menu,result id:{}", sysMenu.getId());
@@ -94,7 +94,7 @@ public class MenuServiceImpl implements MenuService {
         roles.forEach(roleId -> {
             SysRoleMenu sysRoleMenu = new SysRoleMenu();
             sysRoleMenu.setMenuId(id);
-            sysRoleMenu.setStatus(EnabledStatus.ENABLED);
+            sysRoleMenu.setStatus(EnabledStatusEnum.ENABLED);
             sysRoleMenu.setRoleId(roleId);
             roleMenuMapper.insert(sysRoleMenu);
         });

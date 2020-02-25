@@ -35,6 +35,7 @@ public interface MenuService {
 
     /**
      * 查询用户下的可看的所有菜单
+     * 即状态为0的菜单
      *
      * @param userId 用户ID
      * @return

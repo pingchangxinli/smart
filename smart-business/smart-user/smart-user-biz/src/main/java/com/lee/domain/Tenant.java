@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.lee.common.core.BaseObject;
-import com.lee.enums.EnabledStatus;
+import com.lee.enums.EnabledStatusEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -38,7 +38,7 @@ public class Tenant extends BaseObject {
     /**
      * 状态
      */
-    private EnabledStatus status;
+    private EnabledStatusEnum status;
     /**
      * 域名
      */

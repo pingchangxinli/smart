@@ -13,7 +13,7 @@ import java.util.List;
  */
 @Data
 public class SysUserVO extends SysUser {
-    @JsonProperty("cost_center")
+    @JsonProperty("business_unit")
     private BusinessUnit businessUnit;
     /**
      * 用户角色集合

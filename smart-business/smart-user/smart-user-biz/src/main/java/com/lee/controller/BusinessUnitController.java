@@ -6,7 +6,7 @@ import com.lee.common.core.Pagination;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.common.core.response.PaginationResponse;
 import com.lee.api.entity.BusinessUnit;
-import com.lee.enums.EnabledStatus;
+import com.lee.enums.EnabledStatusEnum;
 import com.lee.exception.BusinessUnitExistedException;
 import com.lee.exception.BusinessUnitNotExistedException;
 import com.lee.exception.TenantNotExistedException;
@@ -35,7 +35,9 @@ public class BusinessUnitController {
      * @return
      */
     @GetMapping("list")
-    public BaseResponse<List<BusinessUnit>> findBusinessUnitByTenantId(@RequestParam("tenantId") Long tenantId) {
+    public BaseResponse<List<BusinessUnit>> findBusinessUnitByTenantId(@RequestHeader("authorization") String authorization,
+                                                                       @RequestParam(value = "tenantId",
+                                                                               required = false) Long tenantId) {
 
         if (tenantId == null || tenantId == 0L) {
             tenantId = DEFAULT_TENANT_ID;
@@ -53,7 +55,7 @@ public class BusinessUnitController {
     @PostMapping
     public BaseResponse createBusinessUnit(@RequestBody BusinessUnit businessUnit)
             throws BusinessUnitExistedException {
-        businessUnit.setStatus(EnabledStatus.ENABLED);
+        businessUnit.setStatus(EnabledStatusEnum.ENABLED);
         int count = service.createBusinessUnit(businessUnit);
         return BaseResponse.ok(count);
     }
@@ -66,13 +68,13 @@ public class BusinessUnitController {
      * @throws BusinessUnitNotExistedException 分部不存在
      */
     @PutMapping
-    public BaseResponse updateCostCenterById(@RequestBody BusinessUnit businessUnit) throws BusinessUnitNotExistedException {
+    public BaseResponse updateBusinessUnitById(@RequestBody BusinessUnit businessUnit) throws BusinessUnitNotExistedException {
         int count = service.updateBusinessUnitById(businessUnit);
         return BaseResponse.ok(count);
     }
 
     /**
-     * http://127.0.0.1:8300/user-api/costCenter/2?access_token=52af721c-9425-4fee-a46b-8fee4f068ec8
+     * http://127.0.0.1:8300/user-api/BusinessUnit/2?access_token=52af721c-9425-4fee-a46b-8fee4f068ec8
      * 根据ID查询出分部
      *
      * @param id 分部ID
@@ -95,7 +97,7 @@ public class BusinessUnitController {
         IPage<BusinessUnit> iPage = service.pageList(pagination, businessUnit);
         PaginationResponse response = PaginationResponseUtil.convertIPageToPagination(iPage);
         if (log.isDebugEnabled()) {
-            log.debug("[CostCenterController pageList] result:" + response);
+            log.debug("[BusinessUnitController pageList] result:" + response);
         }
         return BaseResponse.ok(response);
     }

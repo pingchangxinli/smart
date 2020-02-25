@@ -9,7 +9,7 @@ import com.lee.common.core.response.BaseResponse;
 import com.lee.common.core.response.PaginationResponse;
 import com.lee.common.business.util.PaginationResponseUtil;
 import com.lee.common.core.util.JsonUtil;
-import com.lee.enums.EnabledStatus;
+import com.lee.enums.EnabledStatusEnum;
 import com.lee.enums.TenantErrorEnum;
 import com.lee.domain.Tenant;
 import com.lee.exception.TenantExistedException;
@@ -50,7 +50,7 @@ public class TenantController {
         if (StringUtils.isEmpty(tenant.getDomain())) {
             throw new IllegalArgumentException(TenantErrorEnum.DOMAIN_PARAM_NOT_EXISTED.getErrorDes());
         }
-        tenant.setStatus(EnabledStatus.ENABLED);
+        tenant.setStatus(EnabledStatusEnum.ENABLED);
         LocalDateTime localDateTime = LocalDateTime.now();
         tenant.setCreateTime(localDateTime);
         tenant.setUpdateTime(localDateTime);

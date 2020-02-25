@@ -5,6 +5,7 @@ import com.lee.api.entity.SysUser;
 import com.lee.common.core.response.BaseResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -19,18 +20,20 @@ public interface RemoteUserClient {
     /**
      * 根据用户ID得到用户信息
      *
-     * @param accessToken
+     * @param authorization 头部授权信息
      * @return
      */
     @GetMapping("/user/currentUser")
-    BaseResponse<SysUser> getCurrentUser(@RequestParam("access_token") String accessToken);
+    BaseResponse<SysUser> getCurrentUser(@RequestHeader("authorization") String authorization);
 
     /**
      * 获取分部列表
      *
+     * @param authorization 头部授权信息
      * @param tenantId
      * @return
      */
     @GetMapping("businessUnit/list")
-    BaseResponse<List<BusinessUnit>> getBusinessUnits(@RequestParam("tenantId") Long tenantId);
+    BaseResponse<List<BusinessUnit>> getBusinessUnits(@RequestHeader("authorization") String authorization,
+                                                      @RequestParam("tenantId") Long tenantId);
 }

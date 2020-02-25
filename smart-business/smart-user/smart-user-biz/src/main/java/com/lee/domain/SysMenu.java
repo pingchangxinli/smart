@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lee.common.core.BaseObject;
-import com.lee.enums.EnabledStatus;
+import com.lee.enums.EnabledStatusEnum;
 import lombok.Data;
 
 
@@ -46,7 +46,7 @@ public class SysMenu extends BaseObject {
     private String permissions;
 
     /**
-     * 是否启用，
+     * 是否启用
      */
-    private EnabledStatus status;
+    private EnabledStatusEnum status;
 }

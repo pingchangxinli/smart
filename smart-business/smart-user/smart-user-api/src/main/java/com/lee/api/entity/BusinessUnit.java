@@ -5,9 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRawValue;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.lee.enums.EnabledStatus;
+import com.lee.enums.EnabledStatusEnum;
 import com.lee.common.core.BaseObject;
 import lombok.Data;
 
@@ -37,5 +35,5 @@ public class BusinessUnit extends BaseObject {
      * 是否启用
      */
     @JsonProperty
-    private EnabledStatus status;
+    private EnabledStatusEnum status;
 }

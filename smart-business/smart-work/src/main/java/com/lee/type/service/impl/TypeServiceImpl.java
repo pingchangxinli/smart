@@ -1,17 +1,14 @@
 package com.lee.type.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.lee.enums.EnabledStatus;
+import com.lee.enums.EnabledStatusEnum;
 import com.lee.common.core.Pagination;
 import com.lee.type.domain.WorKTypeDTO;
 import com.lee.type.mapper.TypeMapper;
 import com.lee.type.domain.WorKType;
 import com.lee.type.service.TypeService;
-import com.lee.worker.model.WorkerDTO;
-import com.sun.corba.se.spi.orbutil.threadpool.Work;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
@@ -20,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +46,7 @@ public class TypeServiceImpl implements TypeService {
         if (StringUtils.isNotEmpty(description)) {
             wrapper.like("description", description);
         }
-        EnabledStatus status = worKType.getStatus();
+        EnabledStatusEnum status = worKType.getStatus();
         if (status != null) {
             wrapper.eq("status", status.getValue());
         }
@@ -62,7 +58,7 @@ public class TypeServiceImpl implements TypeService {
         //新建排班 状态为生效 时间为当前时间
         worKType.setCreateTime(LocalDateTime.now());
         worKType.setUpdateTime(LocalDateTime.now());
-        worKType.setStatus(EnabledStatus.ENABLED);
+        worKType.setStatus(EnabledStatusEnum.ENABLED);
         int count = typeMapper.insert(worKType);
         if (count == 1) {
             return worKType;
@@ -110,7 +106,7 @@ public class TypeServiceImpl implements TypeService {
         if (StringUtils.isNotEmpty(type)) {
             query.eq("type", type);
         }
-        EnabledStatus status = worKType.getStatus();
+        EnabledStatusEnum status = worKType.getStatus();
         if (status != null) {
             query.eq("status", status.getValue());
         }

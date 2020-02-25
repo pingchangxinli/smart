@@ -3,10 +3,8 @@ package com.lee.api.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lee.enums.EnabledStatus;
+import com.lee.enums.EnabledStatusEnum;
 import lombok.Data;
-
-import java.util.List;
 
 /**
  * @author lee.li
@@ -57,7 +55,7 @@ public class SysUser {
     /**
      * 是否可用
      **/
-    protected EnabledStatus status;
+    protected EnabledStatusEnum status;
 
 
 }

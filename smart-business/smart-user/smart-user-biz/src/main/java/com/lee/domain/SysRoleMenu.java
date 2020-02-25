@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.lee.enums.EnabledStatus;
+import com.lee.enums.EnabledStatusEnum;
 import lombok.Data;
 
 /**
@@ -21,5 +21,5 @@ public class SysRoleMenu {
     private Long menuId;
     @TableField("tenant_id")
     private Long tenantId;
-    private EnabledStatus status;
+    private EnabledStatusEnum status;
 }

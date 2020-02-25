@@ -2,8 +2,8 @@ package com.lee.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lee.common.core.response.BaseResponse;
-import com.lee.enums.EnabledStatus;
 import com.lee.domain.SysRole;
+import com.lee.enums.EnabledStatusEnum;
 import com.lee.exception.RoleExistException;
 import com.lee.service.SysRoleService;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ public class RoleController {
     @PostMapping
     public BaseResponse createRole(@RequestBody SysRole role) throws RoleExistException {
         Integer count = null;
-        role.setEnabled(EnabledStatus.ENABLED);
+        role.setEnabled(EnabledStatusEnum.ENABLED);
         count = roleService.createRole(role);
         return BaseResponse.ok(count);
     }

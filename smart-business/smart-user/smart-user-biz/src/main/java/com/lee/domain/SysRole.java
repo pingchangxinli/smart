@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import com.lee.common.core.BaseObject;
-import com.lee.enums.EnabledStatus;
+import com.lee.enums.EnabledStatusEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -35,7 +35,7 @@ public class SysRole extends BaseObject {
     /**
      * 是否可用,如果不可用将不会添加给用户
      */
-    private EnabledStatus enabled;
+    private EnabledStatusEnum enabled;
     /**
      * 权限 和 角色 是多对多关心
      */

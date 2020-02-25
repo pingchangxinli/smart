@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lee.api.entity.SysUser;
 import com.lee.common.business.domain.LoginUser;
 import com.lee.common.core.Pagination;
-import com.lee.enums.EnabledStatus;
 import com.lee.domain.SysRole;
+import com.lee.enums.EnabledStatusEnum;
 import com.lee.mapper.RoleMapper;
 import com.lee.service.SysRoleService;
 import com.lee.api.entity.BusinessUnit;
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
         SysUser sysUser = this.findUserByName(username);
 
         if (log.isDebugEnabled()) {
-            log.debug("get user from database is : {},enabled:{}", sysUser, sysUser.getStatus());
+            log.debug("get user from database is : {},userName:{}", sysUser, username);
         }
         if (ObjectUtils.isNotEmpty(sysUser)) {
             List<SysRole> list = roleMapper.selectRoleList(sysUser.getId());
@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
     public boolean createUser(SysUserRequest userRequest) {
         //新增用户信息
         SysUser user = new SysUser();
-        user.setStatus(EnabledStatus.ENABLED);
+        user.setStatus(EnabledStatusEnum.ENABLED);
         BeanUtils.copyProperties(userRequest, user);
         int count = userMapper.insert(user);
         //增加用户角色
@@ -122,6 +122,10 @@ public class UserServiceImpl implements UserService {
                 log.debug("[UserService] BusinessUnit id:{},BusinessUnit:{}", sysUser1.getBusinessUnitId(),
                         businessUnit);
             }
+            if (businessUnit == null || Integer.valueOf(0).equals(sysUser1.getBusinessUnitId())) {
+                businessUnit = new BusinessUnit();
+                businessUnit.setName("");
+            }
             sysUserVO.setBusinessUnit(businessUnit);
             responseList.add(sysUserVO);
         });
@@ -134,7 +138,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Integer disabledUserById(Long id) {
         SysUser sysUser = new SysUser();
-        sysUser.setStatus(EnabledStatus.DISABLED);
+        sysUser.setStatus(EnabledStatusEnum.DISABLED);
         sysUser.setId(id);
         return userMapper.updateById(sysUser);
     }
@@ -186,7 +190,7 @@ public class UserServiceImpl implements UserService {
         if (id != null && id > 0) {
             queryWrapper.eq("id", id);
         }
-        EnabledStatus status = sysUser.getStatus();
+        EnabledStatusEnum status = sysUser.getStatus();
         if (status != null) {
             queryWrapper.eq("status", status.getValue());
         }

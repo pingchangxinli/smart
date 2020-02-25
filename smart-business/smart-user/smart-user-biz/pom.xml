@@ -65,6 +65,8 @@
         <dependency>
             <groupId>com.lee</groupId>
             <artifactId>smart-common-business</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.lee</groupId>

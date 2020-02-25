@@ -39,8 +39,8 @@ public class MenuController {
      */
     @GetMapping("/current")
     private BaseResponse findMenusByCurrentUser(@RequestHeader("Authorization") String authorization) {
-        String accessToken = WebUtil.getAccessToken(authorization);
-        BaseResponse baseResponse = tokenClient.findUserByAccessToken(accessToken);
+
+        BaseResponse baseResponse = tokenClient.findUserByAccessToken(authorization);
         if (log.isDebugEnabled()) {
             log.debug("[Menu controller] feign get user result: {}", baseResponse);
         }
@@ -48,9 +48,7 @@ public class MenuController {
         LoginUser loginUser = objectMapper.convertValue(baseResponse.getData(), LoginUser.class);
 
         List<SysMenuResponse> list = menuService.findMenusByUserId(loginUser.getId());
-        if (log.isDebugEnabled()) {
-            log.debug("[Menu controller],param:{},response:{}", accessToken, list);
-        }
+
         return BaseResponse.ok(MenuTreeUtil.buildMenuTree(list));
     }
 

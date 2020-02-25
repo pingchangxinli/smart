@@ -1,6 +1,6 @@
 package com.lee.type.domain;
 
-import com.lee.enums.EnabledStatus;
+import com.lee.enums.EnabledStatusEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -28,5 +28,5 @@ public class WorKTypeDTO {
     /**
      * 启用状态
      */
-    private EnabledStatus status;
+    private EnabledStatusEnum status;
 }

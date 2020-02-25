@@ -1,7 +1,7 @@
 spring:
   cloud:
     config:
-      uri: http://localhost:8200
+      uri: http://smart-config:8200
       profile: ${SMART_CONFIG_PROFILE:dev}
       label: master
   application:

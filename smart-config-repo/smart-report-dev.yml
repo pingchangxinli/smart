@@ -1,5 +1,0 @@
-logging:
-  file:
-    name: application.log
-    path: ./log
-a: dev

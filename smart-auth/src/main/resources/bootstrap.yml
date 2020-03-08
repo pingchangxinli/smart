@@ -1,13 +1,13 @@
 spring:
   cloud:
     config:
-      uri: http://smart-config:8200
+      uri: http://smart-config:2080
       profile: ${SMART_CONFIG_PROFILE:dev}
       label: master
   application:
     name: smart-auth
 server:
-  port: 8400
+  port: 4080
 eureka:
   client:
     serviceUrl:

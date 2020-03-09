@@ -16,26 +16,23 @@ import java.util.List;
  * @author lee.li
  */
 @Data
-@EqualsAndHashCode(callSuper=true)
+@EqualsAndHashCode(callSuper = true)
 @TableName(value = "sys_role")
-public class SysRole extends BaseObject {
+public class SysRoleDO extends BaseObject {
     /**
      * 编号
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     /**
-     * 名称
-     */
-    private String name;
-    /**
      * 角色标识程序中判断使用,如"admin",这个是唯一的:
      */
-    private String code;
+    private String name;
+
     /**
      * 是否可用,如果不可用将不会添加给用户
      */
-    private EnabledStatusEnum enabled;
+    private EnabledStatusEnum status;
     /**
      * 权限 和 角色 是多对多关心
      */

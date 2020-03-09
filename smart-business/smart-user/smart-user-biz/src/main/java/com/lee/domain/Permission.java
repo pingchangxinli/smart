@@ -1,6 +1,5 @@
 package com.lee.domain;
 
-import com.lee.domain.SysRole;
 import lombok.Data;
 
 import java.util.List;
@@ -42,7 +41,7 @@ public class Permission {
     /**
      *
      */
-    private List<SysRole> roles;
+    private List<SysRoleDO> roles;
 
 
 }

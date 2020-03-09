@@ -24,7 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/businessUnit")
 public class BusinessUnitController {
-    private static final Long DEFAULT_TENANT_ID = 1L;
+    private static final Long DEFAULT_TENANT_ID = 0L;
     @Resource
     private BusinessUnitService service;
 

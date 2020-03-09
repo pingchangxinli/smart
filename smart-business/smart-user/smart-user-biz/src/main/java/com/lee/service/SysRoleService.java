@@ -1,7 +1,9 @@
 package com.lee.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.lee.domain.SysRole;
+import com.lee.common.core.Pagination;
+import com.lee.domain.SysRoleDO;
+import com.lee.domain.SysRoleDTO;
 import com.lee.exception.RoleExistException;
 
 import java.util.List;
@@ -12,58 +14,64 @@ import java.util.List;
 public interface SysRoleService {
     /**
      * 根据用户ID查询权限
+     *
      * @param userId 用户ID
      * @return 用户拥有的权限
      */
-    List<SysRole> findRoleByUserId(Long userId);
+    List<SysRoleDO> findRoleByUserId(Long userId);
 
     /**
      * 创建权限
-     * @param role 权限信息
+     *
+     * @param SysRoleDTO 权限信息
      * @return 创建条数
      */
-    Integer createRole(SysRole role) throws RoleExistException;
+    Integer createRole(SysRoleDTO sysRoleDTO) throws RoleExistException;
 
     /**
      * 通过权限ID查询权限信息
+     *
      * @param id 权限ID
      * @return 权限
      */
-    SysRole findRoleById(Long id);
+    SysRoleDO findRoleById(Long id);
 
     /**
      * 分页查询权限
-     * @param name 权限中文名称,模糊查询
-     * @param page 当前页面
-     * @param limit 页面数量
+     *
+     * @param pagination 分页
+     * @param SysRoleDTO 角色类
      * @return
      */
-    IPage<SysRole> findRolePage(String name, Integer page, Integer limit);
+    IPage<SysRoleDO> findRolePage(Pagination pagination, SysRoleDTO sysRole);
 
     /**
      * 更新权限信息
+     *
      * @param role 权限信息
      * @return
      */
-    Integer updateRoleById(SysRole role);
+    Integer updateRoleById(SysRoleDO role);
 
     /**
      * 根据code查询角色,code在表中为唯一索引
-     * @param code
+     *
+     * @param name 名称
      * @return
      */
-    SysRole finRoleByCode(String code);
+    SysRoleDO finRoleByName(String name);
 
     /**
      * 查询多个 role id 下的 role
+     *
      * @param list
      * @return
      */
-    List<SysRole> findRoleByIdList(List<Long> list);
+    List<SysRoleDO> findRoleByIdList(List<Long> list);
 
     /**
      * 租户下的所有权限
      * @return 权限列表
      */
-    List<SysRole> findAllRoles();
+    List<SysRoleDO> findAllRoles();
 }

@@ -2,7 +2,7 @@ package com.lee.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lee.domain.SysRoleMenu;
-import com.lee.domain.SysRole;
+import com.lee.domain.SysRoleDO;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -20,5 +20,5 @@ public interface RoleMenuMapper extends BaseMapper<SysRoleMenu> {
      * @param menuId 菜单ID
      * @return 角色集合
      */
-    List<SysRole> selectRolesByMenuId(Long menuId);
+    List<SysRoleDO> selectRolesByMenuId(Long menuId);
 }

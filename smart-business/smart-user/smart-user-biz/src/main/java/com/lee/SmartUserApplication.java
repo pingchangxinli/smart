@@ -47,25 +47,25 @@ public class SmartUserApplication extends SpringBootServletInitializer implement
 /**
  * 服务启动完毕将租户信息加载进redis
  */
-@Slf4j
-@Component
-class TenantDomainInit implements ApplicationRunner {
-    @Resource
-    private TenantService service;
-    @Autowired
-    private RedisTemplate redisTemplate;
-    @Override
-    public void run(ApplicationArguments args){
-        List<Tenant> list = service.list();
-        if (CollectionUtils.isNotEmpty(list)) {
-            log.info("get " +list.size()+ " tenants from database");
-            Map<String,Tenant> map = new HashMap<>();
-            list.forEach(tenant -> map.put(tenant.getDomain(),tenant));
-            if (log.isDebugEnabled()) {
-                log.debug("Contants.TENANT_KEY:" +Contants.TENANT_KEY);
-            }
-            redisTemplate.opsForHash().putAll(Contants.TENANT_KEY,map);
-        }
-
-    }
-}
+//@Slf4j
+//@Component
+//class TenantDomainInit implements ApplicationRunner {
+//    @Resource
+//    private TenantService service;
+//    @Autowired
+//    private RedisTemplate redisTemplate;
+//    @Override
+//    public void run(ApplicationArguments args){
+//        List<Tenant> list = service.list();
+//        if (CollectionUtils.isNotEmpty(list)) {
+//            log.info("get " +list.size()+ " tenants from database");
+//            Map<String,Tenant> map = new HashMap<>();
+//            list.forEach(tenant -> map.put(tenant.getDomain(),tenant));
+//            if (log.isDebugEnabled()) {
+//                log.debug("Contants.TENANT_KEY:" +Contants.TENANT_KEY);
+//            }
+//            redisTemplate.opsForHash().putAll(Contants.TENANT_KEY,map);
+//        }
+//
+//    }
+//}

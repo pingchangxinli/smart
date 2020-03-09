@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lee.api.entity.SysUser;
 import com.lee.common.business.domain.LoginUser;
 import com.lee.common.core.Pagination;
-import com.lee.domain.SysRole;
+import com.lee.domain.SysRoleDO;
 import com.lee.enums.EnabledStatusEnum;
 import com.lee.mapper.RoleMapper;
 import com.lee.service.SysRoleService;
@@ -65,12 +65,12 @@ public class UserServiceImpl implements UserService {
             log.debug("get user from database is : {},userName:{}", sysUser, username);
         }
         if (ObjectUtils.isNotEmpty(sysUser)) {
-            List<SysRole> list = roleMapper.selectRoleList(sysUser.getId());
+            List<SysRoleDO> list = roleMapper.selectRoleList(sysUser.getId());
 
             BeanUtils.copyProperties(sysUser, loginUser);
             List<String> roles = new ArrayList<>();
             list.forEach(sysRole -> {
-                roles.add(sysRole.getCode());
+                roles.add(sysRole.getName());
             });
             loginUser.setRoles(roles);
         } else {
@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
         List<SysUserVO> responseList = new ArrayList<>();
         list.stream().forEach(sysUser1 -> {
             //用户角色
-            List<SysRole> roles = sysRoleService.findRoleByUserId(sysUser1.getId());
+            List<SysRoleDO> roles = sysRoleService.findRoleByUserId(sysUser1.getId());
             SysUserVO sysUserVO = new SysUserVO();
             BeanUtils.copyProperties(sysUser1, sysUserVO);
             sysUserVO.setRoles(roles);

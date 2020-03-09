@@ -13,7 +13,7 @@ import com.lee.mapper.MenuMapper;
 import com.lee.mapper.RoleMenuMapper;
 import com.lee.service.MenuService;
 import com.lee.service.RoleMenuService;
-import com.lee.domain.SysRole;
+import com.lee.domain.SysRoleDO;
 import com.lee.domain.SysUserRole;
 import com.lee.mapper.SysUserRoleMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -127,12 +127,12 @@ public class MenuServiceImpl implements MenuService {
         list.stream().forEach(sysMenu -> {
             SysMenuResponse menuResponse = new SysMenuResponse();
             BeanUtils.copyProperties(sysMenu, menuResponse);
-            List<SysRole> sysRoles = roleMenuMapper.selectRolesByMenuId(sysMenu.getId());
-            menuResponse.setRoles(sysRoles);
+            List<SysRoleDO> sysRoleDOS = roleMenuMapper.selectRolesByMenuId(sysMenu.getId());
+            menuResponse.setRoles(sysRoleDOS);
             if (log.isDebugEnabled()) {
                 try {
                     log.debug("[MenuService findMenuTree] menu id ：{},sysRoles: {},menuResponse:{}", sysMenu.getId(),
-                            JsonUtil.toJson(sysRoles), JsonUtil.toJson(menuResponse));
+                            JsonUtil.toJson(sysRoleDOS), JsonUtil.toJson(menuResponse));
                 } catch (JsonProcessingException e) {
                     log.error("[MenuService findMenuTree] exception:", e);
                 }

@@ -39,5 +39,5 @@ public class SysMenuResponse {
     /**
      * 角色集合
      */
-    private List<SysRole> roles;
+    private List<SysRoleDO> roles;
 }

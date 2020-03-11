@@ -1,8 +1,9 @@
 spring:
   datasource:
-    jdbc-url: jdbc:mysql://smart-mysql:3306/smart_auth?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    jdbc-url: jdbc:mysql://smart-mysql:3306/smart_report?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
     username: root
-    password: root
+    password: Greate@20200216
+    driverClassName: com.mysql.jdbc.Driver
 eureka:
   client:
     serviceUrl:
@@ -19,15 +20,7 @@ security:
       scope: server
     resource:
       tokenInfoUri: http://smart-auth:8400/oauth/check_token
-## ENUM配置与数据库映射
-mybatis-plus:
-  type-enums-package: com.lee.enums
 ##内部服务调用，跳过资源服务器token校验
 white-list:
   urls:
     - /user/internal/*
-web:
-  password:
-    security:
-      key: 1234123412ABCDEF
-      iv: ABCDEF1234123412

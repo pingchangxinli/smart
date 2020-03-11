@@ -1,5 +1,5 @@
 server:
-  port: 8200
+  port: 2080
 spring:
   application:
     name: smart-config-server
@@ -8,12 +8,6 @@ spring:
   cloud:
     config:
       server:
-        ##git:
-        ##  uri: https://github.com/pingchangxinli/smart
-        ##  search-paths: smart-config-repo
-        ##  username: pingchangxinli@126.com
-        ##  password:
         ##配置本地路径
         native:
-          ##search-locations: file:D:\private\smartSpace\smart\smart-config-repo
           search-locations: classpath:properties/

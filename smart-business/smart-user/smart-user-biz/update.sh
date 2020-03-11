@@ -1,35 +1,30 @@
 #!/bin/bash
 
-ssh root@122.112.245.67
-mvn clean  package
+# start to backup war file in smart-user server
+ssh smart "/home/shell/user-backup.sh"
+if [ $? -eq 0 ]; then
+  echo "INFO ： backup war file successful,next to start mvn package."
+  ## package smart user war
+  mvn clean package && cd ./target
 
-if [ $? -eq 0 ]
-then
-  echo "mvn 执行成功"
-  cd ./target
-  if [ $? -eq 0 ]
-  then
-    echo "生成WAR成功，进入服务器，备份原始WAR文件"
-    currentTime=$(date "+%Y-%m-%d %H:%M:%S")
-
-    cd /home/smart/smart-auth/webapps/ROOT
-    cp smart-user-biz-0.0.1-SNAPSHOT.war ../smart-user-biz-0.0.1-SNAPSHOT_${currentTime}.war
-    if [ $? -eq 0 ]
-    then
-      echo "备份成功，开始上传"
-      scp -P22 ./smart-user-biz-0.0.1-SNAPSHOT.war root@122.112.245.67:/home/smart/smart-user/webapps/ROOT
-      if [ $? -eq 0 ]
-      then
-        echo "上传成功"
+  if [ $? -eq 0 ]; then
+    echo "INFO : mvn package successful ,start to upload war file."
+    scp -P22 ./smart-user-biz-0.0.1-SNAPSHOT.war root@smart:/home/smart/smart-user/webapps/ROOT
+    if [ $? -eq 0 ]; then
+      echo " "
+      echo "INFO : upload war file successful,start to call server user-update.sh shell"
+      ssh smart "/home/shell/user-update.sh"
+      if [ $? -eq 0 ]; then
+        echo "INFO : udpate user successful."
       else
-        echo "上传失败"
+        echo "INFO : udpate user failed."
       fi
     else
-      echo "备份原始WAR文件失败"
+      echo "ERROR: upload war file failed."
     fi
   else
-    echo "target目录不存在"
+    ehco "ERROR: mvn package failed."
   fi
 else
-echo "执行失败"
+  echo " ERROR: backup origin war file failed."
 fi

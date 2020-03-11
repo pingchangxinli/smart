@@ -5,11 +5,6 @@ spring:
     password: root
   main:
     allow-bean-definition-overriding: true
-logging:
-  level:
-    root: DEBUG
-    com.lee: DEBUG
-    org.springframework.security: DEBUG
 eureka:
   client:
     serviceUrl:

@@ -4,11 +4,16 @@ spring:
     username: root
     password: Greate@20200216
     driverClassName: com.mysql.jdbc.Driver
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://smart-eureka:8761/eureka/
+  main:
+    allow-bean-definition-overriding: true
 logging:
   level:
     root: DEBUG
     com.lee: DEBUG
+    org.springframework.security: DEBUG
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://smart-eureka:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true

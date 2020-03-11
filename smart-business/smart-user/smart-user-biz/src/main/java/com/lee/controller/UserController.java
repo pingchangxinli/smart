@@ -1,5 +1,9 @@
 package com.lee.controller;
 
+import cn.hutool.core.util.HexUtil;
+import cn.hutool.crypto.Mode;
+import cn.hutool.crypto.Padding;
+import cn.hutool.crypto.symmetric.AES;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lee.common.business.domain.LoginUser;
 import com.lee.common.business.util.PaginationResponseUtil;
@@ -15,7 +19,7 @@ import com.lee.domain.SysUserVO;
 import com.lee.enums.UserErrorMessageTipEnum;
 import com.lee.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerTokenServicesConfiguration;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +27,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -38,6 +45,21 @@ public class UserController {
     private TokenClient tokenClient;
     @Resource
     private PasswordEncoder passwordEncoder;
+    @Value("${web.password.security.key}")
+    private String aseKey;
+    @Value("${web.password.security.iv}")
+    private String aseIv;
+
+    private String decode(String pass) {
+        if (log.isDebugEnabled()) {
+            log.debug("pass:{},aseKey:{},aseIv:{}", pass, aseKey, aseIv);
+        }
+        AES aes = new AES(Mode.CBC, Padding.PKCS5Padding,
+                new SecretKeySpec(aseKey.getBytes(), "AES"),
+                new IvParameterSpec(aseIv.getBytes()));
+        byte[] result = aes.decrypt(HexUtil.decodeHex(pass.toCharArray()));
+        return new String(result, StandardCharsets.UTF_8);
+    }
 
     /**
      * 租户下的所有用户
@@ -65,8 +87,9 @@ public class UserController {
         }
         //状态为 生效状态
         user.setStatus(EnabledStatusEnum.ENABLED);
+        String password = this.decode(user.getPassword());
         //密码AES加密
-        String passwordEncode = passwordEncoder.encode(user.getPassword());
+        String passwordEncode = passwordEncoder.encode(password);
         user.setPassword(passwordEncode);
         boolean isSuccess = userService.createUser(user);
         return BaseResponse.ok(1);

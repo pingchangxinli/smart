@@ -1,9 +1,6 @@
 package com.lee.gateway.filter;
 
 
-import cn.hutool.core.codec.Base64;
-import cn.hutool.core.codec.Base64Decoder;
-import cn.hutool.core.codec.Base64Encoder;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.crypto.Mode;
@@ -12,7 +9,6 @@ import cn.hutool.crypto.symmetric.AES;
 import cn.hutool.http.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.bouncycastle.util.encoders.Hex;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -53,6 +49,7 @@ public class PasswordFilter extends AbstractGatewayFilterFactory {
     public GatewayFilter apply(Object config) {
         return (exchange, chain) -> {
             URI uri = exchange.getRequest().getURI();
+            exchange.getRequest().getBody();
             String queryParam = uri.getRawQuery();
             Map<String, String> paramMap = HttpUtil.decodeParamMap(queryParam, CharsetUtil.UTF_8);
             String passwordValue = paramMap.get(PAPRAM_PASSWORD);

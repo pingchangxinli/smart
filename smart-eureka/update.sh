@@ -1,24 +1,29 @@
 #!/bin/bash
 
-mvn clean  package
+# start to backup war file in smart-eureka server
+ssh smart "/home/shell/eureka-backup.sh"
+if [ $? -eq 0 ]; then
+  echo "INFO ： backup war file successful,next to start mvn package."
+  ## package smart eureka war
+  mvn clean package && cd ./target
 
-if [ $? -eq 0 ]
-then
-  echo "mvn 执行成功"
-  cd ./target
-  if [ $? -eq 0 ]
-  then
-    echo "进入target成功，开始上传"
-    scp -P22 ./smart-eureka-0.0.1-SNAPSHOT.war root@122.112.245.67:/home/smart/smart-eureka/webapps/ROOT
-    if [ $? -eq 0 ]
-    then
-      echo "上传成功"
+  if [ $? -eq 0 ]; then
+    echo "INFO : mvn package successful ,start to upload war file."
+    scp -P22 ./smart-eureka-0.0.1-SNAPSHOT.war root@smart:/home/smart/smart-eureka/webapps/ROOT
+    if [ $? -eq 0 ]; then
+      echo " "
+      echo "INFO : upload war file successful,please to call server eureka-update.sh shell !!!!!"
+      if [ $? -eq 0 ]; then
+        echo "INFO : udpate eureka successful."
+      else
+        echo "INFO : udpate eureka failed."
+      fi
     else
-      echo "上传失败"
+      echo "ERROR: upload war file failed."
     fi
   else
-    echo "target目录不存在"
+    ehco "ERROR: mvn package failed."
   fi
 else
-echo "执行失败"
+  echo " ERROR: backup origin war file failed."
 fi

@@ -5,7 +5,7 @@
 <configuration>
 
   <!-- @see org/springframework/boot/logging/logback/base.xml -->
-  <property name="LOG_FILE" value="${LOG_CONFIG_DIR}/work"/>
+  <property name="LOG_FILE" value="${LOG_WORK_DIR}/work"/>
 
   <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
   <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>

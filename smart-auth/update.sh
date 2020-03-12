@@ -1,24 +1,29 @@
 #!/bin/bash
 
-mvn clean  package
+# start to backup war file in smart-auth server
+ssh smart "/home/shell/auth-backup.sh"
+if [ $? -eq 0 ]; then
+  echo "INFO ： backup war file successful,next to start mvn package."
+  ## package smart auth war
+  mvn clean package && cd ./target
 
-if [ $? -eq 0 ]
-then
-  echo "mvn 执行成功"
-  cd ./target
-  if [ $? -eq 0 ]
-  then
-    echo "进入target成功，开始上传"
-    scp -P22 ./smart-auth-0.0.1-SNAPSHOT.war root@122.112.245.67:/home/smart/smart-auth/webapps/ROOT
-    if [ $? -eq 0 ]
-    then
-      echo "上传成功"
+  if [ $? -eq 0 ]; then
+    echo "INFO : mvn package successful ,start to upload war file."
+    scp -P22 ./smart-auth-0.0.1-SNAPSHOT.war root@smart:/home/smart/smart-auth/webapps/ROOT
+    if [ $? -eq 0 ]; then
+      echo " "
+      echo "INFO : upload war file successful,please to call server auth-update.sh shell !!!!!"
+      if [ $? -eq 0 ]; then
+        echo "INFO : udpate auth successful."
+      else
+        echo "INFO : udpate auth failed."
+      fi
     else
-      echo "上传失败"
+      echo "ERROR: upload war file failed."
     fi
   else
-    echo "target目录不存在"
+    ehco "ERROR: mvn package failed."
   fi
 else
-echo "执行失败"
+  echo " ERROR: backup origin war file failed."
 fi

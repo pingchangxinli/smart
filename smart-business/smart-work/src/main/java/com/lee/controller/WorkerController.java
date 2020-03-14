@@ -1,7 +1,8 @@
 package com.lee.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.lee.api.entity.SysUser;
+import com.lee.api.vo.BusinessUnitVO;
+import com.lee.api.vo.SysUserVO;
 import com.lee.api.feign.RemoteUserClient;
 import com.lee.common.business.util.PaginationResponseUtil;
 import com.lee.common.core.Pagination;
@@ -39,6 +40,7 @@ public class WorkerController {
     @Resource
     private RemoteUserClient remoteUserClient;
 
+
     /**
      * 通过名称获取伙伴信息
      *
@@ -50,7 +52,7 @@ public class WorkerController {
                                                          @RequestParam("name") String name) {
         //通過token得到用戶信息
         String accessToken = WebUtil.getAccessToken(authorization);
-        BaseResponse<SysUser> baseResponse = remoteUserClient.getCurrentUser(accessToken);
+        BaseResponse<SysUserVO> baseResponse = remoteUserClient.getCurrentUser(accessToken);
         Long userId = baseResponse.getData().getId();
         WorkerDTO workerDTO = new WorkerDTO();
         workerDTO.setName(name);
@@ -64,13 +66,14 @@ public class WorkerController {
      * @return 分页后对象
      */
     @GetMapping("page")
-    public BaseResponse<PaginationResponse<WorkerVO>> pageList(Pagination pagination, WorkerVO workerVO) {
+    public BaseResponse<PaginationResponse<WorkerVO>> pageList(@RequestHeader("authorization") String authorization,
+                                                               Pagination pagination, WorkerVO workerVO) {
 
         WorkerDTO workerDTO = modelMapper.map(workerVO, WorkerDTO.class);
 
         IPage<WorkerDTO> iPage = service.pageList(pagination, workerDTO);
 
-        PaginationResponse<WorkerVO> paginationResponse = convertToPageResponse(iPage);
+        PaginationResponse<WorkerVO> paginationResponse = convertToPageResponse(authorization, iPage);
 
         BaseResponse<PaginationResponse<WorkerVO>> baseResponse = BaseResponse.ok(paginationResponse);
         return baseResponse;
@@ -82,12 +85,15 @@ public class WorkerController {
      * @param ipage
      * @return
      */
-    private PaginationResponse<WorkerVO> convertToPageResponse(IPage<WorkerDTO> ipage) {
+    private PaginationResponse<WorkerVO> convertToPageResponse(String authorization, IPage<WorkerDTO> ipage) {
         List<WorkerVO> returnList = new ArrayList<>();
         List<WorkerDTO> list = ipage.getRecords();
         if (list != null && list.size() > 0) {
             list.stream().forEach(dto -> {
                 WorkerVO vo = modelMapper.map(dto, WorkerVO.class);
+                BaseResponse<BusinessUnitVO> businessUnitBaseResponse =
+                        remoteUserClient.getBusinessUnitById(authorization, dto.getBusinessUnitId());
+                vo.setBusinessUnit(businessUnitBaseResponse.getData());
                 returnList.add(vo);
             });
         }

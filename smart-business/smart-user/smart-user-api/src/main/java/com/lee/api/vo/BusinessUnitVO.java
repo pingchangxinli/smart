@@ -1,24 +1,35 @@
-package com.lee.common.business.domain;
+package com.lee.api.vo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lee.enums.EnabledStatusEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 /**
+ * 分部
+ *
  * @author lee.li
- * 请求基础类
  */
 @Data
-public class BaseDTO {
+public class BusinessUnitVO {
+    /**
+     * 主键
+     */
+    private Long id;
+    /**
+     * 分部名称
+     */
+    private String name;
     /**
      * 租户ID
      */
     private Long tenantId;
     /**
-     * 分部ID
+     * 是否启用
      */
-    private Long businessUnitId;
+    @JsonProperty
+    private EnabledStatusEnum status;
     /**
      * 创建时间
      */
@@ -28,7 +39,7 @@ public class BaseDTO {
      */
     private LocalDateTime updateTime;
     /**
-     * 生效或者失效
+     * 操作人
      */
-    private EnabledStatusEnum status;
+    private String operator;
 }

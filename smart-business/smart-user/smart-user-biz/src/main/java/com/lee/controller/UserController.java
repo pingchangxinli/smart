@@ -5,20 +5,21 @@ import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.symmetric.AES;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.lee.api.vo.SysUserVO;
 import com.lee.common.business.domain.LoginUser;
 import com.lee.common.business.util.PaginationResponseUtil;
 import com.lee.common.core.Pagination;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.common.core.response.PaginationResponse;
-import com.lee.common.core.util.WebUtil;
+import com.lee.domain.SysUserDO;
+import com.lee.domain.SysUserDTO;
 import com.lee.enums.EnabledStatusEnum;
 import com.lee.feign.TokenClient;
-import com.lee.api.entity.SysUser;
-import com.lee.domain.SysUserRequest;
-import com.lee.domain.SysUserVO;
 import com.lee.enums.UserErrorMessageTipEnum;
 import com.lee.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -49,6 +50,8 @@ public class UserController {
     private String aseKey;
     @Value("${web.password.security.iv}")
     private String aseIv;
+    @Resource
+    private ModelMapper modelMapper;
 
     private String decode(String pass) {
         if (log.isDebugEnabled()) {
@@ -64,15 +67,16 @@ public class UserController {
     /**
      * 租户下的所有用户
      *
-     * @param sysUser
+     * @param sysUserVO
      * @return
      */
     @RequestMapping("/list")
-    public BaseResponse findUsers(SysUser sysUser) {
+    public BaseResponse findUsers(SysUserVO sysUserVO) {
         if (log.isDebugEnabled()) {
-            log.debug("[user controller] findUsers,params:" + sysUser);
+            log.debug("[user controller] findUsers,params:" + sysUserVO);
         }
-        List<SysUser> list = userService.findUsers(sysUser);
+        SysUserDTO sysUserDTO = modelMapper.map(sysUserVO, SysUserDTO.class);
+        List<SysUserDO> list = userService.findUsers(sysUserDTO);
         return BaseResponse.ok(list);
     }
 
@@ -81,7 +85,7 @@ public class UserController {
      * @return
      */
     @PostMapping
-    public BaseResponse createUser(@RequestBody SysUserRequest user) {
+    public BaseResponse createUser(@RequestBody SysUserVO user) {
         if (log.isDebugEnabled()) {
             log.debug("[user controller] createUser request params:" + user);
         }
@@ -91,7 +95,8 @@ public class UserController {
         //密码AES加密
         String passwordEncode = passwordEncoder.encode(password);
         user.setPassword(passwordEncode);
-        boolean isSuccess = userService.createUser(user);
+        SysUserDTO sysUserDTO = modelMapper.map(user, SysUserDTO.class);
+        boolean isSuccess = userService.createUser(sysUserDTO);
         return BaseResponse.ok(1);
     }
 
@@ -102,33 +107,33 @@ public class UserController {
      * @return 用户信息
      */
     @GetMapping("/currentUser")
-    public BaseResponse<SysUser> currentUser(@RequestHeader("authorization") String authorization) {
+    public BaseResponse<SysUserVO> currentUser(@RequestHeader("authorization") String authorization) {
+        //授权和认证服务器根据token获取用户简要信息
         BaseResponse<LoginUser> baseResponse = tokenClient.findUserByAccessToken(authorization);
-        if (log.isDebugEnabled()) {
-            log.debug("UserController, currentUser token,param:{}", baseResponse.getData());
-        }
         LoginUser loginUser = baseResponse.getData();
-        if (loginUser == null) {
+        Long id = loginUser.getId();
+        if (loginUser == null || id == null || NumberUtils.compare(id, 0) <= 0) {
             UserErrorMessageTipEnum tip = UserErrorMessageTipEnum.PARAM_ERROR;
             return BaseResponse.error(tip.getCode(), tip.getMessage());
         }
-        Long id = loginUser.getId();
-        if (log.isDebugEnabled()) {
-            log.debug("[user controller] currentUser loginUser, {}", loginUser);
-        }
-        SysUser sysUser = null;
+        //根据用户ID得到用户详细信息
         try {
+            SysUserDO sysUserDO = userService.findUserById(id);
             if (log.isDebugEnabled()) {
-                log.debug("[User Controller] user id : {}", id);
+                log.debug("UserController,currentUser:{}", sysUserDO);
             }
-            sysUser = userService.findUserById(id);
-            if (log.isDebugEnabled()) {
-                log.debug("[user controller] currentUser, {}", sysUser);
+            //判断用户状态是否可用
+            if (EnabledStatusEnum.DISABLED.equals(sysUserDO.getStatus())) {
+                UserErrorMessageTipEnum tip = UserErrorMessageTipEnum.USER_DISABLED;
+                return BaseResponse.error(tip.getCode(), tip.getMessage());
             }
+            SysUserVO sysUserVO = modelMapper.map(sysUserDO, SysUserVO.class);
+            return BaseResponse.ok(sysUserVO);
         } catch (Exception e) {
             log.error("[user controller],", e);
+            UserErrorMessageTipEnum tip = UserErrorMessageTipEnum.INTERNAL_SERVER_ERROR;
+            return BaseResponse.error(tip.getCode(), tip.getMessage());
         }
-        return BaseResponse.ok(sysUser);
     }
 
     @Deprecated
@@ -151,12 +156,12 @@ public class UserController {
      * 分页查询当前租户下的所有用户信息
      *
      * @param pagination 分页
-     * @param sysUser    用户
+     * @param sysUserDO  用户
      * @return
      */
     @GetMapping(value = "/page")
-    public BaseResponse pageList(Pagination pagination, SysUser sysUser) {
-        IPage<SysUserVO> iPage = userService.pageList(pagination, sysUser);
+    public BaseResponse pageList(Pagination pagination, SysUserDO sysUserDO) {
+        IPage<SysUserVO> iPage = userService.pageList(pagination, sysUserDO);
 
         PaginationResponse<SysUserVO> paginationResponse = PaginationResponseUtil.convertIPageToPagination(iPage);
 
@@ -171,7 +176,7 @@ public class UserController {
      */
     @GetMapping
     public BaseResponse findUserByUserName(@RequestParam("username") String username) {
-        SysUser userDetails = userService.findUserByName(username);
+        SysUserDO userDetails = userService.findUserByName(username);
         return BaseResponse.ok(userDetails);
     }
 
@@ -196,9 +201,9 @@ public class UserController {
     }
 
     @PutMapping
-    public BaseResponse updateUserById(@RequestBody SysUserRequest sysUserRequest) {
-        HttpStatus status = HttpStatus.OK;
-        int count = userService.updateUserById(sysUserRequest);
+    public BaseResponse updateUserById(@RequestBody SysUserVO sysUserRequest) {
+        SysUserDTO sysUserDTO = modelMapper.map(sysUserRequest, SysUserDTO.class);
+        int count = userService.updateUserById(sysUserDTO);
         return BaseResponse.ok(count);
     }
 }

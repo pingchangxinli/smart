@@ -1,6 +1,6 @@
 package com.lee.model;
 
-import com.lee.api.entity.BusinessUnit;
+import com.lee.api.vo.BusinessUnitVO;
 import lombok.Data;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
  */
 @Data
 public class SettingReportInitVO {
-    private List<BusinessUnit> businessUnitList;
+    private List<BusinessUnitVO> businessUnitList;
     private List<Period> periodList;
     private SettingReportVO settingReportVO;
 }

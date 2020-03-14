@@ -1,46 +1,38 @@
-package com.lee.model;
+package com.lee.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.lee.common.core.BaseObject;
 import com.lee.enums.EnabledStatusEnum;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
+/**
+ * 分部
+ *
+ * @author lee.li
+ */
 @Data
-@TableName("work_partner")
-public class WorkerDO {
+public class BusinessUnitDTO extends BaseObject {
     /**
      * 主键
      */
     @TableId(type = IdType.AUTO)
     private Long id;
     /**
-     * 名称
+     * 分部名称
      */
     private String name;
     /**
-     * 创建时间
-     */
-    @TableField("create_time")
-    private LocalDateTime createTime;
-    /**
-     * 更新时间
-     */
-    @TableField("update_time")
-    private LocalDateTime updateTime;
-    /**
      * 租户ID
      */
+    @TableField(value = "tenant_id")
     private Long tenantId;
     /**
-     * 分布ID
+     * 是否启用
      */
-    private Long businessUnitId;
-    /**
-     * 生效或者失效
-     */
+    @JsonProperty
     private EnabledStatusEnum status;
 }

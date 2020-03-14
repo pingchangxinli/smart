@@ -26,7 +26,9 @@ public enum UserErrorMessageTipEnum {
     /**
      * 用户状态不可用
      **/
-    USER_DISABLED("USER_DISABLED", "用户状态不可用");
+    USER_DISABLED("USER_DISABLED", "用户状态不可用"),
+
+    INTERNAL_SERVER_ERROR("INTERNAL_SERVER_ERROR", "服务器内部错误");
     /**
      * 响应码
      */

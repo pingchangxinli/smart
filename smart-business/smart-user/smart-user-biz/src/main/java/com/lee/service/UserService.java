@@ -2,11 +2,11 @@ package com.lee.service;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.lee.api.entity.SysUser;
+import com.lee.api.vo.SysUserVO;
+import com.lee.domain.SysUserDO;
 import com.lee.common.business.domain.LoginUser;
 import com.lee.common.core.Pagination;
-import com.lee.domain.SysUserRequest;
-import com.lee.domain.SysUserVO;
+import com.lee.domain.SysUserDTO;
 
 import java.util.List;
 
@@ -18,10 +18,11 @@ import java.util.List;
 public interface UserService {
     /**
      * 通过username查询用户信息
+     *
      * @param username
      * @return
      */
-    public SysUser findUserByName(String username);
+    public SysUserDO findUserByName(String username);
 
     /**
      * 内部feign判断登录用户
@@ -32,19 +33,20 @@ public interface UserService {
 
     /**
      * 创建用户
+     *
      * @param user
      * @return
      */
-    boolean createUser(SysUserRequest user);
+    boolean createUser(SysUserDTO user);
 
     /**
      * 分页查询用户信息
      *
      * @param pagination 分页
-     * @param sysUser    用户
+     * @param sysUserDO  用户
      * @return 分页用户信息
      */
-    IPage<SysUserVO> pageList(Pagination pagination, SysUser sysUser);
+    IPage<SysUserVO> pageList(Pagination pagination, SysUserDO sysUserDO);
 
     /**
      * 作废用户
@@ -56,12 +58,12 @@ public interface UserService {
     /**
      * 查询用户列表
      *
-     * @param sysUser
+     * @param sysUserDTO
      * @return
      */
-    List<SysUser> findUsers(SysUser sysUser);
+    List<SysUserDO> findUsers(SysUserDTO sysUserDTO);
 
-    int updateUserById(SysUserRequest sysUserRequest);
+    int updateUserById(SysUserDTO sysUserRequest);
 
     /**
      * 根据用户ID得到用户信息
@@ -69,5 +71,5 @@ public interface UserService {
      * @param id 用户ID
      * @return 用户信息
      */
-    SysUser findUserById(Long id);
+    SysUserDO findUserById(Long id);
 }

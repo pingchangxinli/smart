@@ -40,4 +40,18 @@ public enum EnabledStatusEnum implements IEnum<Integer> {
         return description;
     }
 
+    /**
+     * 根据value得到枚举类型
+     *
+     * @param value
+     * @return 枚举类
+     */
+    public static EnabledStatusEnum fromValue(Integer value) {
+        for (EnabledStatusEnum type : EnabledStatusEnum.values()) {
+            if (type.getValue().equals(value)) {
+                return type;
+            }
+        }
+        return null;
+    }
 }

@@ -41,7 +41,12 @@ public class BaseResponse<T> implements Serializable {
                 .build();
     }
 
-
+    /**
+     * 根据Exception返回错误信息
+     *
+     * @param e 抛出Exception
+     * @return 错误应答
+     */
     public static BaseResponse error(Exception e) {
         return error(ResponseStatusEnum.FAILED.getCode(), e.getMessage());
     }

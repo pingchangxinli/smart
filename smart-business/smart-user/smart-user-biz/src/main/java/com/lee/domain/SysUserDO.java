@@ -1,4 +1,4 @@
-package com.lee.api.entity;
+package com.lee.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -12,7 +12,7 @@ import lombok.Data;
  */
 @Data
 @TableName("sys_user")
-public class SysUser {
+public class SysUserDO {
     /**
      * 自生成ID
      **/
@@ -20,8 +20,6 @@ public class SysUser {
     /**
      * 中文名称
      */
-    @JsonProperty("chinese_name")
-    @TableField("chinese_name")
     protected String chineseName;
     /**
      * 用户名
@@ -42,14 +40,10 @@ public class SysUser {
     /**
      * 租户ID
      **/
-    @JsonProperty("tenant_id")
-    @TableField("tenant_id")
     protected Long tenantId;
     /**
      * 客户分部编号
      **/
-    @JsonProperty("business_unit_id")
-    @TableField("business_unit_id")
     protected Long businessUnitId;
 
     /**

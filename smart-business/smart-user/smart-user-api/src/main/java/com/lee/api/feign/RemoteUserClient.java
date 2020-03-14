@@ -1,10 +1,11 @@
 package com.lee.api.feign;
 
-import com.lee.api.entity.BusinessUnit;
-import com.lee.api.entity.SysUser;
+import com.lee.api.vo.BusinessUnitVO;
+import com.lee.api.vo.SysUserVO;
 import com.lee.common.core.response.BaseResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -24,7 +25,7 @@ public interface RemoteUserClient {
      * @return
      */
     @GetMapping("/user/currentUser")
-    BaseResponse<SysUser> getCurrentUser(@RequestHeader("authorization") String authorization);
+    BaseResponse<SysUserVO> getCurrentUser(@RequestHeader("authorization") String authorization);
 
     /**
      * 获取分部列表
@@ -34,6 +35,10 @@ public interface RemoteUserClient {
      * @return
      */
     @GetMapping("businessUnit/list")
-    BaseResponse<List<BusinessUnit>> getBusinessUnits(@RequestHeader("authorization") String authorization,
-                                                      @RequestParam("tenantId") Long tenantId);
+    BaseResponse<List<BusinessUnitVO>> getBusinessUnits(@RequestHeader("authorization") String authorization,
+                                                        @RequestParam("tenantId") Long tenantId);
+
+    @GetMapping("businessUnit/{id}")
+    BaseResponse<BusinessUnitVO> getBusinessUnitById(@RequestHeader("authorization") String authorization,
+                                                     @PathVariable("id") Long id);
 }

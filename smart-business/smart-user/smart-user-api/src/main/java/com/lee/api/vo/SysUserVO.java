@@ -1,5 +1,7 @@
-package com.lee.domain;
+package com.lee.api.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.lee.enums.EnabledStatusEnum;
 import lombok.Data;
 
@@ -7,12 +9,14 @@ import java.util.List;
 
 /**
  * @author lee.li
+ * 用户信息类
  */
 @Data
 public class SysUserVO {
     /**
      * 自生成ID
      **/
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
     /**
      * 中文名称
@@ -38,18 +42,17 @@ public class SysUserVO {
      * 租户ID
      **/
     private Long tenantId;
-    /**
-     * 客户分部编号
-     **/
-    private Long businessUnitId;
 
     /**
      * 是否可用
      **/
     private EnabledStatusEnum status;
     /**
-     * 用户角色集合
+     * 分部明细
      */
-    private List<Long> roles;
-
+    private BusinessUnitVO businessUnit;
+    /**
+     * 用户所拥有角色
+     */
+    private List<SysRoleVO> roles;
 }

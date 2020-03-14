@@ -20,5 +20,5 @@ public interface RoleMapper extends BaseMapper<SysRoleDO> {
      * @return
      */
     @Select("SELECT A.* FROM SYS_ROLE A,SYS_USER_ROLE B WHERE A.ID = B.ROLE_ID AND B.USER_ID = #{user_id}")
-    List<SysRoleDO> selectRoleList(@Param("user_id") Long userId);
+    List<SysRoleDO> selectRoleListByUserId(@Param("user_id") Long userId);
 }

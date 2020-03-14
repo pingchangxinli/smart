@@ -1,5 +1,6 @@
 package com.lee.domain;
 
+import com.lee.api.vo.SysRoleVO;
 import com.lee.enums.EnabledStatusEnum;
 import lombok.Data;
 
@@ -7,9 +8,10 @@ import java.util.List;
 
 /**
  * @author lee.li
+ * service 用户传输对象
  */
 @Data
-public class SysUserVO {
+public class SysUserDTO {
     /**
      * 自生成ID
      **/
@@ -47,9 +49,6 @@ public class SysUserVO {
      * 是否可用
      **/
     private EnabledStatusEnum status;
-    /**
-     * 用户角色集合
-     */
-    private List<Long> roles;
 
+    private List<SysRoleDTO> roles;
 }

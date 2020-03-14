@@ -2,8 +2,8 @@ package com.lee.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lee.common.core.Pagination;
-import com.lee.domain.SysRoleDO;
 import com.lee.domain.SysRoleDTO;
+import com.lee.enums.EnabledStatusEnum;
 import com.lee.exception.RoleExistException;
 
 import java.util.List;
@@ -18,12 +18,12 @@ public interface SysRoleService {
      * @param userId 用户ID
      * @return 用户拥有的权限
      */
-    List<SysRoleDO> findRoleByUserId(Long userId);
+    List<SysRoleDTO> findRoleByUserId(Long userId);
 
     /**
      * 创建权限
      *
-     * @param SysRoleDTO 权限信息
+     * @param sysRoleDTO 权限信息
      * @return 创建条数
      */
     Integer createRole(SysRoleDTO sysRoleDTO) throws RoleExistException;
@@ -34,16 +34,16 @@ public interface SysRoleService {
      * @param id 权限ID
      * @return 权限
      */
-    SysRoleDO findRoleById(Long id);
+    SysRoleDTO findRoleById(Long id);
 
     /**
      * 分页查询权限
      *
      * @param pagination 分页
-     * @param SysRoleDTO 角色类
+     * @param sysRoleDTO 角色类
      * @return
      */
-    IPage<SysRoleDO> findRolePage(Pagination pagination, SysRoleDTO sysRole);
+    IPage<SysRoleDTO> findRolePage(Pagination pagination, SysRoleDTO sysRoleDTO);
 
     /**
      * 更新权限信息
@@ -51,7 +51,7 @@ public interface SysRoleService {
      * @param role 权限信息
      * @return
      */
-    Integer updateRoleById(SysRoleDO role);
+    Integer updateRoleById(SysRoleDTO role);
 
     /**
      * 根据code查询角色,code在表中为唯一索引
@@ -59,7 +59,7 @@ public interface SysRoleService {
      * @param name 名称
      * @return
      */
-    SysRoleDO finRoleByName(String name);
+    SysRoleDTO finRoleByName(String name);
 
     /**
      * 查询多个 role id 下的 role
@@ -67,11 +67,20 @@ public interface SysRoleService {
      * @param list
      * @return
      */
-    List<SysRoleDO> findRoleByIdList(List<Long> list);
+    List<SysRoleDTO> findRoleByIdList(List<Long> list);
 
     /**
      * 租户下的所有权限
+     *
      * @return 权限列表
      */
-    List<SysRoleDO> findAllRoles();
+    List<SysRoleDTO> findAllRoles();
+
+    /**
+     * 根据状态返回角色信息
+     *
+     * @param status 角色状态
+     * @return 角色信息
+     */
+    List<SysRoleDTO> findRolesByStatus(EnabledStatusEnum status);
 }

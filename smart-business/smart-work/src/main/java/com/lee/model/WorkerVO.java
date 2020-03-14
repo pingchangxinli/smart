@@ -1,5 +1,7 @@
 package com.lee.model;
 
+import com.lee.api.vo.BusinessUnitVO;
+import com.lee.enums.EnabledStatusEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -31,7 +33,11 @@ public class WorkerVO {
      */
     private Long tenantId;
     /**
-     * 分布ID
+     * 分部信息
      */
-    private Long businessUnitId;
+    private BusinessUnitVO businessUnit;
+    /**
+     * 生效或者失效
+     */
+    private EnabledStatusEnum status;
 }

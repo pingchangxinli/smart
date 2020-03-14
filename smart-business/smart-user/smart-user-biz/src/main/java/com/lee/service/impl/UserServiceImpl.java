@@ -3,24 +3,24 @@ package com.lee.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.lee.api.entity.SysUser;
+import com.lee.api.vo.BusinessUnitVO;
+import com.lee.api.vo.SysRoleVO;
+import com.lee.api.vo.SysUserVO;
+import com.lee.domain.*;
 import com.lee.common.business.domain.LoginUser;
 import com.lee.common.core.Pagination;
-import com.lee.domain.SysRoleDO;
 import com.lee.enums.EnabledStatusEnum;
 import com.lee.mapper.RoleMapper;
 import com.lee.service.SysRoleService;
-import com.lee.api.entity.BusinessUnit;
 import com.lee.service.BusinessUnitService;
-import com.lee.domain.SysUserRequest;
-import com.lee.domain.SysUserVO;
-import com.lee.domain.SysUserRole;
 import com.lee.mapper.UserMapper;
 import com.lee.service.SysUserRoleService;
 import com.lee.service.UserService;
+import com.lee.util.ConvertUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -49,25 +49,27 @@ public class UserServiceImpl implements UserService {
     private SysUserRoleService sysUserRoleService;
     @Resource
     private BusinessUnitService businessUnitService;
+    @Resource
+    private ModelMapper modelMapper;
 
     @Override
-    public SysUser findUserByName(String username) {
-        SysUser user = userMapper.selectOne(new QueryWrapper<SysUser>().lambda().eq(SysUser::getUsername, username));
+    public SysUserDO findUserByName(String username) {
+        SysUserDO user = userMapper.selectOne(new QueryWrapper<SysUserDO>().lambda().eq(SysUserDO::getUsername, username));
         return user;
     }
 
     @Override
     public LoginUser internalFindUserByUserName(String username) {
         LoginUser loginUser = new LoginUser();
-        SysUser sysUser = this.findUserByName(username);
+        SysUserDO sysUserDO = this.findUserByName(username);
 
         if (log.isDebugEnabled()) {
-            log.debug("get user from database is : {},userName:{}", sysUser, username);
+            log.debug("get user from database is : {},userName:{}", sysUserDO, username);
         }
-        if (ObjectUtils.isNotEmpty(sysUser)) {
-            List<SysRoleDO> list = roleMapper.selectRoleList(sysUser.getId());
+        if (ObjectUtils.isNotEmpty(sysUserDO)) {
+            List<SysRoleDO> list = roleMapper.selectRoleListByUserId(sysUserDO.getId());
 
-            BeanUtils.copyProperties(sysUser, loginUser);
+            BeanUtils.copyProperties(sysUserDO, loginUser);
             List<String> roles = new ArrayList<>();
             list.forEach(sysRole -> {
                 roles.add(sysRole.getName());
@@ -80,16 +82,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean createUser(SysUserRequest userRequest) {
+    public boolean createUser(SysUserDTO userRequest) {
         //新增用户信息
-        SysUser user = new SysUser();
+        SysUserDO user = new SysUserDO();
         user.setStatus(EnabledStatusEnum.ENABLED);
         BeanUtils.copyProperties(userRequest, user);
         int count = userMapper.insert(user);
         //增加用户角色
-        List<SysUserRole> list = userRequest.getRoles().stream().map(roleId -> {
+        List<SysUserRole> list = userRequest.getRoles().stream().map(role -> {
             SysUserRole sysUserRole = new SysUserRole();
-            sysUserRole.setRoleId(roleId);
+            sysUserRole.setRoleId(role.getId());
             sysUserRole.setUserId(user.getId());
             return sysUserRole;
         }).collect(Collectors.toList());
@@ -98,35 +100,40 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public IPage<SysUserVO> pageList(Pagination pagination, SysUser sysUser) {
+    public IPage<SysUserVO> pageList(Pagination pagination, SysUserDO sysUserDO) {
 
 
-        Page<SysUser> page = new Page<>(pagination.getCurrent(), pagination.getPageSize());
+        Page<SysUserDO> page = new Page<>(pagination.getCurrent(), pagination.getPageSize());
 
-        QueryWrapper<SysUser> queryWrapper = createQueryWhere(sysUser);
+        QueryWrapper<SysUserDO> queryWrapper = createQueryWhere(sysUserDO);
 
-        IPage<SysUser> iPage = userMapper.selectPage(page, queryWrapper);
+        IPage<SysUserDO> iPage = userMapper.selectPage(page, queryWrapper);
         //用户权限集合
-        List<SysUser> list = iPage.getRecords();
+        List<SysUserDO> list = iPage.getRecords();
 
         List<SysUserVO> responseList = new ArrayList<>();
-        list.stream().forEach(sysUser1 -> {
-            //用户角色
-            List<SysRoleDO> roles = sysRoleService.findRoleByUserId(sysUser1.getId());
+        list.forEach(sysUser1 -> {
+
             SysUserVO sysUserVO = new SysUserVO();
             BeanUtils.copyProperties(sysUser1, sysUserVO);
-            sysUserVO.setRoles(roles);
+
+            //用户角色
+            List<SysRoleDTO> roles = sysRoleService.findRoleByUserId(sysUser1.getId());
+            List<SysRoleVO> sysRoleVOList = ConvertUtil.convertRoleListDTOToVO(modelMapper, roles);
+            sysUserVO.setRoles(sysRoleVOList);
+
             //用户所在分部详情
-            BusinessUnit businessUnit = businessUnitService.findBusinessUnitById(sysUser1.getBusinessUnitId());
+            BusinessUnitDTO businessUnit = businessUnitService.findBusinessUnitById(sysUser1.getBusinessUnitId());
             if (log.isDebugEnabled()) {
                 log.debug("[UserService] BusinessUnit id:{},BusinessUnit:{}", sysUser1.getBusinessUnitId(),
                         businessUnit);
             }
             if (businessUnit == null || Integer.valueOf(0).equals(sysUser1.getBusinessUnitId())) {
-                businessUnit = new BusinessUnit();
+                businessUnit = new BusinessUnitDTO();
                 businessUnit.setName("");
             }
-            sysUserVO.setBusinessUnit(businessUnit);
+            BusinessUnitVO businessUnitVO = modelMapper.map(businessUnit, BusinessUnitVO.class);
+            sysUserVO.setBusinessUnit(businessUnitVO);
             responseList.add(sysUserVO);
         });
         IPage<SysUserVO> returnIpage = new Page<>(iPage.getCurrent(), iPage.getSize(), iPage.getTotal());
@@ -137,27 +144,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer disabledUserById(Long id) {
-        SysUser sysUser = new SysUser();
-        sysUser.setStatus(EnabledStatusEnum.DISABLED);
-        sysUser.setId(id);
-        return userMapper.updateById(sysUser);
+        SysUserDO sysUserDO = new SysUserDO();
+        sysUserDO.setStatus(EnabledStatusEnum.DISABLED);
+        sysUserDO.setId(id);
+        return userMapper.updateById(sysUserDO);
     }
 
     @Override
-    public List<SysUser> findUsers(SysUser sysUser) {
-        QueryWrapper<SysUser> queryWrapper = createQueryWhere(sysUser);
+    public List<SysUserDO> findUsers(SysUserDTO sysUserDTO) {
+        SysUserDO sysUserDO = modelMapper.map(sysUserDTO, SysUserDO.class);
+        QueryWrapper<SysUserDO> queryWrapper = createQueryWhere(sysUserDO);
         return userMapper.selectList(queryWrapper);
     }
 
     @Override
-    public int updateUserById(SysUserRequest sysUserRequest) {
+    public int updateUserById(SysUserDTO sysUserRequest) {
         //更新用户信息
-        SysUser sysUser = new SysUser();
-        BeanUtils.copyProperties(sysUserRequest, sysUser);
+        SysUserDO sysUserDO = new SysUserDO();
+        BeanUtils.copyProperties(sysUserRequest, sysUserDO);
         if (log.isDebugEnabled()) {
-            log.debug("[UserService updateUserById],sysUser:"+sysUser);
+            log.debug("[UserService updateUserById],sysUser:" + sysUserDO);
         }
-        int count = userMapper.updateById(sysUser);
+        int count = userMapper.updateById(sysUserDO);
         //更新用户角色
         QueryWrapper<SysUserRole> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", sysUserRequest.getId());
@@ -166,7 +174,7 @@ public class UserServiceImpl implements UserService {
         sysUserRequest.getRoles().stream().forEach(role -> {
             SysUserRole sysUserRole = new SysUserRole();
             sysUserRole.setUserId(sysUserRequest.getId());
-            sysUserRole.setRoleId(role);
+            sysUserRole.setRoleId(role.getId());
             list.add(sysUserRole);
         });
         sysUserRoleService.saveBatch(list);
@@ -174,38 +182,39 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public SysUser findUserById(Long id) {
+    public SysUserDO findUserById(Long id) {
         return userMapper.selectById(id);
     }
 
     /**
      * 创建查询用户Where条件
      *
-     * @param sysUser 用户实体类
+     * @param sysUserDO 用户实体类
      * @return 查询条件
      */
-    private QueryWrapper<SysUser> createQueryWhere(SysUser sysUser) {
-        QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
-        Long id = sysUser.getId();
+    private QueryWrapper<SysUserDO> createQueryWhere(SysUserDO sysUserDO) {
+        QueryWrapper<SysUserDO> queryWrapper = new QueryWrapper<>();
+        Long id = sysUserDO.getId();
         if (id != null && id > 0) {
             queryWrapper.eq("id", id);
         }
-        EnabledStatusEnum status = sysUser.getStatus();
+        EnabledStatusEnum status = sysUserDO.getStatus();
         if (status != null) {
             queryWrapper.eq("status", status.getValue());
         }
-        String username = sysUser.getUsername();
+        String username = sysUserDO.getUsername();
         if (StringUtils.isNotEmpty(username)) {
             queryWrapper.eq("username", username);
         }
-        String email = sysUser.getEmail();
+        String email = sysUserDO.getEmail();
         if (StringUtils.isNotEmpty(email)) {
             queryWrapper.eq("email", email);
         }
-        String phone = sysUser.getPhone();
+        String phone = sysUserDO.getPhone();
         if (StringUtils.isNotEmpty(phone)) {
             queryWrapper.eq("phone", phone);
         }
         return queryWrapper;
     }
+
 }

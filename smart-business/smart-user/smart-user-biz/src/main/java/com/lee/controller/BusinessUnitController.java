@@ -1,20 +1,23 @@
 package com.lee.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.lee.api.vo.BusinessUnitVO;
 import com.lee.common.business.util.PaginationResponseUtil;
 import com.lee.common.core.Pagination;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.common.core.response.PaginationResponse;
-import com.lee.api.entity.BusinessUnit;
+import com.lee.domain.BusinessUnitDTO;
 import com.lee.enums.EnabledStatusEnum;
 import com.lee.exception.BusinessUnitExistedException;
 import com.lee.exception.BusinessUnitNotExistedException;
 import com.lee.exception.TenantNotExistedException;
 import com.lee.service.BusinessUnitService;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,6 +30,8 @@ public class BusinessUnitController {
     private static final Long DEFAULT_TENANT_ID = 0L;
     @Resource
     private BusinessUnitService service;
+    @Resource
+    private ModelMapper modelMapper;
 
     /**
      * 查询分部列表
@@ -35,15 +40,19 @@ public class BusinessUnitController {
      * @return
      */
     @GetMapping("list")
-    public BaseResponse<List<BusinessUnit>> findBusinessUnitByTenantId(@RequestHeader("authorization") String authorization,
-                                                                       @RequestParam(value = "tenantId",
-                                                                               required = false) Long tenantId) {
-
+    public BaseResponse<List<BusinessUnitVO>> findBusinessUnitByTenantId(@RequestHeader("authorization") String authorization,
+                                                                         @RequestParam(value = "tenantId",
+                                                                                 required = false) Long tenantId) {
         if (tenantId == null || tenantId == 0L) {
             tenantId = DEFAULT_TENANT_ID;
         }
-        List<BusinessUnit> list = service.findBusinessUnitByTenantId(tenantId);
-        return BaseResponse.ok(list);
+        List<BusinessUnitDTO> list = service.findBusinessUnitByTenantId(tenantId);
+        List<BusinessUnitVO> voList = new ArrayList<>();
+        list.forEach(businessUnitDTO -> {
+            BusinessUnitVO vo = modelMapper.map(businessUnitDTO, BusinessUnitVO.class);
+            voList.add(vo);
+        });
+        return BaseResponse.ok(voList);
     }
 
     /**
@@ -53,10 +62,11 @@ public class BusinessUnitController {
      * @return 新增条数
      */
     @PostMapping
-    public BaseResponse createBusinessUnit(@RequestBody BusinessUnit businessUnit)
+    public BaseResponse createBusinessUnit(@RequestBody BusinessUnitVO businessUnit)
             throws BusinessUnitExistedException {
         businessUnit.setStatus(EnabledStatusEnum.ENABLED);
-        int count = service.createBusinessUnit(businessUnit);
+        BusinessUnitDTO dto = modelMapper.map(businessUnit, BusinessUnitDTO.class);
+        int count = service.createBusinessUnit(dto);
         return BaseResponse.ok(count);
     }
 
@@ -68,8 +78,9 @@ public class BusinessUnitController {
      * @throws BusinessUnitNotExistedException 分部不存在
      */
     @PutMapping
-    public BaseResponse updateBusinessUnitById(@RequestBody BusinessUnit businessUnit) throws BusinessUnitNotExistedException {
-        int count = service.updateBusinessUnitById(businessUnit);
+    public BaseResponse updateBusinessUnitById(@RequestBody BusinessUnitVO businessUnit) throws BusinessUnitNotExistedException {
+        BusinessUnitDTO dto = modelMapper.map(businessUnit, BusinessUnitDTO.class);
+        int count = service.updateBusinessUnitById(dto);
         return BaseResponse.ok(count);
     }
 
@@ -82,8 +93,9 @@ public class BusinessUnitController {
      */
     @GetMapping("/{id}")
     public BaseResponse findBusinessUnitById(@PathVariable("id") Long id) {
-        BusinessUnit businessUnit = service.findBusinessUnitById(id);
-        return BaseResponse.ok(businessUnit);
+        BusinessUnitDTO businessUnitDTO = service.findBusinessUnitById(id);
+        BusinessUnitVO businessUnitVO = modelMapper.map(businessUnitDTO, BusinessUnitVO.class);
+        return BaseResponse.ok(businessUnitVO);
     }
 
     /**
@@ -93,8 +105,9 @@ public class BusinessUnitController {
      * @throws TenantNotExistedException 租户
      */
     @GetMapping(value = "/page")
-    public BaseResponse pageList(Pagination pagination, BusinessUnit businessUnit) {
-        IPage<BusinessUnit> iPage = service.pageList(pagination, businessUnit);
+    public BaseResponse pageList(Pagination pagination, BusinessUnitVO businessUnitVO) {
+        BusinessUnitDTO businessUnitDTO = modelMapper.map(businessUnitVO, BusinessUnitDTO.class);
+        IPage<BusinessUnitDTO> iPage = service.pageList(pagination, businessUnitDTO);
         PaginationResponse response = PaginationResponseUtil.convertIPageToPagination(iPage);
         if (log.isDebugEnabled()) {
             log.debug("[BusinessUnitController pageList] result:" + response);

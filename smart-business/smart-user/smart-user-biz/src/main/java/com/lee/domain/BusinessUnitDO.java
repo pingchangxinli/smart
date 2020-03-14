@@ -1,12 +1,12 @@
-package com.lee.api.entity;
+package com.lee.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lee.enums.EnabledStatusEnum;
 import com.lee.common.core.BaseObject;
+import com.lee.enums.EnabledStatusEnum;
 import lombok.Data;
 
 /**
@@ -16,7 +16,7 @@ import lombok.Data;
  */
 @Data
 @TableName("sys_business_unit")
-public class BusinessUnit extends BaseObject {
+public class BusinessUnitDO extends BaseObject {
     /**
      * 主键
      */

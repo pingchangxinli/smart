@@ -7,14 +7,13 @@ import com.lee.common.core.response.BaseResponse;
 import com.lee.common.core.response.PaginationResponse;
 import com.lee.domain.SysRoleDO;
 import com.lee.domain.SysRoleDTO;
-import com.lee.domain.SysRoleVO;
+import com.lee.api.vo.SysRoleVO;
 import com.lee.enums.EnabledStatusEnum;
 import com.lee.exception.RoleExistException;
 import com.lee.service.SysRoleService;
+import com.lee.util.ConvertUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ObjectUtils;
 import org.modelmapper.ModelMapper;
-import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,18 +51,20 @@ public class RoleController {
     /**
      * 更新权限
      *
-     * @param role 权限
+     * @param sysRoleVO 权限
      * @return 更新条数
      */
     @PutMapping
-    public BaseResponse updateRoleById(@RequestBody SysRoleDO role) {
-
-        Integer count = roleService.updateRoleById(role);
+    public BaseResponse updateRoleById(@RequestBody SysRoleVO sysRoleVO) {
+        if (log.isDebugEnabled()) {
+            log.debug("updateRoleById,param:{}", sysRoleVO);
+        }
+        SysRoleDTO sysRoleDTO = modelMapper.map(sysRoleVO, SysRoleDTO.class);
+        Integer count = roleService.updateRoleById(sysRoleDTO);
         return BaseResponse.ok(count);
     }
 
     /**
-     * http://127.0.0.1:8300/user-api/role/1?access_token=52af721c-9425-4fee-a46b-8fee4f068ec8
      * 根据ID查询权限信息
      *
      * @param id 权限ID
@@ -71,8 +72,9 @@ public class RoleController {
      */
     @GetMapping("/{id}")
     public BaseResponse findRoleById(@PathVariable("id") Long id) {
-        SysRoleDO role = roleService.findRoleById(id);
-        return BaseResponse.ok(role);
+        SysRoleDTO role = roleService.findRoleById(id);
+        SysRoleVO sysRoleVO = modelMapper.map(role, SysRoleVO.class);
+        return BaseResponse.ok(sysRoleVO);
     }
 
     /**
@@ -85,7 +87,7 @@ public class RoleController {
     @GetMapping(value = "/page")
     public BaseResponse findRole(Pagination pagination, SysRoleVO sysRoleVO) {
         SysRoleDTO sysRoleDTO = modelMapper.map(sysRoleVO, SysRoleDTO.class);
-        IPage<SysRoleDO> iPage = roleService.findRolePage(pagination, sysRoleDTO);
+        IPage<SysRoleDTO> iPage = roleService.findRolePage(pagination, sysRoleDTO);
         PaginationResponse response = PaginationResponseUtil.convertIPageToPagination(iPage);
         return BaseResponse.ok(response);
     }
@@ -94,8 +96,9 @@ public class RoleController {
     public BaseResponse findRolesByIds(@RequestParam Long[] ids) {
 
         List<Long> list = CollectionUtils.arrayToList(ids);
-        List<SysRoleDO> roleList = roleService.findRoleByIdList(list);
-        return BaseResponse.ok(roleList);
+        List<SysRoleDTO> roleList = roleService.findRoleByIdList(list);
+        List<SysRoleVO> roleVOList = ConvertUtil.convertRoleListDTOToVO(modelMapper, roleList);
+        return BaseResponse.ok(roleVOList);
     }
 
     /**
@@ -104,13 +107,15 @@ public class RoleController {
      */
     @GetMapping("/user_id/{user_id}")
     public BaseResponse findRolesByUserId(@PathVariable("user_id") Long userId) {
-        List<SysRoleDO> list = roleService.findRoleByUserId(userId);
+        List<SysRoleDTO> list = roleService.findRoleByUserId(userId);
         return BaseResponse.ok(list);
     }
 
     @GetMapping
-    public BaseResponse<List> findAllRoles() {
-        List<SysRoleDO> list = roleService.findAllRoles();
-        return BaseResponse.<List>ok(list);
+    public BaseResponse<List> findRolesByStatus(@RequestParam("status") Integer status) {
+        EnabledStatusEnum statusEnum = EnabledStatusEnum.fromValue(status);
+        List<SysRoleDTO> list = roleService.findRolesByStatus(statusEnum);
+        List<SysRoleVO> roleVOList = ConvertUtil.convertRoleListDTOToVO(modelMapper, list);
+        return BaseResponse.ok(roleVOList);
     }
 }

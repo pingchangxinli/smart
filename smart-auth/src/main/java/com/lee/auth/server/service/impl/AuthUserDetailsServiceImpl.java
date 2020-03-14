@@ -3,6 +3,8 @@ package com.lee.auth.server.service.impl;
 
 import com.lee.auth.server.feign.UserClient;
 import com.lee.common.business.domain.LoginUser;
+import com.lee.common.core.exception.SmartException;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,17 +29,14 @@ public class AuthUserDetailsServiceImpl extends JdbcUserDetailsManager {
         this.setDataSource(dataSource);
     }
 
+    @SneakyThrows
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info("feign client info by username: {}", username);
+    public UserDetails loadUserByUsername(String username) {
         LoginUser loginUser = userClient.findUserByUserName(username);
-        if(log.isDebugEnabled()) {
-            log.debug("auth user client result is : {} ",loginUser);
-        }
+        //判断用户状态是否正常
         if (!loginUser.isEnabled()) {
-            throw new UsernameNotFoundException("username: "+loginUser.getUsername()+" is disabled.");
+            throw new SmartException(username + " is disabled.");
         }
-
         return loginUser;
     }
 }

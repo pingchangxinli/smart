@@ -1,4 +1,4 @@
-package com.lee.type.domain;
+package com.lee.model;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

@@ -118,16 +118,16 @@ public class UserController {
         }
         //根据用户ID得到用户详细信息
         try {
-            SysUserDO sysUserDO = userService.findUserById(id);
+            SysUserDTO sysUserDTO = userService.findUserById(id);
             if (log.isDebugEnabled()) {
-                log.debug("UserController,currentUser:{}", sysUserDO);
+                log.debug("UserController,currentUser:{}", sysUserDTO);
             }
             //判断用户状态是否可用
-            if (EnabledStatusEnum.DISABLED.equals(sysUserDO.getStatus())) {
+            if (EnabledStatusEnum.DISABLED.equals(sysUserDTO.getStatus())) {
                 UserErrorMessageTipEnum tip = UserErrorMessageTipEnum.USER_DISABLED;
                 return BaseResponse.error(tip.getCode(), tip.getMessage());
             }
-            SysUserVO sysUserVO = modelMapper.map(sysUserDO, SysUserVO.class);
+            SysUserVO sysUserVO = modelMapper.map(sysUserDTO, SysUserVO.class);
             return BaseResponse.ok(sysUserVO);
         } catch (Exception e) {
             log.error("[user controller],", e);

@@ -9,6 +9,9 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+/**
+ * @author lee.li
+ */
 @Data
 @TableName("work_partner")
 public class WorkerDO {
@@ -43,4 +46,5 @@ public class WorkerDO {
      * 生效或者失效
      */
     private EnabledStatusEnum status;
+
 }

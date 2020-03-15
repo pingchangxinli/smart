@@ -86,20 +86,20 @@ public class BusinessUnitServiceImpl implements BusinessUnitService {
     }
 
     @Override
-    public List<BusinessUnitDTO> findBusinessUnit(BusinessUnitDTO businessUnitDO) {
+    public List<BusinessUnitDTO> findBusinessUnit(BusinessUnitDTO businessUnitDTO) {
         QueryWrapper<BusinessUnitDO> queryWrapper = new QueryWrapper<>();
-        if (businessUnitDO != null) {
-            Long id = businessUnitDO.getId();
+        if (businessUnitDTO != null) {
+            Long id = businessUnitDTO.getId();
             if (id != null && id > 0) {
                 queryWrapper.eq("id", id);
             }
 
-            String name = businessUnitDO.getName();
+            String name = businessUnitDTO.getName();
             if (StringUtils.isNotEmpty(name)) {
                 queryWrapper.like("name", name);
             }
 
-            EnabledStatusEnum status = businessUnitDO.getStatus();
+            EnabledStatusEnum status = businessUnitDTO.getStatus();
 
             if (status != null) {
                 queryWrapper.eq("status", status.getValue());
@@ -108,8 +108,8 @@ public class BusinessUnitServiceImpl implements BusinessUnitService {
         List<BusinessUnitDO> businessUnitDOList = mapper.selectList(queryWrapper);
         List<BusinessUnitDTO> businessUnitDTOList = new ArrayList<>();
         businessUnitDOList.forEach(businessUnitDO1 -> {
-            BusinessUnitDTO businessUnitDTO = modelMapper.map(businessUnitDO1, BusinessUnitDTO.class);
-            businessUnitDTOList.add(businessUnitDTO);
+            BusinessUnitDTO businessUnitDTO1 = modelMapper.map(businessUnitDO1, BusinessUnitDTO.class);
+            businessUnitDTOList.add(businessUnitDTO1);
         });
         return businessUnitDTOList;
     }

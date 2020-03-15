@@ -49,7 +49,7 @@ public class SettingController {
     @GetMapping("init")
     public BaseResponse<SettingReportInitVO> init(@RequestHeader("authorization") String authorization) {
 
-        BaseResponse<List<BusinessUnitVO>> businessUnitRes = businessUnitClient.getBusinessUnits(authorization, 0L);
+        BaseResponse<List<BusinessUnitVO>> businessUnitRes = businessUnitClient.getBusinessUnits(authorization, true);
         BaseResponse<List<Period>> periodRes = this.getPeriods();
 
         List<BusinessUnitVO> businessUnits = businessUnitRes.getData();
@@ -164,7 +164,7 @@ public class SettingController {
      * @return
      */
     private SettingDTO convertVoToDto(SettingVO settingVO, Long businessUnitId) {
-        List<BusinessUnitDataVO> businessUnitDataVOList = settingVO.getBusinessUnitList();
+        List<BusinessUnitDataVO> businessUnitDataVOList = settingVO.getBusinessUnitDataList();
         List<PartnerDataVO> partnerDataVOS = settingVO.getPartnerReportList();
 
         List<BusinessUnitDataDTO> businessUnitDataDTOList = new ArrayList<>();
@@ -212,7 +212,11 @@ public class SettingController {
             return null;
         }
         //获取当前用户信息分布场所
-        return userBaseResponse.getData().getBusinessUnit().getId();
+        BusinessUnitVO businessUnit = userBaseResponse.getData().getBusinessUnit();
+        if (businessUnit == null) {
+            return null;
+        }
+        return businessUnit.getId();
     }
 
     /**
@@ -224,12 +228,8 @@ public class SettingController {
      */
     @GetMapping
     private BaseResponse<SettingVO> getSettingData(@RequestHeader("authorization") String authorization,
-                                                   @RequestParam(value = "reportDate", required = false) String reportDate) {
-        Long businessUnitId = getBusinessUnitIdByAuthorization(authorization);
-        if (businessUnitId == null) {
-            ErrorMsgEnum error = ErrorMsgEnum.AUTHORIZATION_ERROR;
-            return BaseResponse.error(error.getCode(), error.getMessage());
-        }
+                                                   @RequestParam(value = "reportDate", required = false) String reportDate,
+                                                   @RequestParam(value = "businessUnitId") Long businessUnitId) {
         //报表请求日期为null,设置为当前日期
         LocalDate localDate = LocalDate.now();
         if (StringUtils.isNotEmpty(reportDate)) {
@@ -242,7 +242,7 @@ public class SettingController {
 
         SettingVO settingVO = new SettingVO();
         settingVO.setReportDate(localDate);
-        settingVO.setBusinessUnitList(businessUnitDataVOS);
+        settingVO.setBusinessUnitDataList(businessUnitDataVOS);
         settingVO.setPartnerReportList(partnerDataVOS);
         return BaseResponse.ok(settingVO);
     }
@@ -326,24 +326,13 @@ public class SettingController {
     @GetMapping("report")
     public BaseResponse<SettingReportVO> report(@RequestParam("businessUnitId") Long businessUnitId,
                                                 @RequestParam("businessPeriodType") String periodType,
-                                                @RequestParam("beginDate") LocalDate beginDate,
-                                                @RequestParam("endDate") LocalDate endDate) {
+                                                @RequestParam("beginDate") String beginDate,
+                                                @RequestParam("endDate") String endDate) {
         SettingReportVO settingReportVO;
-        if (businessUnitId == null || businessUnitId.equals(0L)) {
-            return BaseResponse.ok(new SettingReportVO());
-        }
-        if (StringUtils.isEmpty(periodType)) {
-            return BaseResponse.ok(new SettingReportVO());
-        }
-        if (beginDate == null || endDate == null) {
-            return BaseResponse.ok(new SettingReportVO());
-        }
-        if (endDate.toEpochDay() - beginDate.toEpochDay() > DEFAULT_DAYS) {
-            return BaseResponse.ok(new SettingReportVO());
-        }
         PeriodEnum periodTypeEnum = Enum.valueOf(PeriodEnum.class, periodType);
+        ;
         SettingReportDTO settingReportDTO = settingService.businessUnitReport(businessUnitId, periodTypeEnum,
-                beginDate, endDate);
+                LocalDate.parse(beginDate), LocalDate.parse(endDate));
         settingReportVO = modelMapper.map(settingReportDTO, SettingReportVO.class);
         return BaseResponse.ok(settingReportVO);
     }

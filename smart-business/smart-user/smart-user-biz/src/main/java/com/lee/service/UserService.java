@@ -71,5 +71,5 @@ public interface UserService {
      * @param id 用户ID
      * @return 用户信息
      */
-    SysUserDO findUserById(Long id);
+    SysUserDTO findUserById(Long id);
 }

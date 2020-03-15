@@ -31,12 +31,12 @@ public interface RemoteUserClient {
      * 获取分部列表
      *
      * @param authorization 头部授权信息
-     * @param tenantId
+     * @param needAll       根据token 无法返回分部，true则返回所有的分部
      * @return
      */
-    @GetMapping("businessUnit/list")
+    @GetMapping("businessUnit/listByAuth")
     BaseResponse<List<BusinessUnitVO>> getBusinessUnits(@RequestHeader("authorization") String authorization,
-                                                        @RequestParam("tenantId") Long tenantId);
+                                                        @RequestParam("needAll") Boolean needAll);
 
     @GetMapping("businessUnit/{id}")
     BaseResponse<BusinessUnitVO> getBusinessUnitById(@RequestHeader("authorization") String authorization,

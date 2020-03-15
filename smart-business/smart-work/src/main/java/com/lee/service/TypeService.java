@@ -1,9 +1,9 @@
-package com.lee.type.service;
+package com.lee.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lee.common.core.Pagination;
-import com.lee.type.domain.WorKType;
-import com.lee.type.domain.WorKTypeDTO;
+import com.lee.model.WorKType;
+import com.lee.model.WorKTypeDTO;
 
 import java.util.List;
 

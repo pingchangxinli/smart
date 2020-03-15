@@ -1,4 +1,4 @@
-package com.lee.type.controller;
+package com.lee.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lee.enums.ErrorMsgEnum;
@@ -6,10 +6,10 @@ import com.lee.common.business.util.PaginationResponseUtil;
 import com.lee.common.core.Pagination;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.common.core.response.PaginationResponse;
-import com.lee.type.domain.WorKType;
-import com.lee.type.domain.WorKTypeDTO;
-import com.lee.type.domain.WorKTypeVO;
-import com.lee.type.service.TypeService;
+import com.lee.model.WorKType;
+import com.lee.model.WorKTypeDTO;
+import com.lee.model.WorKTypeVO;
+import com.lee.service.TypeService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;

@@ -17,7 +17,7 @@ public class SettingVO {
     /**
      * 门店预估营业额
      */
-    private List<BusinessUnitDataVO> businessUnitList;
+    private List<BusinessUnitDataVO> businessUnitDataList;
     /**
      * 伙伴排班类型
      */

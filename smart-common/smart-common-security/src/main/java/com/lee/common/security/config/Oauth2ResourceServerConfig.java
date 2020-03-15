@@ -40,7 +40,6 @@ public class Oauth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        log.info(">>>>>>>>>>hello");
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>
                 .ExpressionInterceptUrlRegistry registry = http
                 .authorizeRequests();
@@ -79,16 +78,6 @@ public class Oauth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
         });
         return restTemplate;
     }
-//    @Bean
-//    @Primary
-//    public ResourceServerTokenServices tokenServices() {
-//        final RemoteTokenServices remoteTokenServices = new RemoteTokenServices();
-//        remoteTokenServices.setAccessTokenConverter(accessTokenConverter());
-//        remoteTokenServices.setClientId("resource");
-//        remoteTokenServices.setClientSecret("resource");
-//        return remoteTokenServices;
-//    }
-
     @Bean
     public AccessTokenConverter accessTokenConverter() {
         return new DefaultAccessTokenConverter();

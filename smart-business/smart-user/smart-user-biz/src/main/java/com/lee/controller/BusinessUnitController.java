@@ -2,17 +2,25 @@ package com.lee.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lee.api.vo.BusinessUnitVO;
+import com.lee.api.vo.SysUserVO;
+import com.lee.common.business.domain.LoginUser;
 import com.lee.common.business.util.PaginationResponseUtil;
 import com.lee.common.core.Pagination;
 import com.lee.common.core.response.BaseResponse;
 import com.lee.common.core.response.PaginationResponse;
 import com.lee.domain.BusinessUnitDTO;
+import com.lee.domain.SysUserDTO;
 import com.lee.enums.EnabledStatusEnum;
+import com.lee.enums.UserErrorMessageTipEnum;
 import com.lee.exception.BusinessUnitExistedException;
 import com.lee.exception.BusinessUnitNotExistedException;
 import com.lee.exception.TenantNotExistedException;
+import com.lee.feign.TokenClient;
 import com.lee.service.BusinessUnitService;
+import com.lee.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +40,10 @@ public class BusinessUnitController {
     private BusinessUnitService service;
     @Resource
     private ModelMapper modelMapper;
+    @Resource
+    private UserService userService;
+    @Resource
+    private TokenClient tokenClient;
 
     /**
      * 查询分部列表
@@ -53,6 +65,36 @@ public class BusinessUnitController {
             voList.add(vo);
         });
         return BaseResponse.ok(voList);
+    }
+
+    /**
+     * 查询分部列表
+     *
+     * @param needAll 如果authorization获取不到分部信息，
+     *                true: 返回所有的分部信息；
+     *                false： 返回Null
+     * @return
+     */
+    @GetMapping("listByAuth")
+    public BaseResponse<List<BusinessUnitVO>> findBusinessUnitByAuth(@RequestHeader("authorization") String authorization,
+                                                                     @RequestParam("needAll") Boolean needAll) {
+        BusinessUnitDTO businessUnitDTO = this.getBusinessUnitByAuthorization(authorization);
+        if (businessUnitDTO == null) {
+            if (needAll) {
+                List<BusinessUnitVO> businessUnitVOList = new ArrayList<>();
+                List<BusinessUnitDTO> list = service.findBusinessUnit(null);
+                list.forEach(businessUnitDTO1 -> {
+                    BusinessUnitVO businessUnitVO = modelMapper.map(businessUnitDTO1, BusinessUnitVO.class);
+                    businessUnitVOList.add(businessUnitVO);
+                });
+                return BaseResponse.ok(businessUnitVOList);
+            }
+            return BaseResponse.ok(null);
+        }
+        BusinessUnitVO businessUnitVO = modelMapper.map(businessUnitDTO, BusinessUnitVO.class);
+        List<BusinessUnitVO> list = new ArrayList<>();
+        list.add(businessUnitVO);
+        return BaseResponse.ok(list);
     }
 
     /**
@@ -113,5 +155,29 @@ public class BusinessUnitController {
             log.debug("[BusinessUnitController pageList] result:" + response);
         }
         return BaseResponse.ok(response);
+    }
+
+    /**
+     * 根据授权信息获取业务单元ID
+     *
+     * @param authorization 授权信息
+     * @return
+     */
+    private BusinessUnitDTO getBusinessUnitByAuthorization(String authorization) {
+        if (StringUtils.isEmpty(authorization)) {
+            return null;
+        }
+        BaseResponse<LoginUser> baseResponse = tokenClient.findUserByAccessToken(authorization);
+        LoginUser loginUser = baseResponse.getData();
+        Long id = loginUser.getId();
+        if (loginUser == null || id == null || NumberUtils.compare(id, 0) <= 0) {
+            return null;
+        }
+        SysUserDTO sysUserDTO = userService.findUserById(id);
+        if (sysUserDTO == null) {
+            return null;
+        }
+
+        return service.findBusinessUnitById(sysUserDTO.getBusinessUnitId());
     }
 }

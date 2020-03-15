@@ -1,4 +1,4 @@
-package com.lee.type.domain;
+package com.lee.model;
 
 import com.lee.enums.EnabledStatusEnum;
 import lombok.Data;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
  * @author lee.li
  */
 @Data
-public class WorKTypeVO {
+public class WorKTypeDTO {
     private String type;
     /**
      * 中文描述

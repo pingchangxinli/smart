@@ -11,5 +11,6 @@ import java.time.LocalDate;
 public class WorkEfficiencyReportDTO {
     private LocalDate reportDate;
     private String type;
+    private String typeDesc;
     private Double amount;
 }

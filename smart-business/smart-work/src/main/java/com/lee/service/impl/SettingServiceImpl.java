@@ -100,6 +100,7 @@ public class SettingServiceImpl implements SettingService {
             WorkEfficiencyReportDTO workEfficiencyReportDTO = new WorkEfficiencyReportDTO();
             workEfficiencyReportDTO.setReportDate(businessUnitData.getReportDate());
             workEfficiencyReportDTO.setType(BusinessEnum.PREDICT.name());
+            workEfficiencyReportDTO.setTypeDesc(BusinessEnum.PREDICT.getDesc());
             if (PeriodEnum.BREAKFAST.equals(periodType)) {
                 workEfficiencyReportDTO.setAmount(businessUnitData.getBreakfastAmount());
             }
@@ -120,6 +121,7 @@ public class SettingServiceImpl implements SettingService {
             WorkEfficiencyReportDTO workEfficiencyReportDTO = new WorkEfficiencyReportDTO();
             workEfficiencyReportDTO.setReportDate(businessUnitData.getReportDate());
             workEfficiencyReportDTO.setType(BusinessEnum.REAL.name());
+            workEfficiencyReportDTO.setTypeDesc(BusinessEnum.REAL.getDesc());
             if (PeriodEnum.BREAKFAST.equals(periodType)) {
                 workEfficiencyReportDTO.setAmount(businessUnitData.getBreakfastAmount());
             }
@@ -155,6 +157,7 @@ public class SettingServiceImpl implements SettingService {
             WorkTimeReportDTO workTimeReportDTO = new WorkTimeReportDTO();
             workTimeReportDTO.setReportDate(businessUnitData.getReportDate());
             workTimeReportDTO.setType(BusinessEnum.PREDICT.name());
+            workTimeReportDTO.setTypeDesc(BusinessEnum.PREDICT.getDesc());
             if (PeriodEnum.BREAKFAST.equals(periodType)) {
                 workTimeReportDTO.setAmount(businessUnitData.getBreakfastAmount());
             }
@@ -175,6 +178,7 @@ public class SettingServiceImpl implements SettingService {
             WorkTimeReportDTO workTimeReportDTO = new WorkTimeReportDTO();
             workTimeReportDTO.setReportDate(businessUnitData.getReportDate());
             workTimeReportDTO.setType(BusinessEnum.REAL.name());
+            workTimeReportDTO.setTypeDesc(BusinessEnum.REAL.getDesc());
             if (PeriodEnum.BREAKFAST.equals(periodType)) {
                 workTimeReportDTO.setAmount(businessUnitData.getBreakfastAmount());
             }
@@ -208,6 +212,7 @@ public class SettingServiceImpl implements SettingService {
             AmountReportDTO amountReportDTO = new AmountReportDTO();
             amountReportDTO.setReportDate(businessUnitData.getReportDate());
             amountReportDTO.setType(BusinessEnum.PREDICT.name());
+            amountReportDTO.setTypeDesc(BusinessEnum.PREDICT.getDesc());
             if (log.isDebugEnabled()) {
                 log.debug("[SettingService] name:{},name len:{},type:{},type len:{},isEqual:{},isEqual:{}",
                         PeriodEnum.BREAKFAST.name(), PeriodEnum.BREAKFAST.name().length(),
@@ -236,6 +241,7 @@ public class SettingServiceImpl implements SettingService {
             AmountReportDTO amountReportDTO = new AmountReportDTO();
             amountReportDTO.setReportDate(businessUnitData.getReportDate());
             amountReportDTO.setType(BusinessEnum.REAL.name());
+            amountReportDTO.setTypeDesc(BusinessEnum.REAL.getDesc());
             if (PeriodEnum.BREAKFAST.equals(periodType)) {
                 amountReportDTO.setAmount(businessUnitData.getBreakfastAmount());
             }

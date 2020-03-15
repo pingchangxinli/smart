@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.oauth2.client.http.AccessTokenRequiredException;
+import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.web.bind.annotation.*;
 import com.lee.model.WorkerDTO;
 
@@ -68,15 +70,24 @@ public class WorkerController {
     @GetMapping("page")
     public BaseResponse<PaginationResponse<WorkerVO>> pageList(@RequestHeader("authorization") String authorization,
                                                                Pagination pagination, WorkerVO workerVO) {
+        //根据access token 得到用户信息
+        BaseResponse<SysUserVO> baseResponse = remoteUserClient.getCurrentUser(authorization);
+        SysUserVO sysUserVO = baseResponse.getData();
+        if (sysUserVO == null) {
+            throw new InvalidTokenException("获取用户信息失败");
+        }
 
         WorkerDTO workerDTO = modelMapper.map(workerVO, WorkerDTO.class);
-
+        //根据token得到用户的分部信息
+        if (sysUserVO.getBusinessUnit() != null && sysUserVO.getBusinessUnit().getId() > 0) {
+            workerDTO.setBusinessUnitId(sysUserVO.getBusinessUnit().getId());
+        }
         IPage<WorkerDTO> iPage = service.pageList(pagination, workerDTO);
 
         PaginationResponse<WorkerVO> paginationResponse = convertToPageResponse(authorization, iPage);
 
-        BaseResponse<PaginationResponse<WorkerVO>> baseResponse = BaseResponse.ok(paginationResponse);
-        return baseResponse;
+        BaseResponse<PaginationResponse<WorkerVO>> baseResponse1 = BaseResponse.ok(paginationResponse);
+        return baseResponse1;
     }
 
     /**
@@ -91,9 +102,11 @@ public class WorkerController {
         if (list != null && list.size() > 0) {
             list.stream().forEach(dto -> {
                 WorkerVO vo = modelMapper.map(dto, WorkerVO.class);
-                BaseResponse<BusinessUnitVO> businessUnitBaseResponse =
-                        remoteUserClient.getBusinessUnitById(authorization, dto.getBusinessUnitId());
-                vo.setBusinessUnit(businessUnitBaseResponse.getData());
+                if (dto.getBusinessUnitId() != null) {
+                    BaseResponse<BusinessUnitVO> businessUnitBaseResponse =
+                            remoteUserClient.getBusinessUnitById(authorization, dto.getBusinessUnitId());
+                    vo.setBusinessUnit(businessUnitBaseResponse.getData());
+                }
                 returnList.add(vo);
             });
         }

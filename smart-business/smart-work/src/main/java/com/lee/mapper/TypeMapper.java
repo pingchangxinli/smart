@@ -1,7 +1,7 @@
-package com.lee.type.mapper;
+package com.lee.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.lee.type.domain.WorKType;
+import com.lee.model.WorKType;
 
 /**
  * @author lee.li

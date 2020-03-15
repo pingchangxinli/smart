@@ -78,13 +78,18 @@ public class WorkerServiceImpl implements WorkerService {
         WorkerDO workerDO = modelMapper.map(workerDTO, WorkerDO.class);
         String name = workerDO.getName();
         Long id = workerDO.getId();
+        //伙伴ID
         if (id != null) {
             lambda.eq(WorkerDO::getId, id);
         }
+        //伙伴名称
         if (StringUtils.isNotEmpty(name)) {
             lambda.like(WorkerDO::getName, name);
         }
-
+        //分部信息
+        if (workerDTO.getBusinessUnitId() != null && workerDTO.getBusinessUnitId() > 0) {
+            lambda.eq(WorkerDO::getBusinessUnitId, workerDTO.getBusinessUnitId());
+        }
         return lambda;
     }
 

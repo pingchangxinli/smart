@@ -11,5 +11,6 @@ import java.time.LocalDate;
 public class AmountReportDTO {
     private LocalDate reportDate;
     private String type;
+    private String typeDesc;
     private Double amount;
 }

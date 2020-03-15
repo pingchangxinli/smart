@@ -1,14 +1,14 @@
-package com.lee.type.service.impl;
+package com.lee.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lee.enums.EnabledStatusEnum;
 import com.lee.common.core.Pagination;
-import com.lee.type.domain.WorKTypeDTO;
-import com.lee.type.mapper.TypeMapper;
-import com.lee.type.domain.WorKType;
-import com.lee.type.service.TypeService;
+import com.lee.model.WorKTypeDTO;
+import com.lee.mapper.TypeMapper;
+import com.lee.model.WorKType;
+import com.lee.service.TypeService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;

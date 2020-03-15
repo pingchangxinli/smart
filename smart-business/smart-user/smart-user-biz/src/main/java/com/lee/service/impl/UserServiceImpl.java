@@ -182,8 +182,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public SysUserDO findUserById(Long id) {
-        return userMapper.selectById(id);
+    public SysUserDTO findUserById(Long id) {
+        SysUserDO sysUserDO = userMapper.selectById(id);
+        if (sysUserDO == null) {
+            return null;
+        }
+        return modelMapper.map(sysUserDO, SysUserDTO.class);
     }
 
     /**

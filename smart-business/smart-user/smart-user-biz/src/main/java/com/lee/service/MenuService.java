@@ -7,7 +7,7 @@ import com.lee.domain.SysMenuResponse;
 import java.util.List;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 public interface MenuService {
     /**

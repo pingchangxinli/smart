@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 /**
  * 排班类型
  *
- * @author lee.li
+ * @author haitao Li
  */
 @Data
 public class WorKTypeVO {

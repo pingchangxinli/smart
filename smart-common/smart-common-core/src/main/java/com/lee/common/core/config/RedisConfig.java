@@ -7,7 +7,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 /**
  * Redis配置文件
- * @author lee.li
+ *
+ * @author haitao Li
  */
 @Slf4j
 public class RedisConfig {

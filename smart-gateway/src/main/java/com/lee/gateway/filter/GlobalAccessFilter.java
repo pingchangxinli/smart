@@ -32,7 +32,7 @@ import java.util.Map;
  * 过滤是否请求链接
  * param带入access_token参数 或者 header 带入 Authorization 格式为 Bearer ******
  *
- * @author lee.li
+ * @author haitao Li
  */
 @Slf4j
 @Component

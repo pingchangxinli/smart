@@ -9,7 +9,8 @@ import java.util.Properties;
 
 /**
  * 验证码生成配置
- * @author lee.li
+ *
+ * @author haitao Li
  */
 @Configuration
 public class KaptchaConfig {

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lee.domain.Tenant;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 public interface TenantMapper extends BaseMapper<Tenant> {
 }

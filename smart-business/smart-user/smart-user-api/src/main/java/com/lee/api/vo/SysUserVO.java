@@ -8,7 +8,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * @author lee.li
+ * @author haitao Li
  * 用户信息类
  */
 @Data

@@ -2,7 +2,8 @@ package com.lee.common.core.util;
 
 /**
  * web公共类
- * @author lee.li
+ *
+ * @author haitao Li
  */
 public class WebUtil {
     /**

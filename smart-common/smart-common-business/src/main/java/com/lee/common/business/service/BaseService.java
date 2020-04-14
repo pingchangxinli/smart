@@ -6,7 +6,7 @@ import com.lee.common.core.Pagination;
 import java.util.List;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 public interface BaseService<T> {
     /**

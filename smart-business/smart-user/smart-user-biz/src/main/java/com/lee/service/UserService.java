@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 参考JdbcUserDetailsManager
  *
- * @author lee.li
+ * @author haitao Li
  */
 public interface UserService {
     /**

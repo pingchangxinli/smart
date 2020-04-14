@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lee.model.WorkerDO;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 public interface WorkerMapper extends BaseMapper<WorkerDO> {
 }

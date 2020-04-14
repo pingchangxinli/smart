@@ -1,7 +1,7 @@
 package com.lee.common.core.exception;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 public class PageException extends Exception {
     public PageException() {

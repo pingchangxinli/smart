@@ -4,7 +4,8 @@ import lombok.Data;
 
 /**
  * 角色 & URL FILTER 关联关系
- * @author lee.li
+ *
+ * @author haitao Li
  */
 @Data
 public class RoleUrlFilterRelation {

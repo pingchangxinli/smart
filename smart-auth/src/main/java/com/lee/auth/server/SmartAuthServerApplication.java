@@ -10,7 +10,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.web.WebApplicationInitializer;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 @SpringBootApplication
 @EnableEurekaClient

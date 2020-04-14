@@ -11,7 +11,7 @@ import org.springframework.web.WebApplicationInitializer;
 /**
  * 网关启动类,将网关服务注册成为 服务配置客户端
  *
- * @author lee.li
+ * @author haitao Li
  */
 @SpringBootApplication
 public class SmartGatewayApplication extends SpringBootServletInitializer implements WebApplicationInitializer {

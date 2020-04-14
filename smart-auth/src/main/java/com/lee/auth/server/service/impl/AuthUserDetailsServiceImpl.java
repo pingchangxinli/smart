@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 @Slf4j
 public class AuthUserDetailsServiceImpl extends JdbcUserDetailsManager {

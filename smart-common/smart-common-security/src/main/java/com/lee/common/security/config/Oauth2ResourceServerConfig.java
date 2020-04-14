@@ -22,7 +22,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * @author lee.li
+ * @author haitao Li
  * 资源服务器配置
  */
 @Slf4j

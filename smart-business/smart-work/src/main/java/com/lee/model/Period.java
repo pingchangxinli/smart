@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * 营业时段
  *
- * @author lee.li
+ * @author haitao Li
  */
 @Data
 public class Period {

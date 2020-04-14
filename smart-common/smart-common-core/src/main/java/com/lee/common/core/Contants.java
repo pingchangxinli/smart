@@ -1,7 +1,7 @@
 package com.lee.common.core;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 public class Contants {
     /**

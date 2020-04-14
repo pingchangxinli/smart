@@ -24,7 +24,7 @@ import java.util.List;
 
 
 /**
- * @author lee.li
+ * @author haitao Li
  * 排班类型
  */
 @Slf4j

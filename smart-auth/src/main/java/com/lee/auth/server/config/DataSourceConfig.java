@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 @Slf4j
 @Configuration

@@ -20,7 +20,7 @@ import java.security.InvalidParameterException;
 /**
  * 验证码判断
  *
- * @author lee.li
+ * @author haitao Li
  */
 @Slf4j
 @Component

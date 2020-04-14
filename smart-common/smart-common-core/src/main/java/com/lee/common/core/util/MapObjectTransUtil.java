@@ -9,7 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 public class MapObjectTransUtil<T> {
     /**

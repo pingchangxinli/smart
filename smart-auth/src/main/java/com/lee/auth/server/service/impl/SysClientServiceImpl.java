@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
 /**
- * @author lee.li
+ * @author haitao Li
  */
 @Service
 public class SysClientServiceImpl implements SysClientService {

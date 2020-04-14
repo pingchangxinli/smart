@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 不需要验证权限路径,自由访问路径
  *
- * @author lee.li
+ * @author haitao Li
  */
 @Component
 @ConfigurationProperties(prefix = "auth")

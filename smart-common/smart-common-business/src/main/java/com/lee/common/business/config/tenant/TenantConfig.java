@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * 租户配置文件,配置租户拦截器,
  *
- * @author lee.li
+ * @author haitao Li
  */
 @Slf4j
 public class TenantConfig extends WebMvcConfigurerAdapter {

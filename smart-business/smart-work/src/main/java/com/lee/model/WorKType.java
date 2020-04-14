@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 /**
  * 排班类型
  *
- * @author lee.li
+ * @author haitao Li
  */
 @Data
 @TableName(value = "work_type")

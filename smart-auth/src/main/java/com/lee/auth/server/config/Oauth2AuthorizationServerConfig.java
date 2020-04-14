@@ -31,7 +31,7 @@ import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 @Configuration
 public class Oauth2AuthorizationServerConfig {

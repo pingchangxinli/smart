@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 @Data
 public class SettingReportInitVO {

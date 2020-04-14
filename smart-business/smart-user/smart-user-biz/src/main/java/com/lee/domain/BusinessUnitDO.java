@@ -12,7 +12,7 @@ import lombok.Data;
 /**
  * 分部
  *
- * @author lee.li
+ * @author haitao Li
  */
 @Data
 @TableName("sys_business_unit")

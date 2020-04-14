@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * @author lee.li
+ * @author haitao Li
  * 排班设置
  */
 @Data

@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 菜单请求参数
  *
- * @author lee.li
+ * @author haitao Li
  */
 @Data
 public class SysMenuRequest extends SysMenu {

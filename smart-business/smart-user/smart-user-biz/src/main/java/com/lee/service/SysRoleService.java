@@ -9,7 +9,7 @@ import com.lee.exception.RoleExistException;
 import java.util.List;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 public interface SysRoleService {
     /**

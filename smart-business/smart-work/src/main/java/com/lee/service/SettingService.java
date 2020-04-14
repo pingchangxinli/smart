@@ -8,7 +8,7 @@ import com.lee.model.SettingReportDTO;
 import java.time.LocalDate;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 
 public interface SettingService extends BaseService<SettingDTO> {

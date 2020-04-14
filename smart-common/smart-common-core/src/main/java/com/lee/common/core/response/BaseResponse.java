@@ -7,7 +7,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * @author lee.li
+ * @author haitao Li
  * 基础相应信息
  **/
 @Data

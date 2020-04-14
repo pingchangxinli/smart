@@ -3,7 +3,7 @@ package com.lee.enums;
 /**
  * 用户服务响应码
  *
- * @author lee.li
+ * @author haitao Li
  */
 public enum UserErrorMessageTipEnum {
 

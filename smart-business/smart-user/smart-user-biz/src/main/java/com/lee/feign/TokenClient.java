@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 @FeignClient("SMART-AUTH")
 public interface TokenClient {

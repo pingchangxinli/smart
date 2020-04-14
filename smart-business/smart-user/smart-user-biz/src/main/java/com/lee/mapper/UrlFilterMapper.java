@@ -7,7 +7,8 @@ import org.apache.ibatis.annotations.Param;
 
 /**
  * 动态链接配置
- * @author lee.li
+ *
+ * @author haitao Li
  */
 @Mapper
 public interface UrlFilterMapper {

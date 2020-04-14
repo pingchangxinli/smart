@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 public class ConvertUtil {
     /**

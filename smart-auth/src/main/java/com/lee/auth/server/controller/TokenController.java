@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 @Slf4j
 @RestController

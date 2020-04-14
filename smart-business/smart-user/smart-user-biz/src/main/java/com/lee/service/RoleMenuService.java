@@ -6,7 +6,7 @@ import com.lee.domain.SysRoleMenu;
 import java.util.List;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 public interface RoleMenuService extends IService<SysRoleMenu> {
     /**

@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 用户请求
  *
- * @author lee.li
+ * @author haitao Li
  */
 @FeignClient("SMART-USER")
 public interface RemoteUserClient {

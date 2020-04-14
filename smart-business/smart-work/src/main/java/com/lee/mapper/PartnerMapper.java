@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lee.model.PartnerData;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 public interface PartnerMapper extends BaseMapper<PartnerData> {
 }

@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 @Slf4j
 public class RedisClientDetailService extends JdbcClientDetailsService {

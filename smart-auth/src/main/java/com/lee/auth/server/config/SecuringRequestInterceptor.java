@@ -9,7 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 /**
  * 配置该interceptor,可以将原始请求头传入feign调用的服务中
- * @author lee.li
+ *
+ * @author haitao Li
  */
 @Component
 public class SecuringRequestInterceptor implements RequestInterceptor {

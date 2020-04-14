@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lee.auth.server.domain.SysClient;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 public interface SysClientMapper extends BaseMapper<SysClient> {
 }

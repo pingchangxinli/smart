@@ -8,7 +8,7 @@ import com.lee.enums.EnabledStatusEnum;
 import lombok.Data;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 @Data
 @TableName("sys_role_menu")

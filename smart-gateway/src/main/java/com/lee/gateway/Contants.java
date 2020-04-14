@@ -2,7 +2,8 @@ package com.lee.gateway;
 
 /**
  * 网关公共属性
- * @author lee.li
+ *
+ * @author haitao Li
  */
 public class Contants {
     /** 验证码前缀 **/

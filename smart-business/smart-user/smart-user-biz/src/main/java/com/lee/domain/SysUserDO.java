@@ -7,7 +7,7 @@ import com.lee.enums.EnabledStatusEnum;
 import lombok.Data;
 
 /**
- * @author lee.li
+ * @author haitao Li
  * 用户信息类
  */
 @Data

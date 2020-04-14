@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 @Data
 public class PartnerDataDTO {

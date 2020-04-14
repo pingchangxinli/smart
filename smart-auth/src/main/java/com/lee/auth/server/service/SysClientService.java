@@ -5,7 +5,7 @@ import com.lee.auth.server.domain.SysClient;
 import java.util.List;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 public interface SysClientService {
     /**

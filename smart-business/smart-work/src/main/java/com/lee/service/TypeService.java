@@ -8,7 +8,7 @@ import com.lee.model.WorKTypeDTO;
 import java.util.List;
 
 /**
- * @author lee.li
+ * @author haitao Li
  * 排班类型服务类
  */
 public interface TypeService {

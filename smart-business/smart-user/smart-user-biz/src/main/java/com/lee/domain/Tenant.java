@@ -14,7 +14,8 @@ import lombok.EqualsAndHashCode;
 
 /**
  * 租户
- * @author lee.li
+ *
+ * @author haitao Li
  */
 @Data
 @EqualsAndHashCode(callSuper=true)

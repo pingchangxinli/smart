@@ -6,7 +6,8 @@ import java.util.List;
 
 /**
  * 配置动态链接访问 链接 角色 权限
- * @author lee.li
+ *
+ * @author haitao Li
  */
 @Data
 public class UrlFilter {

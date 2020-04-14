@@ -4,7 +4,7 @@ import com.lee.common.business.service.BaseService;
 import com.lee.model.WorkerDTO;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 public interface WorkerService extends BaseService<WorkerDTO> {
 }

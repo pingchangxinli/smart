@@ -8,7 +8,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import java.lang.annotation.*;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 @Documented
 @Inherited

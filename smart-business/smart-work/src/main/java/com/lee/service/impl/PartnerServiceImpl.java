@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 @Service
 public class PartnerServiceImpl implements PartnerService {

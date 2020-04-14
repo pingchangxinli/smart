@@ -1,7 +1,7 @@
 package com.lee.enums;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 public enum BusinessEnum {
     PREDICT("预估"), REAL("实际");

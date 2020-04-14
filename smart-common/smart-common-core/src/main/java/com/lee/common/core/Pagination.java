@@ -4,7 +4,8 @@ import lombok.Data;
 
 /**
  * 分页信息
- * @author lee.li
+ *
+ * @author haitao Li
  */
 @Data
 public class Pagination {

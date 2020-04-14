@@ -10,7 +10,7 @@ import org.springframework.web.WebApplicationInitializer;
 /**
  * 配置服务
  *
- * @author lee.li
+ * @author haitao Li
  */
 @SpringBootApplication
 @EnableConfigServer

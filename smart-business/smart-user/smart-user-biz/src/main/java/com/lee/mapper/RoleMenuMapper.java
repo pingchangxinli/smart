@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 public interface RoleMenuMapper extends BaseMapper<SysRoleMenu> {
 

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lee.domain.SysUserDO;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 public interface UserMapper extends BaseMapper<SysUserDO> {
 }

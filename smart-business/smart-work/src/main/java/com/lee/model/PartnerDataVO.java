@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * @author lee.li
+ * @author haitao Li
  * 门店所有伙伴不同时段排班类型
  */
 @Data

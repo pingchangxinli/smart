@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 @Data
 public class WorkTimeReportDTO {

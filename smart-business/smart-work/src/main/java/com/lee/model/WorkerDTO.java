@@ -4,7 +4,7 @@ import com.lee.common.business.domain.BaseDTO;
 import lombok.Data;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 @Data
 public class WorkerDTO extends BaseDTO {

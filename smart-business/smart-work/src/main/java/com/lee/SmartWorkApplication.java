@@ -13,7 +13,7 @@ import org.springframework.web.WebApplicationInitializer;
 /**
  * 启动类
  *
- * @author lee.li
+ * @author haitao Li
  */
 @SpringBootApplication
 @EnableFeignClients

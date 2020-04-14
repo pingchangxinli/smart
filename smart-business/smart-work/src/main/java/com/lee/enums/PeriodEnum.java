@@ -6,7 +6,7 @@ import lombok.Getter;
 /**
  * 时段
  *
- * @author lee.li
+ * @author haitao Li
  */
 @Getter
 public enum PeriodEnum implements IEnum<Integer> {

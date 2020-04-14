@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 @RestController
 @RequestMapping("setting")
@@ -139,14 +139,9 @@ public class SettingController {
     @PostMapping
     public BaseResponse saveSetting(@RequestHeader("authorization") String authorization,
                                     @RequestBody SettingVO settingVO) {
-        if (StringUtils.isEmpty(authorization)) {
-            ErrorMsgEnum errorMsgEnum = ErrorMsgEnum.AUTHORIZATION_ERROR;
-            return BaseResponse.error(errorMsgEnum.getCode(), errorMsgEnum.getMessage());
-        }
-
         Long businessUnitId = getBusinessUnitIdByAuthorization(authorization);
         if (businessUnitId == null) {
-            ErrorMsgEnum errorMsgEnum = ErrorMsgEnum.AUTHORIZATION_ERROR;
+            ErrorMsgEnum errorMsgEnum = ErrorMsgEnum.NOT_FIND_BUSINESS_UNIT_BY_USER;
             return BaseResponse.error(errorMsgEnum.getCode(), errorMsgEnum.getMessage());
         }
         SettingDTO settingDTO = convertVoToDto(settingVO, businessUnitId);
@@ -308,6 +303,9 @@ public class SettingController {
                 }
                 partnerDataVO.setPartnerId(workerDTO.getId());
                 partnerDataVO.setPartnerName(workerDTO.getName());
+                if (partnerDataVO.getType0830() == null) {
+                    partnerDataVO.setType0830(" ");
+                }
                 partnerDataVOS.add(partnerDataVO);
             });
         }

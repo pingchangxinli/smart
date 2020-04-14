@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 @Data
 public abstract class BaseObject implements Serializable {

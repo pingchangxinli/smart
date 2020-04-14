@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * @author lee.li
+ * @author haitao Li
  * 请求基础类
  */
 @Data

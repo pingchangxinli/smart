@@ -8,7 +8,8 @@ import lombok.Data;
 
 /**
  * 用户 角色 对应表
- * @author lee.li
+ *
+ * @author haitao Li
  */
 @Data
 @TableName(value="sys_user_role")

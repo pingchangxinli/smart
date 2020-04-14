@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * @author lee.li
+ * @author haitao Li
  * 门店每天营业额预估
  */
 @Data

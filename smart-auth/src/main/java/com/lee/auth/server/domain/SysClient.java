@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 @Data
 @TableName(value = "oauth_client_details")

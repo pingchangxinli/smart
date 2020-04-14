@@ -10,7 +10,7 @@ import com.lee.exception.TenantNotExistedException;
 import java.util.List;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 public interface TenantService {
     /**

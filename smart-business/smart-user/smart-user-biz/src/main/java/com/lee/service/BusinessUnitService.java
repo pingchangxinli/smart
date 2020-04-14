@@ -9,7 +9,7 @@ import com.lee.exception.BusinessUnitNotExistedException;
 import java.util.List;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 public interface BusinessUnitService {
     /**

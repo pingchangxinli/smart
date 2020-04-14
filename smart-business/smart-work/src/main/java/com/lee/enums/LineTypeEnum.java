@@ -3,7 +3,7 @@ package com.lee.enums;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
 /**
- * @author lee.li
+ * @author haitao Li
  * 分部行类型
  */
 public enum LineTypeEnum {

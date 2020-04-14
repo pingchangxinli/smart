@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 /**
- * @author lee.li
+ * @author haitao Li
  * 门店每天营业额预估
  */
 @Data

@@ -1,7 +1,7 @@
 package com.lee.exception;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 public class BusinessUnitExistedException extends Exception {
     public BusinessUnitExistedException() {

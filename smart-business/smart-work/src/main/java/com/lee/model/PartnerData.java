@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 @Data
 @TableName("work_partner_report")

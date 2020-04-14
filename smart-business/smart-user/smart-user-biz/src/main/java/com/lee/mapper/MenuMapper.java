@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 
 /**
- * @author lee.li
+ * @author haitao Li
  */
 public interface MenuMapper extends BaseMapper<SysMenu> {
     @Select("SELECT A.* FROM SYS_MENU A,SYS_ROLE_MENU B " +

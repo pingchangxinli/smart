@@ -1,27 +1,38 @@
 package com.lee.controller;
 
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.support.ExcelTypeEnum;
+import com.alibaba.excel.write.metadata.WriteSheet;
+import com.alibaba.excel.write.metadata.fill.FillWrapper;
 import com.lee.api.vo.BusinessUnitVO;
 import com.lee.api.vo.SysUserVO;
 import com.lee.enums.ErrorMsgEnum;
 import com.lee.api.feign.RemoteUserClient;
 import com.lee.common.core.response.BaseResponse;
+import com.lee.enums.LineTypeEnum;
 import com.lee.enums.PeriodEnum;
 import com.lee.model.*;
 import com.lee.service.BusinessUnitService;
 import com.lee.service.PartnerService;
 import com.lee.service.SettingService;
 import com.lee.service.WorkerService;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author haitao Li
@@ -30,7 +41,9 @@ import java.util.List;
 @RequestMapping("setting")
 @Slf4j
 public class SettingController {
-    private static final long DEFAULT_DAYS = 30L;
+    private static final String EXCEL_TEMPLATE_SHOP = SettingController.class.getResource("/").getPath() + "/templates" +
+            "/work" +
+            ".xlsx";
     @Resource
     private RemoteUserClient remoteUserClient;
     @Resource
@@ -242,6 +255,108 @@ public class SettingController {
         return BaseResponse.ok(settingVO);
     }
 
+    @SneakyThrows
+    @GetMapping("/excel")
+    public void excel(HttpServletResponse response, @RequestHeader("authorization") String authorization,
+                      @RequestParam(value = "reportDate") String reportDate,
+                      @RequestParam(value = "businessUnitId") Long businessUnitId) {
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.parse(reportDate, fmt);
+        List<BusinessUnitDataVO> businessUnitDataVOS = dealBusinessUnitData(businessUnitId, localDate);
+        List<PartnerDataVO> partnerDataVOS = dealPartnerData(businessUnitId, localDate);
+        List<BusinessUnitDataVO> data1 = new ArrayList<>();
+        List<BusinessUnitDataVO> data2 = new ArrayList<>();
+        List<BusinessUnitDataVO> data3 = new ArrayList<>();
+        List<BusinessUnitDataVO> data4 = new ArrayList<>();
+        List<BusinessUnitDataVO> data5 = new ArrayList<>();
+        List<BusinessUnitDataVO> data6 = new ArrayList<>();
+        if (businessUnitDataVOS != null) {
+            businessUnitDataVOS.forEach(businessUnitDataVO -> {
+                amountNullToZero(businessUnitDataVO);
+                if (LineTypeEnum.PREDICT_AMOUNT.equals(businessUnitDataVO.getLineType())) {
+                    data1.add(businessUnitDataVO);
+                }
+                if (LineTypeEnum.PREDICT_WORK_TIMES.equals(businessUnitDataVO.getLineType())) {
+                    data2.add(businessUnitDataVO);
+                }
+                if (LineTypeEnum.PREDICT_WORK_EFFICIENCY.equals(businessUnitDataVO.getLineType())) {
+                    data3.add(businessUnitDataVO);
+                }
+                if (LineTypeEnum.REAL_AMOUNT.equals(businessUnitDataVO.getLineType())) {
+                    data4.add(businessUnitDataVO);
+                }
+                if (LineTypeEnum.REAL_WORK_TIMES.equals(businessUnitDataVO.getLineType())) {
+                    data5.add(businessUnitDataVO);
+                }
+                if (LineTypeEnum.REAL_WORK_EFFICIENCY.equals(businessUnitDataVO.getLineType())) {
+                    data6.add(businessUnitDataVO);
+                }
+            });
+        }
+        if (partnerDataVOS != null) {
+            int i = 0;
+            Iterator<PartnerDataVO> ite = partnerDataVOS.iterator();
+            while (ite.hasNext()) {
+                PartnerDataVO vo = ite.next();
+                vo.setIndex(++i);
+                Float workTimes = getWorkTimesFromTypes(vo);
+                vo.setWorkTimes(workTimes);
+            }
+        }
+        response.setCharacterEncoding("utf-8");
+        // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
+        String fileName = URLEncoder.encode("测试", "UTF-8");
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.addHeader("Content-Disposition", "attachment;filename=fileName" + ".xlsx");
+
+        ExcelWriter excelWriter =
+                EasyExcel.write(response.getOutputStream()).excelType(ExcelTypeEnum.XLSX).withTemplate(EXCEL_TEMPLATE_SHOP).build();
+        WriteSheet writeSheet = EasyExcel.writerSheet().build();
+
+        excelWriter.fill(new FillWrapper("data1", data1), writeSheet);
+        excelWriter.fill(new FillWrapper("data2", data2), writeSheet);
+        excelWriter.fill(new FillWrapper("data3", data3), writeSheet);
+        excelWriter.fill(new FillWrapper("data4", data4), writeSheet);
+        excelWriter.fill(new FillWrapper("data5", data5), writeSheet);
+        excelWriter.fill(new FillWrapper("data6", data6), writeSheet);
+        excelWriter.fill(new FillWrapper("data7", partnerDataVOS), writeSheet);
+
+        excelWriter.finish();
+    }
+
+    private void amountNullToZero(BusinessUnitDataVO businessUnitDataVO) {
+        if (businessUnitDataVO.getBreakfastAmount() == null) {
+            businessUnitDataVO.setBreakfastAmount(0d);
+        }
+        if (businessUnitDataVO.getLunchAmount() == null) {
+            businessUnitDataVO.setLunchAmount(0d);
+        }
+        if (businessUnitDataVO.getSupperFirstPhaseAmount() == null) {
+            businessUnitDataVO.setSupperFirstPhaseAmount(0d);
+        }
+        if (businessUnitDataVO.getSupperSecondPhaseAmount() == null) {
+            businessUnitDataVO.setSupperSecondPhaseAmount(0d);
+        }
+        if (businessUnitDataVO.getSupperThirdPhaseAmount() == null) {
+            businessUnitDataVO.setSupperThirdPhaseAmount(0d);
+        }
+    }
+
+    private Float getWorkTimesFromTypes(PartnerDataVO partnerDataVO) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        Float count = 0f;
+        Method[] methods = partnerDataVO.getClass().getMethods();
+        for (int i = 0; i < methods.length; i++) {
+            String name = methods[i].getName();
+            if (StringUtils.startsWith(name, "getType")) {
+                String type = (String) MethodUtils.invokeMethod(partnerDataVO, name);
+                if (StringUtils.isNotBlank(type)) {
+                    count = count + 0.5f;
+                }
+            }
+        }
+        return count;
+    }
+
     /**
      * 处理分部数据,
      *
@@ -334,4 +449,6 @@ public class SettingController {
         settingReportVO = modelMapper.map(settingReportDTO, SettingReportVO.class);
         return BaseResponse.ok(settingReportVO);
     }
+
+
 }

@@ -178,5 +178,12 @@ public class PartnerDataVO {
      * 更新时刻
      */
     private LocalDateTime updateTime;
-
+    /**
+     * 索引
+     */
+    private Integer index;
+    /**
+     * 工时合计
+     */
+    private Float workTimes;
 }
